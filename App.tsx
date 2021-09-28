@@ -1,21 +1,27 @@
-import { StatusBar } from 'expo-status-bar';
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { createAppContainer } from 'react-navigation';
+import { createStackNavigator } from 'react-navigation-stack';
+import { Provider as PaperProvider } from 'react-native-paper';
+import HomeScreen from './src/views/home.tsx';
+import LoginScreen from './src/views/login.tsx';
 
-export default function App() {
-  return (
-    <View style={styles.container}>
-      <Text>UBADEMY</Text>
-      <StatusBar style="auto" />
-    </View>
-  );
-}
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
+const AppNavigator = createStackNavigator({
+  Login: {
+    screen: LoginScreen,
+  },
+  Home: {
+    screen: HomeScreen,
   },
 });
+
+const AppContainer = createAppContainer(AppNavigator);
+
+export default class App extends React.Component {
+  render() {
+    return (
+      <PaperProvider>
+        <AppContainer />
+      </PaperProvider>
+    );
+  }
+}
