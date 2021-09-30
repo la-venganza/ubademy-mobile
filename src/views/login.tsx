@@ -44,7 +44,6 @@ const LoginScreen = () => {
           value={userName}
           onChangeText={setUserName}
           label="Username"
-          style={styles.input}
         />
         <TextInput
           mode="outlined"
@@ -52,7 +51,6 @@ const LoginScreen = () => {
           onChangeText={setPassword}
           label="Password"
           secureTextEntry
-          style={styles.input}
         />
         <View style={styles.buttonWrapper}>
           <Button mode="contained">Log In</Button>

@@ -1,7 +1,7 @@
 import Axios from 'axios';
 import Constants from 'expo-constants';
 
-export const configureAxiosHeaders = (token) => {
+export const configureAxiosHeaders = (token:string) => {
   Axios.defaults.headers['X-Auth-Token'] = token;
 };
 

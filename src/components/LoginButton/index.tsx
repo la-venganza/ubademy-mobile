@@ -3,7 +3,6 @@ import {
   TouchableOpacity, Image, View, Text, StyleSheet,
 } from 'react-native';
 import * as Linking from 'expo-linking';
-// import { AuthSession } from 'expo';
 import * as WebBrowser from 'expo-web-browser';
 import Constants from 'expo-constants';
 import GoogleLogo from '../../assets/images/google-logo.png';
@@ -43,7 +42,6 @@ const styles = StyleSheet.create({
 
 export const GoogleLoginButton = () => {
   const handleRedirect = async (event) => {
-    console.log(event);
     WebBrowser.dismissBrowser();
   };
 
@@ -56,15 +54,12 @@ export const GoogleLoginButton = () => {
 
   const handleOAuthLogin = async () => {
     // gets the app's deep link
-    // const redirectUrl = await Linking.getInitialURL('/');
     const redirectUrl = await Linking.createURL();
     // this should change depending on where the server is running
     const authUrl = `${Constants.manifest.extra.REACT_APP_BACKEND_URL}/auth?redirect=${encodeURIComponent(redirectUrl)}`;
-    console.log(redirectUrl);
     addLinkingListener();
     try {
       const authResult = await WebBrowser.openAuthSessionAsync(authUrl, redirectUrl);
-      console.log('test2', authResult);
     //   await this.setState({ authResult });
     } catch (err) {
       console.log('ERROR:', err);

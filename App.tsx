@@ -6,37 +6,23 @@ import HomeScreen from './src/views/home.tsx';
 import LoginScreen from './src/views/login.tsx';
 import { AuthContext, AuthProvider } from './src/context/AuthContext';
 
-// const AppNavigator = createStackNavigator({
-//   Login: {
-//     screen: LoginScreen,
-//   },
-//   Home: {
-//     screen: HomeScreen,
-//   },
-// });
-
 const Stack = createNativeStackNavigator();
 
-// const AppContainer = createAppContainer(AppNavigator);
-
-export default () =>
-  // const { auth } = useContext(AuthContext);
-  // console.log('auth?', auth);
-  (
-    <PaperProvider>
-      <AuthProvider>
-        <AuthContext.Consumer>
-          { ({ auth }) => (
-            <NavigationContainer>
-              {console.log(auth)}
-              <Stack.Navigator>
-                { auth.token
-                  ? <Stack.Screen name="Home" component={HomeScreen} />
-                  : <Stack.Screen name="Login" component={LoginScreen} />}
-              </Stack.Navigator>
-            </NavigationContainer>
-          )}
-        </AuthContext.Consumer>
-      </AuthProvider>
-    </PaperProvider>
-  );
+export default () => (
+  <PaperProvider>
+    <AuthProvider>
+      <AuthContext.Consumer>
+        { ({ auth }) => (
+          <NavigationContainer>
+            {console.log(auth)}
+            <Stack.Navigator>
+              { auth.token
+                ? <Stack.Screen name="Home" component={HomeScreen} />
+                : <Stack.Screen name="Login" component={LoginScreen} />}
+            </Stack.Navigator>
+          </NavigationContainer>
+        )}
+      </AuthContext.Consumer>
+    </AuthProvider>
+  </PaperProvider>
+);
