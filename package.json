@@ -6,10 +6,11 @@
     "ios": "expo start --ios",
     "web": "expo start --web",
     "eject": "expo eject",
-    "test": "jest",
+    "test": "jest --coverage && coveralls < coverage/lcov.info",
     "lint": "eslint src/"
   },
   "dependencies": {
+    "coveralls": "^3.1.1",
     "expo": "~42.0.1",
     "expo-status-bar": "~1.0.4",
     "react": "16.13.1",
