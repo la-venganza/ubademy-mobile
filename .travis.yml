@@ -1,0 +1,17 @@
+sudo: false
+language: node_js
+node_js:
+- '14'
+branches:
+  only:
+  - develop
+cache:
+  directories:
+  - node_modules
+before_install:
+- cd app
+- npm update
+install:
+- npm install
+script:
+- npm test
