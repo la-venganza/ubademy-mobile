@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext, userContext } from 'react';
 import {
   TouchableOpacity, Image, View, Text, StyleSheet,
 } from 'react-native';
@@ -7,6 +7,7 @@ import * as WebBrowser from 'expo-web-browser';
 import Constants from 'expo-constants';
 import GoogleLogo from '../../assets/images/google-logo.png';
 import ColorPalette from '../../styles/colors';
+import { AuthContext } from '../../context/AuthContext';
 
 const styles = StyleSheet.create({
   googleButton: {
@@ -41,6 +42,7 @@ const styles = StyleSheet.create({
 });
 
 export const GoogleLoginButton = () => {
+  const auth = useContext(AuthContext);
   const handleRedirect = async (event) => {
     WebBrowser.dismissBrowser();
   };
@@ -60,6 +62,9 @@ export const GoogleLoginButton = () => {
     addLinkingListener();
     try {
       const authResult = await WebBrowser.openAuthSessionAsync(authUrl, redirectUrl);
+      const matches = authResult.url.match(/token=([^&#]*)/);
+      auth.setAuth(matches[1]);
+      console.log(matches[1]);
     //   await this.setState({ authResult });
     } catch (err) {
       console.log('ERROR:', err);
