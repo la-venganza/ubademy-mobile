@@ -62,9 +62,11 @@ export const GoogleLoginButton = () => {
     addLinkingListener();
     try {
       const authResult = await WebBrowser.openAuthSessionAsync(authUrl, redirectUrl);
-      const matches = authResult.url.match(/token=([^&#]*)/);
-      auth.setAuth(matches[1]);
-      console.log(matches[1]);
+      console.log(authResult);
+      const jwt = authResult.url.match(/jwt=([^&#]*)/);
+      const userName = authResult.url.match(/name=([^&#]*)/);
+      auth.setAuth(jwt[1], userName[1]);
+      console.log(jwt[1], userName);
     //   await this.setState({ authResult });
     } catch (err) {
       console.log('ERROR:', err);
@@ -72,13 +74,13 @@ export const GoogleLoginButton = () => {
     removeLinkingListener();
   };
   return (
-    <TouchableOpacity style={styles.googleButton} activeOpacity={0.5}>
+    <TouchableOpacity style={styles.googleButton} activeOpacity={0.5} onPress={handleOAuthLogin}>
       <Image
         source={GoogleLogo}
         style={styles.ImageIconStyle}
       />
       <View style={styles.SeparatorLine} />
-      <Text style={styles.TextStyle} onPress={handleOAuthLogin}> Login with Google </Text>
+      <Text style={styles.TextStyle}> Login with Google </Text>
     </TouchableOpacity>
   );
 };
