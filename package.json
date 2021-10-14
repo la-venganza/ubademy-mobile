@@ -6,7 +6,7 @@
     "ios": "expo start --ios",
     "web": "expo start --web",
     "eject": "expo eject",
-    "test": "jest",
+    "test": "jest --coverage && coveralls < coverage/lcov.info",
     "lint": "eslint src/"
   },
   "dependencies": {
@@ -17,6 +17,7 @@
     "@react-navigation/stack": "^6.0.9",
     "axios": "^0.21.4",
     "dotenv": "^10.0.0",
+    "coveralls": "^3.1.1",
     "expo": "~42.0.1",
     "expo-linking": "^2.3.1",
     "expo-status-bar": "~1.0.4",
