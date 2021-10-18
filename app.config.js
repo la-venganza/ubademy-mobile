@@ -23,6 +23,7 @@ export default {
       supportsTablet: true,
     },
     android: {
+      package: 'com.ubademy.app',
       adaptiveIcon: {
         foregroundImage: './assets/adaptive-icon.png',
         backgroundColor: '#FFFFFF',

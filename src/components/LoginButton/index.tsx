@@ -67,7 +67,6 @@ export const GoogleLoginButton = () => {
       const userName = authResult.url.match(/name=([^&#]*)/);
       auth.setAuth(jwt[1], userName[1]);
       console.log(jwt[1], userName);
-    //   await this.setState({ authResult });
     } catch (err) {
       console.log('ERROR:', err);
     }
