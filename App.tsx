@@ -1,21 +1,28 @@
-import { StatusBar } from 'expo-status-bar';
-import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import React, { useContext } from 'react';
+import { NavigationContainer } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { Provider as PaperProvider } from 'react-native-paper';
+import HomeScreen from './src/views/home.tsx';
+import LoginScreen from './src/views/login.tsx';
+import { AuthContext, AuthProvider } from './src/context/AuthContext';
 
-export default function App() {
-  return (
-    <View style={styles.container}>
-      <Text>UBADEMY</Text>
-      <StatusBar style="auto" />
-    </View>
-  );
-}
+const Stack = createNativeStackNavigator();
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+export default () => (
+  <PaperProvider>
+    <AuthProvider>
+      <AuthContext.Consumer>
+        { ({ auth }) => (
+          <NavigationContainer>
+            {console.log(auth)}
+            <Stack.Navigator>
+              { auth.token
+                ? <Stack.Screen name="Home" component={HomeScreen} />
+                : <Stack.Screen name="Login" component={LoginScreen} />}
+            </Stack.Navigator>
+          </NavigationContainer>
+        )}
+      </AuthContext.Consumer>
+    </AuthProvider>
+  </PaperProvider>
+);
