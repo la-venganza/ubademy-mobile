@@ -12,33 +12,34 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     justifyContent: 'center',
   },
+  image: {
+    alignSelf: 'center',
+  },
   wrapper: {
     flex: 1,
     width: '100%',
   },
-  image: {
-    alignSelf: 'center',
-  },
   buttonWrapper: {
     marginTop: 25,
   },
-  row: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-  },
+
 });
 
-const LoginScreen = ({ navigation }) => {
+const RegistrationScreen = () => {
   const [userName, _setUserName] = useState('');
   const [password, _setPassword] = useState('');
+  const [passwordConfirm, _setPasswordConfirm] = useState('');
+  const [email, _setEmail] = useState('');
 
   const setUserName = (name: string) => _setUserName(name);
   const setPassword = (text: string) => _setPassword(text);
+  const setPasswordConfirm = (text: string) => _setPasswordConfirm(text);
+  const setEmail = (text:string) => _setEmail(text);
   return (
     <View style={styles.wrapper}>
       <View style={styles.surface}>
         <Logo style={styles.image} />
-        <Text>Welcome to Ubademy! Please log in</Text>
+        <Text>Registration</Text>
         <TextInput
           mode="outlined"
           value={userName}
@@ -52,16 +53,26 @@ const LoginScreen = ({ navigation }) => {
           label="Password"
           secureTextEntry
         />
+        <TextInput
+          mode="outlined"
+          value={passwordConfirm}
+          onChangeText={setPasswordConfirm}
+          label="Confirm password"
+          secureTextEntry
+        />
+        <TextInput
+          mode="outlined"
+          value={email}
+          onChangeText={setEmail}
+          label="Email"
+          keyboardType="email-address"
+          textContentType="emailAddress"
+        />
         <View style={styles.buttonWrapper}>
-          <Button mode="contained">Log In</Button>
-          <Button mode="text">Forgot password</Button>
-          <Button mode="text" onPress={() => navigation.navigate('Registration')}>You don&apos;t have an account? Register now!</Button>
-        </View>
-        <View style={styles.row}>
-          <GoogleLoginButton />
+          <Button mode="contained">Register</Button>
         </View>
       </View>
     </View>
   );
 };
-export default LoginScreen;
+export default RegistrationScreen;
