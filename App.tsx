@@ -5,6 +5,7 @@ import { Provider as PaperProvider, DefaultTheme } from 'react-native-paper';
 import HomeScreen from './src/views/home.tsx';
 import LoginScreen from './src/views/login.tsx';
 import RegistrationScreen from './src/views/registration';
+import CourseCreationScreen from './src/views/courseCreation';
 import { AuthContext, AuthProvider } from './src/context/AuthContext';
 import Colors from './src/styles/colors';
 
@@ -31,6 +32,7 @@ export default () => (
                 ? <Stack.Screen name="Home" component={HomeScreen} />
                 : (
                   <>
+                    <Stack.Screen name="Course" component={CourseCreationScreen} />
                     <Stack.Screen name="Login" component={LoginScreen} />
                     <Stack.Screen name="Registration" component={RegistrationScreen} />
                   </>

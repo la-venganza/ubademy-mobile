@@ -62,11 +62,9 @@ export const GoogleLoginButton = () => {
     addLinkingListener();
     try {
       const authResult = await WebBrowser.openAuthSessionAsync(authUrl, redirectUrl);
-      console.log(authResult);
       const jwt = authResult.url.match(/jwt=([^&#]*)/);
       const userName = authResult.url.match(/name=([^&#]*)/);
       auth.setAuth(jwt[1], userName[1]);
-      console.log(jwt[1], userName);
     } catch (err) {
       console.log('ERROR:', err);
     }

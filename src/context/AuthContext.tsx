@@ -13,8 +13,6 @@ const AuthProvider = ({ children }) => {
   const getAuthState = async () => {
     try {
       const authDataString = await AsyncStorage.getItem('auth');
-      // await AsyncStorage.setItem('auth', '');
-      // console.log(authDataString);
       const authData = JSON.parse(authDataString || defaultData);
       // Configure axios headers
       configureAxiosHeaders(authData.token);
