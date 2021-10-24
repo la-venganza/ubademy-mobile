@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { StyleSheet, View } from 'react-native';
-import { Button, Text, TextInput } from 'react-native-paper';
+import {
+  Button, Text, TextInput, HelperText,
+} from 'react-native-paper';
 import Logo from '../components/Logo';
 import { GoogleLoginButton } from '../components/LoginButton';
 
@@ -26,15 +28,48 @@ const styles = StyleSheet.create({
 });
 
 const RegistrationScreen = () => {
+  const errorMessagesInitial : string[] = [];
   const [userName, _setUserName] = useState('');
   const [password, _setPassword] = useState('');
   const [passwordConfirm, _setPasswordConfirm] = useState('');
   const [email, _setEmail] = useState('');
+  const [errorMsgs, _setErrors] = useState(errorMessagesInitial);
 
   const setUserName = (name: string) => _setUserName(name);
   const setPassword = (text: string) => _setPassword(text);
   const setPasswordConfirm = (text: string) => _setPasswordConfirm(text);
   const setEmail = (text:string) => _setEmail(text);
+  const setErrorList = (errors: string[]) => _setErrors(errors);
+
+  const handleLogin = () => {
+    let errorList : string[] = [];
+
+    if (!userName) {
+      errorList = errorList.concat(['User name empty.']);
+    }
+
+    if (!password) {
+      errorList = errorList.concat(['Password empty.']);
+    }
+
+    if (!email) {
+      errorList = errorList.concat(['Email empty.']);
+    }
+
+    if (!(password === passwordConfirm)) {
+      errorList = errorList.concat(['Passwords should match.']);
+    }
+
+    setErrorList(errorList);
+
+    if (errorMsgs.length === 0) {
+      // Calling backend
+      // TO DO
+    }
+  };
+
+  const hasErrors = () => errorMsgs.length !== 0;
+
   return (
     <View style={styles.wrapper}>
       <View style={styles.surface}>
@@ -69,7 +104,12 @@ const RegistrationScreen = () => {
           textContentType="emailAddress"
         />
         <View style={styles.buttonWrapper}>
-          <Button mode="contained">Register</Button>
+          <Button onPress={handleLogin} mode="contained">Register</Button>
+        </View>
+        <View style={styles.buttonWrapper}>
+          <HelperText type="error" visible={hasErrors()}>
+            {errorMsgs}
+          </HelperText>
         </View>
       </View>
     </View>
