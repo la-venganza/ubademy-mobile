@@ -3,8 +3,10 @@ import { StyleSheet, View } from 'react-native';
 import {
   Button, Text, TextInput, HelperText,
 } from 'react-native-paper';
+import axios from 'axios';
 import Logo from '../components/Logo';
 import { GoogleLoginButton } from '../components/LoginButton';
+import { instance, configureAxiosHeaders } from '../utils/httpClient';
 
 const styles = StyleSheet.create({
   surface: {
@@ -41,7 +43,7 @@ const RegistrationScreen = () => {
   const setEmail = (text:string) => _setEmail(text);
   const setErrorList = (errors: string[]) => _setErrors(errors);
 
-  const handleLogin = () => {
+  const validate = () => {
     let errorList : string[] = [];
 
     if (!userName) {
@@ -61,10 +63,23 @@ const RegistrationScreen = () => {
     }
 
     setErrorList(errorList);
+  };
+
+  const handleLogin = () => {
+    validate();
 
     if (errorMsgs.length === 0) {
-      // Calling backend
-      // TO DO
+      instance.post('/register', {
+        first_name: userName,
+        last_name: 'mock',
+        email,
+        is_admin: false,
+      }).then((response) => {
+        console.log(response);
+      }, (error) => {
+        console.log('failed');
+        console.log(error);
+      });
     }
   };
 
@@ -108,7 +123,7 @@ const RegistrationScreen = () => {
         </View>
         <View style={styles.buttonWrapper}>
           <HelperText type="error" visible={hasErrors()}>
-            {errorMsgs}
+            {errorMsgs.join('\r\n')}
           </HelperText>
         </View>
       </View>
