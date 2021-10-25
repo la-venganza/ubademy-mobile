@@ -83,7 +83,7 @@ const RegistrationScreen = () => {
     }
   };
 
-  const hasErrors = () => errorMsgs.length !== 0;
+  const hasErrors = () => errorMsgs.length;
 
   return (
     <View style={styles.wrapper}>
