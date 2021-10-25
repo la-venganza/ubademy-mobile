@@ -1,169 +1,13 @@
 import React, { useState } from 'react';
 import {
-  StyleSheet, View, Image, ScrollView, Text,
+  StyleSheet, View, ScrollView, Text,
 } from 'react-native';
 import {
-  Title, TextInput, Button, Divider, Surface, IconButton, Menu,
+  Title, TextInput, Button, Divider, Surface, IconButton, Menu, List,
 } from 'react-native-paper';
-import * as ImagePicker from 'expo-image-picker';
 import SlideInEditor from '../components/SlideInEditor/index';
-import ImagePlaceholder from '../assets/images/image-placeholder.jpg';
-import VideoPlaceholder from '../assets/images/video-placeholder.png';
-
-const CourseCreationScreen = () => {
-  const [media, setMedia] = useState(null);
-  const [activeSlide, setActiveslide] = useState({ slideType: 'image' });
-  const [slides, setSlides] = useState([]);
-  const [courseTitle, setCourseTitle] = useState('');
-  const [slideTitle, setSlideTitle] = useState('');
-  const [menuVisible, setMenuVisible] = useState(false);
-
-  const submit = () => console.log('123');
-
-  const clearActiveSlide = () => {
-    setMedia(null);
-    setActiveslide({ slideType: 'image' });
-    setSlideTitle('');
-  };
-
-  const selectSlides = (id: Number) => {
-    const slide = slides.filter((slide) => slide.id === id)[0];
-    setActiveslide(slide);
-    setMedia(slide.media);
-    setSlideTitle(slide.title);
-  };
-
-  const deleteSlide = (id: Number) => {
-    setSlides(slides.filter((slide) => slide.id !== id));
-  };
-
-  const handleChoosePhoto = async () => {
-    const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
-    const result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: activeSlide.slideType === 'image' ? ImagePicker.MediaTypeOptions.Images : ImagePicker.MediaTypeOptions.Videos,
-      allowsEditing: true,
-      aspect: [4, 3],
-      quality: 1,
-    });
-
-    if (!result.cancelled) {
-      setMedia(result);
-    }
-  };
-
-  const handleSave = () => {
-    if (activeSlide.id) {
-      if (!media || !slideTitle.length) {
-        return console.log('No media no save!');
-      }
-      const index = slides.findIndex((slide) => slide.id === activeSlide.id);
-      activeSlide.media = media;
-      activeSlide.title = slideTitle;
-      if (index) {
-        const auxSlides = [...slides];
-        auxSlides[index] = activeSlide;
-        setSlides(auxSlides);
-        setActiveslide({ slideType: 'image' });
-        setMedia(null);
-        setSlideTitle('');
-      }
-    } else {
-      const slide = {
-        id: Date.now(),
-        title: slideTitle,
-        media,
-        slideType: activeSlide.slideType,
-      };
-      setSlides([...slides, slide]);
-      setActiveslide({ slideType: 'image' });
-      setMedia(null);
-      setSlideTitle('');
-    }
-  };
-
-  const renderDefaultImage = (slideType) => {
-    console.log(slideType);
-    switch (slideType) {
-      case 'video':
-        return <View><Image source={VideoPlaceholder} style={styles.image} resizeMethod="resize" resizeMode="contain" /></View>;
-      case 'image':
-        return <View><Image source={ImagePlaceholder} style={styles.image} style={styles.image} resizeMethod="resize" resizeMode="contain" /></View>;
-      default:
-        return null;
-    }
-  };
-
-  const closeMenu = () => setMenuVisible(false);
-  const openMenu = () => setMenuVisible(true);
-
-  const handleAdd = (mediaType: string) => {
-    clearActiveSlide();
-    console.log('add', mediaType);
-    setActiveslide({ slideType: mediaType });
-    // activeSlide.slideType = mediaType;
-    closeMenu();
-  };
-
-  const renderMenu = () => (
-    <Menu
-      visible={menuVisible}
-      onDismiss={closeMenu}
-      anchor={(
-        <IconButton
-          icon="plus-box"
-          size={20}
-          onPress={openMenu}
-        />
-)}
-    >
-      <Menu.Item onPress={() => handleAdd('video')} title="Add video slide" />
-      <Menu.Item onPress={() => handleAdd('image')} title="Add image slide" />
-    </Menu>
-  );
-
-  return (
-    <ScrollView style={styles.mainWrapper}>
-      <Title>Course creation!</Title>
-      <TextInput mode="flat" value={courseTitle} placeholder="Course title" onChangeText={(text) => setCourseTitle(text)} />
-      <Surface style={styles.surface}>
-        <View>
-          <TextInput mode="flat" value={slideTitle} placeholder="Slide title" onChangeText={(text) => setSlideTitle(text)} />
-          {media ? (
-            <>
-              <Image
-                source={{ uri: media.uri }}
-                style={styles.image}
-                resizeMethod="resize"
-                resizeMode="contain"
-              />
-            </>
-          ) : renderDefaultImage(activeSlide.slideType)}
-        </View>
-        <View>
-          <Button mode="contained" labelStyle={{ color: 'white' }} onPress={handleChoosePhoto}>Choose Media</Button>
-        </View>
-      </Surface>
-      <View style={styles.menuWrapper}>
-        <Button onPress={clearActiveSlide}>Cancel</Button>
-        <Button mode="contained" labelStyle={{ color: 'white' }} onPress={handleSave}>Save</Button>
-      </View>
-      <Divider style={styles.divide} />
-      <View style={styles.addWrapper}>
-        {renderMenu()}
-      </View>
-      <Surface style={styles.surface}>
-        <ScrollView>
-          {
-            slides.length
-              ? slides.map((slide) => <SlideInEditor id={slide.id} key={slide.id} title={slide.title} slideType={slide.slideType} onDelete={deleteSlide} onSelect={selectSlides} />)
-              : <Text>No slides for this course yet!</Text>
-          }
-        </ScrollView>
-      </Surface>
-      <Button onPress={submit}>Submit</Button>
-    </ScrollView>
-  );
-};
+import SlideEditor from '../components/SlideEditor';
+import ISlide from '../interfaces/ISlide';
 
 const styles = StyleSheet.create({
   mainWrapper: {
@@ -200,5 +44,115 @@ const styles = StyleSheet.create({
     color: 'white',
   },
 });
+
+const CourseCreationScreen = () => {
+  const [activeSlide, setActiveslide] = useState<ISlide>({ slideType: 'image', title: '' });
+  const [slides, setSlides] = useState<ISlide[]>([]);
+  const [courseTitle, setCourseTitle] = useState('');
+  const [courseDescription, setCourseDescription] = useState('');
+  const [menuVisible, setMenuVisible] = useState(false);
+
+  const submit = () => console.log('123');
+
+  const clearActiveSlide = (mediaType:string = 'image') => {
+    setActiveslide({ slideType: mediaType, title: '' });
+  };
+
+  const selectSlides = (id: number) => {
+    const slide = slides.filter((slide:ISlide) => slide.id === id)[0];
+    setActiveslide(slide);
+  };
+
+  const deleteSlide = (id: number) => {
+    setSlides(slides.filter((slide:ISlide) => slide.id !== id));
+  };
+
+  const handleSave = () => {
+    if (activeSlide.id) {
+      if (!activeSlide.media || !(activeSlide.title && activeSlide.title.length)) {
+        return console.log('No media no save!');
+      }
+      const index = slides.findIndex((slide:ISlide) => slide.id === activeSlide.id);
+      if (index >= 0) {
+        const auxSlides = [...slides];
+        auxSlides[index] = activeSlide;
+        setSlides(auxSlides);
+        clearActiveSlide();
+      }
+    } else {
+      const slide = {
+        id: Date.now(),
+        ...activeSlide,
+      };
+      setSlides([...slides, slide]);
+      clearActiveSlide();
+    }
+  };
+
+  const closeMenu = () => setMenuVisible(false);
+  const openMenu = () => setMenuVisible(true);
+
+  const handleAdd = (mediaType: string) => {
+    clearActiveSlide(mediaType);
+    closeMenu();
+  };
+
+  const cancelAll = () => console.log('a');
+
+  const renderMenu = () => (
+    <Menu
+      visible={menuVisible}
+      onDismiss={closeMenu}
+      anchor={(
+        <IconButton
+          icon="plus-box"
+          size={20}
+          onPress={openMenu}
+        />
+)}
+    >
+      <Menu.Item onPress={() => handleAdd('video')} title="Add video slide" />
+      <Menu.Item onPress={() => handleAdd('image')} title="Add image slide" />
+    </Menu>
+  );
+
+  return (
+    <ScrollView style={styles.mainWrapper}>
+      <Title>Course creation!</Title>
+      <List.AccordionGroup>
+        <List.Accordion title="Course information" id="1">
+          <TextInput mode="flat" value={courseTitle} placeholder="Course title" onChangeText={(text) => setCourseTitle(text)} />
+          <TextInput mode="flat" value={courseDescription} multiline numberOfLines={4} placeholder="Course description" onChangeText={(text) => setCourseDescription(text)} />
+        </List.Accordion>
+        <List.Accordion title="Slide Editor" id="2">
+          <SlideEditor slide={activeSlide} setSlide={setActiveslide} />
+          <View style={styles.menuWrapper}>
+            <Button onPress={clearActiveSlide}>Cancel</Button>
+            <Button mode="contained" labelStyle={{ color: 'white' }} onPress={handleSave}>Save</Button>
+          </View>
+        </List.Accordion>
+        <Divider style={styles.divide} />
+        <List.Accordion title="Slide list" id="3">
+          <View style={styles.addWrapper}>
+            {renderMenu()}
+          </View>
+          <Surface style={styles.surface}>
+            <ScrollView>
+              {
+            slides.length
+              ? slides.map((slide) => <SlideInEditor id={slide.id} key={slide.id} title={slide.title} slideType={slide.slideType} onDelete={deleteSlide} onSelect={selectSlides} />)
+              : <Text>No slides for this course yet!</Text>
+          }
+            </ScrollView>
+          </Surface>
+        </List.Accordion>
+      </List.AccordionGroup>
+      <View style={styles.menuWrapper}>
+        <Button onPress={cancelAll}>Cancel</Button>
+        <Button mode="contained" labelStyle={{ color: 'white' }} onPress={submit}>Submit</Button>
+      </View>
+    </ScrollView>
+  );
+};
 
 export default CourseCreationScreen;
