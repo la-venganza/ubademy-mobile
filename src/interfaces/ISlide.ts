@@ -5,6 +5,7 @@ interface ISlide {
     media?: any;
     title?: string;
     slideType?: ESlideType;
+    position?: number;
 }
 
 export default ISlide;

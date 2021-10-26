@@ -1,6 +1,8 @@
 enum SlideType {
     Video = 'video',
-    Image = 'image'
+    Image = 'image',
+    Exam = 'exam',
+    Text = 'text'
 }
 
 export default SlideType;

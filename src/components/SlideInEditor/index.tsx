@@ -12,6 +12,8 @@ interface ISlide {
     onSelect: (number) => void;
     onDelete: (number) => void;
     slideType: String;
+    onLongPress: (number) => void;
+    disabled: boolean;
 }
 
 const styles = StyleSheet.create(
@@ -28,7 +30,7 @@ const styles = StyleSheet.create(
   },
 );
 const SlideInEditor = ({
-  id, title, onSelect, onDelete, slideType,
+  id, title, onSelect, onDelete, slideType, onLongPress, disabled,
 }: ISlide) => {
   const renderType = () => {
     switch (slideType) {
@@ -41,7 +43,7 @@ const SlideInEditor = ({
     }
   };
   return (
-    <View style={styles.view}>
+    <TouchableOpacity style={styles.view} onPressIn={onLongPress} disabled={disabled}>
       <IconButton
         icon="close"
         size={20}
@@ -53,7 +55,7 @@ const SlideInEditor = ({
           renderType()
     }
       </TouchableOpacity>
-    </View>
+    </TouchableOpacity>
   );
 };
 

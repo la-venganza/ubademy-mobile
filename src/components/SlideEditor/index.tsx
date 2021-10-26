@@ -25,11 +25,18 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     marginBottom: 0,
   },
+  textEditor: {
+    marginTop: 25,
+  },
 });
 
 const SlideEditor = ({ slide, setSlide }: Props) => {
   const setSlideTitle = (title: string) => {
     setSlide({ ...slide, title });
+  };
+
+  const handleTextContentChange = (text: string) => {
+    setSlide({ ...slide, textContent: text });
   };
 
   const handleChoosePhoto = async () => {
@@ -57,23 +64,40 @@ const SlideEditor = ({ slide, setSlide }: Props) => {
     }
   };
 
+  const renderImageVideoEditor = () => (
+    <>
+      {slide.media ? (
+        <>
+          <Image
+            source={{ uri: slide.media.uri }}
+            style={styles.image}
+            resizeMethod="resize"
+            resizeMode="contain"
+          />
+        </>
+      ) : renderDefaultImage(slide.slideType)}
+      <Button mode="contained" labelStyle={{ color: 'white' }} onPress={handleChoosePhoto}>Choose Media</Button>
+    </>
+  );
+
+  const renderEditor = () => {
+    switch (slide.slideType) {
+      case 'text':
+        return <TextInput multiline numberOfLines={4} value={slide.textContent} onChangeText={handleTextContentChange} placeholder="Enter slide text" style={styles.textEditor} />;
+      case 'video':
+      case 'image':
+      default:
+        return renderImageVideoEditor();
+    }
+  };
+
   return (
     <Surface style={styles.surface}>
       <View>
         <TextInput mode="flat" value={slide.title} placeholder="Slide title" onChangeText={(text) => setSlideTitle(text)} />
-        {slide.media ? (
-          <>
-            <Image
-              source={{ uri: slide.media.uri }}
-              style={styles.image}
-              resizeMethod="resize"
-              resizeMode="contain"
-            />
-          </>
-        ) : renderDefaultImage(slide.slideType)}
       </View>
       <View>
-        <Button mode="contained" labelStyle={{ color: 'white' }} onPress={handleChoosePhoto}>Choose Media</Button>
+        {renderEditor()}
       </View>
     </Surface>
   );

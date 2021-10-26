@@ -2,3 +2,4 @@ node_modules/
 .expo/
 cache/
 **/__snapshots__/
+coverage/

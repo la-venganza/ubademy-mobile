@@ -5,9 +5,16 @@ import {
 import {
   Title, TextInput, Button, Divider, Surface, IconButton, Menu, List,
 } from 'react-native-paper';
+import DraggableFlatList from 'react-native-draggable-flatlist';
 import SlideInEditor from '../components/SlideInEditor/index';
 import SlideEditor from '../components/SlideEditor';
 import ISlide from '../interfaces/ISlide';
+
+interface expandables {
+  courseInfo: boolean;
+  slideEditor: boolean;
+  slideList: boolean;
+}
 
 const styles = StyleSheet.create({
   mainWrapper: {
@@ -45,12 +52,16 @@ const styles = StyleSheet.create({
   },
 });
 
+const IDefaultAccordionStatus = { courseInfo: true, slideEditor: false, slideList: false };
+enum Sections {courseInfo = 1, slideEditor = 2, slideList = 3 }
+
 const CourseCreationScreen = () => {
   const [activeSlide, setActiveslide] = useState<ISlide>({ slideType: 'image', title: '' });
   const [slides, setSlides] = useState<ISlide[]>([]);
   const [courseTitle, setCourseTitle] = useState('');
   const [courseDescription, setCourseDescription] = useState('');
   const [menuVisible, setMenuVisible] = useState(false);
+  const [isExpanded, setIsExpanded] = useState<expandables>(IDefaultAccordionStatus);
 
   const submit = () => console.log('123');
 
@@ -67,6 +78,14 @@ const CourseCreationScreen = () => {
     setSlides(slides.filter((slide:ISlide) => slide.id !== id));
   };
 
+  const handleAccordionClick = (section: number) => {
+    setIsExpanded({
+      courseInfo: section === Sections.courseInfo && !isExpanded.courseInfo,
+      slideEditor: section === Sections.slideEditor && !isExpanded.slideEditor,
+      slideList: section === Sections.slideList && !isExpanded.slideList,
+    });
+  };
+
   const handleSave = () => {
     if (activeSlide.id) {
       if (!activeSlide.media || !(activeSlide.title && activeSlide.title.length)) {
@@ -78,14 +97,17 @@ const CourseCreationScreen = () => {
         auxSlides[index] = activeSlide;
         setSlides(auxSlides);
         clearActiveSlide();
+        handleAccordionClick(Sections.slideList);
       }
     } else {
       const slide = {
-        id: Date.now(),
         ...activeSlide,
+        id: Date.now(),
+        position: slides.length,
       };
       setSlides([...slides, slide]);
       clearActiveSlide();
+      handleAccordionClick(Sections.slideList);
     }
   };
 
@@ -95,9 +117,19 @@ const CourseCreationScreen = () => {
   const handleAdd = (mediaType: string) => {
     clearActiveSlide(mediaType);
     closeMenu();
+    handleAccordionClick(Sections.slideEditor);
   };
 
   const cancelAll = () => console.log('a');
+
+  const swap = ({ from, to }) => {
+    const aux = slides[from];
+    const auxArray = [...slides];
+    auxArray.splice(from, 1);
+    auxArray.splice(to, 0, aux);
+    auxArray.forEach((slide:ISlide, index:number) => { slide.position = index; });
+    setSlides(auxArray);
+  };
 
   const renderMenu = () => (
     <Menu
@@ -113,18 +145,32 @@ const CourseCreationScreen = () => {
     >
       <Menu.Item onPress={() => handleAdd('video')} title="Add video slide" />
       <Menu.Item onPress={() => handleAdd('image')} title="Add image slide" />
+      <Menu.Item onPress={() => handleAdd('text')} title="Add text slide" />
     </Menu>
+  );
+
+  const renderItem = ({ item, drag, isActive }: RenderItemParams<Item>) => (
+    <SlideInEditor
+      id={item.id}
+      key={item.id}
+      title={item.title}
+      slideType={item.slideType}
+      onDelete={deleteSlide}
+      onSelect={selectSlides}
+      onLongPress={drag}
+      disabled={isActive}
+    />
   );
 
   return (
     <ScrollView style={styles.mainWrapper}>
       <Title>Course creation!</Title>
-      <List.AccordionGroup>
-        <List.Accordion title="Course information" id="1">
+      <List.Section>
+        <List.Accordion title="Course information" id="1" expanded={isExpanded.courseInfo} onPress={() => handleAccordionClick(Sections.courseInfo)}>
           <TextInput mode="flat" value={courseTitle} placeholder="Course title" onChangeText={(text) => setCourseTitle(text)} />
           <TextInput mode="flat" value={courseDescription} multiline numberOfLines={4} placeholder="Course description" onChangeText={(text) => setCourseDescription(text)} />
         </List.Accordion>
-        <List.Accordion title="Slide Editor" id="2">
+        <List.Accordion title="Slide Editor" id="2" expanded={isExpanded.slideEditor} onPress={() => handleAccordionClick(Sections.slideEditor)}>
           <SlideEditor slide={activeSlide} setSlide={setActiveslide} />
           <View style={styles.menuWrapper}>
             <Button onPress={clearActiveSlide}>Cancel</Button>
@@ -132,21 +178,29 @@ const CourseCreationScreen = () => {
           </View>
         </List.Accordion>
         <Divider style={styles.divide} />
-        <List.Accordion title="Slide list" id="3">
+        <List.Accordion title="Slide list" id="3" expanded={isExpanded.slideList} onPress={() => handleAccordionClick(Sections.slideList)}>
           <View style={styles.addWrapper}>
             {renderMenu()}
           </View>
           <Surface style={styles.surface}>
             <ScrollView>
+
               {
             slides.length
-              ? slides.map((slide) => <SlideInEditor id={slide.id} key={slide.id} title={slide.title} slideType={slide.slideType} onDelete={deleteSlide} onSelect={selectSlides} />)
+              ? (
+                <DraggableFlatList
+                  data={slides}
+                  onDragEnd={swap}
+                  keyExtractor={(slide) => slide.id}
+                  renderItem={renderItem}
+                />
+              )
               : <Text>No slides for this course yet!</Text>
           }
             </ScrollView>
           </Surface>
         </List.Accordion>
-      </List.AccordionGroup>
+      </List.Section>
       <View style={styles.menuWrapper}>
         <Button onPress={cancelAll}>Cancel</Button>
         <Button mode="contained" labelStyle={{ color: 'white' }} onPress={submit}>Submit</Button>
