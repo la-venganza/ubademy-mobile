@@ -5,6 +5,6 @@ export const configureAxiosHeaders = (token:string) => {
   Axios.defaults.headers['X-Auth-Token'] = token;
 };
 
-export const instance = Axios.create({
+export default Axios.create({
   baseURL: `${Constants.manifest.extra.REACT_APP_BACKEND_URL}/`,
 });

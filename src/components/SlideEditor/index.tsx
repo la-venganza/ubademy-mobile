@@ -1,10 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { View, StyleSheet, Image } from 'react-native';
-import { Surface, TextInput, Button } from 'react-native-paper';
+import {
+  Surface, TextInput, Button, Text,
+} from 'react-native-paper';
 import * as ImagePicker from 'expo-image-picker';
+import * as DocumentPicker from 'expo-document-picker';
 import ISlide from '../../interfaces/ISlide';
 import ImagePlaceholder from '../../assets/images/image-placeholder.jpg';
 import VideoPlaceholder from '../../assets/images/video-placeholder.png';
+import PDFPlaceholder from '../../assets/images/pdf-placeholder.png';
 
 interface Props {
     slide: ISlide;
@@ -28,6 +32,11 @@ const styles = StyleSheet.create({
   textEditor: {
     marginTop: 25,
   },
+  pdfName: {
+    marginTop: 15,
+    marginBottom: 15,
+    alignSelf: 'center',
+  },
 });
 
 const SlideEditor = ({ slide, setSlide }: Props) => {
@@ -49,6 +58,13 @@ const SlideEditor = ({ slide, setSlide }: Props) => {
     });
 
     if (!result.cancelled) {
+      setSlide({ ...slide, media: result });
+    }
+  };
+
+  const handleChoosePdf = async () => {
+    const result = await DocumentPicker.getDocumentAsync({ type: 'application/pdf' });
+    if (result.type !== 'cancel') {
       setSlide({ ...slide, media: result });
     }
   };
@@ -80,10 +96,20 @@ const SlideEditor = ({ slide, setSlide }: Props) => {
     </>
   );
 
+  const renderPDFEditor = () => (
+    <>
+      <Image source={PDFPlaceholder} resizeMethod="resize" resizeMode="contain" style={styles.image} />
+      { slide.media && slide.media.name && <View><Text style={styles.pdfName}>{slide.media.name}</Text></View>}
+      <Button mode="contained" labelStyle={{ color: 'white' }} onPress={handleChoosePdf}>Choose PDF</Button>
+    </>
+  );
+
   const renderEditor = () => {
     switch (slide.slideType) {
       case 'text':
         return <TextInput multiline numberOfLines={4} value={slide.textContent} onChangeText={handleTextContentChange} placeholder="Enter slide text" style={styles.textEditor} />;
+      case 'PDF':
+        return renderPDFEditor();
       case 'video':
       case 'image':
       default:

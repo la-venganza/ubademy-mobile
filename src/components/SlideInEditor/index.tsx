@@ -5,6 +5,7 @@ import {
 import { Title, IconButton } from 'react-native-paper';
 import ImagePlaceholder from '../../assets/images/image-placeholder.jpg';
 import VideoPlaceholder from '../../assets/images/video-placeholder.png';
+import PDFPlaceholder from '../../assets/images/pdf-placeholder.png';
 
 interface ISlide {
     id: Number;
@@ -38,6 +39,8 @@ const SlideInEditor = ({
         return <View><Image source={VideoPlaceholder} /></View>;
       case 'image':
         return <View><Image source={ImagePlaceholder} style={styles.image} /></View>;
+      case 'PDF':
+        return <View><Image source={PDFPlaceholder} resizeMethod="resize" resizeMode="contain" style={styles.image} /></View>;
       default:
         return null;
     }

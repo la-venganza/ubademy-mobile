@@ -9,6 +9,7 @@ import DraggableFlatList from 'react-native-draggable-flatlist';
 import SlideInEditor from '../components/SlideInEditor/index';
 import SlideEditor from '../components/SlideEditor';
 import ISlide from '../interfaces/ISlide';
+import CourseService from '../services/courseService';
 
 interface expandables {
   courseInfo: boolean;
@@ -62,8 +63,15 @@ const CourseCreationScreen = () => {
   const [courseDescription, setCourseDescription] = useState('');
   const [menuVisible, setMenuVisible] = useState(false);
   const [isExpanded, setIsExpanded] = useState<expandables>(IDefaultAccordionStatus);
+  const [courseId, setCourseId] = useState(-1);
 
-  const submit = () => console.log('123');
+  const submit = async () => {
+    const response = await CourseService.createCourse(courseTitle, courseDescription, slides);
+    if (!response) {
+      // Alert
+    }
+    setCourseId(response.courseId);
+  };
 
   const clearActiveSlide = (mediaType:string = 'image') => {
     setActiveslide({ slideType: mediaType, title: '' });
@@ -145,7 +153,7 @@ const CourseCreationScreen = () => {
     >
       <Menu.Item onPress={() => handleAdd('video')} title="Add video slide" />
       <Menu.Item onPress={() => handleAdd('image')} title="Add image slide" />
-      <Menu.Item onPress={() => handleAdd('text')} title="Add text slide" />
+      <Menu.Item onPress={() => handleAdd('PDF')} title="Add PDF slide" />
     </Menu>
   );
 
