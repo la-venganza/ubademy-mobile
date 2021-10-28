@@ -1,11 +1,12 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   StyleSheet, View, ScrollView, Text,
 } from 'react-native';
 import {
-  Title, TextInput, Button, Divider, Surface, IconButton, Menu, List,
+  Title, TextInput, Button, Divider, Surface, IconButton, Menu, List, Snackbar,
 } from 'react-native-paper';
 import DraggableFlatList from 'react-native-draggable-flatlist';
+import { white } from 'react-native-paper/lib/typescript/styles/colors';
 import SlideInEditor from '../components/SlideInEditor/index';
 import SlideEditor from '../components/SlideEditor';
 import ISlide from '../interfaces/ISlide';
@@ -51,26 +52,64 @@ const styles = StyleSheet.create({
   buttonContained: {
     color: 'white',
   },
+  snackbarSuccess: {
+    backgroundColor: 'green',
+    color: 'white',
+  },
+  snackbarError: {
+    backgroundColor: 'red',
+    color: 'white',
+  },
 });
 
 const IDefaultAccordionStatus = { courseInfo: true, slideEditor: false, slideList: false };
 enum Sections {courseInfo = 1, slideEditor = 2, slideList = 3 }
 
-const CourseCreationScreen = () => {
+const CourseCreationScreen = ({ route, navigation }) => {
+  const { id } = route !== undefined && route.params;
   const [activeSlide, setActiveslide] = useState<ISlide>({ slideType: 'image', title: '' });
   const [slides, setSlides] = useState<ISlide[]>([]);
   const [courseTitle, setCourseTitle] = useState('');
   const [courseDescription, setCourseDescription] = useState('');
   const [menuVisible, setMenuVisible] = useState(false);
   const [isExpanded, setIsExpanded] = useState<expandables>(IDefaultAccordionStatus);
-  const [courseId, setCourseId] = useState(-1);
+  const [courseId, setCourseId] = useState(id);
+  const [snackbar, setSnackbar] = useState({ show: false, message: '', status: 'ok' });
+
+  useEffect(() => {
+    async function getCourse() {
+      if (id) {
+        const response = await CourseService.getCourse(id);
+        if (response) {
+          setCourseTitle(response.title);
+          setCourseDescription(response.description);
+          setSlides(response.slides);
+        } else {
+          setSnackbar({ show: true, message: 'Unable to fetch course!', status: 'error' });
+        }
+      }
+    }
+
+    getCourse();
+  }, []);
 
   const submit = async () => {
-    const response = await CourseService.createCourse(courseTitle, courseDescription, slides);
-    if (!response) {
-      // Alert
+    if (courseId) {
+      const response = await CourseService.updateCourse(id, courseTitle, courseDescription, slides);
+      if (!response) {
+        setSnackbar({ show: true, message: 'There was an error while updating the course!', status: 'error' });
+      } else {
+        setSnackbar({ show: true, message: 'Course successfully updated!', status: 'ok' });
+      }
+    } else {
+      const response = await CourseService.createCourse(courseTitle, courseDescription, slides);
+      if (!response) {
+        setSnackbar({ show: true, message: 'There was an error while creating the course!', status: 'error' });
+      } else {
+        setCourseId(response.courseId);
+        setSnackbar({ show: true, message: 'Course successfully created!', status: 'ok' });
+      }
     }
-    setCourseId(response.courseId);
   };
 
   const clearActiveSlide = (mediaType:string = 'image') => {
@@ -130,15 +169,6 @@ const CourseCreationScreen = () => {
 
   const cancelAll = () => console.log('a');
 
-  const swap = ({ from, to }) => {
-    const aux = slides[from];
-    const auxArray = [...slides];
-    auxArray.splice(from, 1);
-    auxArray.splice(to, 0, aux);
-    auxArray.forEach((slide:ISlide, index:number) => { slide.position = index; });
-    setSlides(auxArray);
-  };
-
   const renderMenu = () => (
     <Menu
       visible={menuVisible}
@@ -169,6 +199,25 @@ const CourseCreationScreen = () => {
       disabled={isActive}
     />
   );
+
+  const renderSnackbar = () => {
+    const style = snackbar.status === 'ok' ? styles.snackbarSuccess : styles.snackbarError;
+    return (
+      <Snackbar
+        visible={snackbar.show}
+        onDismiss={() => setSnackbar({ show: false })}
+        action={{
+          label: 'close',
+          onPress: () => {
+            setSnackbar({ show: false });
+          },
+        }}
+        style={style}
+      >
+        {snackbar.message}
+      </Snackbar>
+    );
+  };
 
   return (
     <ScrollView style={styles.mainWrapper}>
@@ -213,6 +262,7 @@ const CourseCreationScreen = () => {
         <Button onPress={cancelAll}>Cancel</Button>
         <Button mode="contained" labelStyle={{ color: 'white' }} onPress={submit}>Submit</Button>
       </View>
+      {renderSnackbar()}
     </ScrollView>
   );
 };

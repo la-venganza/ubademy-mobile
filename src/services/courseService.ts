@@ -2,7 +2,7 @@ import ISlide from '../interfaces/ISlide';
 import ICourse from '../interfaces/ICourse';
 import HTTPClient from '../utils/httpClient';
 
-const createCourse = async (courseTitle:string, courseDescription:string, slides:Array<ISlide>) => {
+const formatCourse = (courseTitle:string, courseDescription:string, slides:Array<ISlide>) => {
   const course:ICourse = {
     title: courseTitle,
     description: courseDescription,
@@ -16,8 +16,12 @@ const createCourse = async (courseTitle:string, courseDescription:string, slides
     title: element.title,
     multimedia_type: element.slideType,
   }));
+  return course;
+};
 
+const createCourse = async (courseTitle:string, courseDescription:string, slides:Array<ISlide>) => {
   try {
+    const course = formatCourse(courseTitle, courseDescription, slides);
     const response = await HTTPClient.post('/course', course);
     return response.data;
   } catch (error) {
@@ -26,11 +30,29 @@ const createCourse = async (courseTitle:string, courseDescription:string, slides
   }
 };
 
-const updateCourse = () => {
+const updateCourse = async (id:number, courseTitle:string, courseDescription:string, slides:Array<ISlide>) => {
+  try {
+    const course = formatCourse(courseTitle, courseDescription, slides);
+    const response = await HTTPClient.patch(`/course/${id}`, course);
+    return response.data;
+  } catch (error) {
+    console.log(error);
+    return null;
+  }
+};
 
+const getCourse = async (id) => {
+  try {
+    const response = await HTTPClient.get(`/course/${id}`);
+    return response.data;
+  } catch (error) {
+    console.log(error);
+    return null;
+  }
 };
 
 export default {
   createCourse,
   updateCourse,
+  getCourse,
 };
