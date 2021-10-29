@@ -62,13 +62,13 @@ const RegistrationScreen = () => {
       errorList = errorList.concat(['Passwords should match.']);
     }
 
-    setErrorList(errorList);
+    return (errorList);
   };
 
   const handleLogin = () => {
-    validate();
-
-    if (errorMsgs.length === 0) {
+    const errors = validate();
+    setErrorList(errors);
+    if (errors && errors.length === 0) {
       instance.post('/register', {
         first_name: userName,
         last_name: 'mock',
