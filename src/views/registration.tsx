@@ -68,7 +68,7 @@ const RegistrationScreen = () => {
   const handleLogin = () => {
     const errors = validate();
     setErrorList(errors);
-    if (errorMsgs && errorMsgs.length === 0) {
+    if (errors && errors.length === 0) {
       instance.post('/register', {
         first_name: userName,
         last_name: 'mock',
