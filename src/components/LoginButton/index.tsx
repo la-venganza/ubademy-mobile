@@ -5,9 +5,13 @@ import {
 import * as Linking from 'expo-linking';
 import * as WebBrowser from 'expo-web-browser';
 import Constants from 'expo-constants';
+import * as Google from 'expo-google-app-auth';
+import * as AppAuth from 'expo-app-auth';
+import { getAuth, GoogleAuthProvider, signInWithCredential } from 'firebase/auth';
 import GoogleLogo from '../../assets/images/google-logo.png';
 import ColorPalette from '../../styles/colors';
 import { AuthContext } from '../../context/AuthContext';
+import * as GoogleAuthentication from '../../actions/googleAuthentication';
 
 const styles = StyleSheet.create({
   googleButton: {
@@ -61,12 +65,22 @@ export const GoogleLoginButton = () => {
     const authUrl = `${Constants.manifest.extra.REACT_APP_BACKEND_URL}/auth?redirect=${encodeURIComponent(redirectUrl)}`;
     addLinkingListener();
     try {
-      const authResult = await WebBrowser.openAuthSessionAsync(authUrl, redirectUrl);
-      console.log(authResult);
-      const jwt = authResult.url.match(/jwt=([^&#]*)/);
-      const userName = authResult.url.match(/name=([^&#]*)/);
-      auth.setAuth(jwt[1], userName[1]);
-      console.log(jwt[1], userName);
+      const result = await GoogleAuthentication.signInWithGoogleAsync();
+      const jwt = result.accessToken;
+      const userName = result.user.givenName;
+      const provider = new GoogleAuthProvider();
+      const cred = GoogleAuthProvider.credential(
+        result.idToken,
+        result.accessToken,
+      );
+
+      const authFb = getAuth();
+      const fbCred = await signInWithCredential(authFb, cred);
+      console.log('Firebase credentials');
+      console.log(fbCred);
+
+      auth.setAuth(jwt, userName);
+      console.log(jwt, userName);
     } catch (err) {
       console.log('ERROR:', err);
     }
