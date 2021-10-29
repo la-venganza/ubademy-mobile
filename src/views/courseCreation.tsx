@@ -6,7 +6,6 @@ import {
   Title, TextInput, Button, Divider, Surface, IconButton, Menu, List, Snackbar,
 } from 'react-native-paper';
 import DraggableFlatList from 'react-native-draggable-flatlist';
-import { white } from 'react-native-paper/lib/typescript/styles/colors';
 import SlideInEditor from '../components/SlideInEditor/index';
 import SlideEditor from '../components/SlideEditor';
 import ISlide from '../interfaces/ISlide';
@@ -167,7 +166,7 @@ const CourseCreationScreen = ({ route, navigation }) => {
     handleAccordionClick(Sections.slideEditor);
   };
 
-  const cancelAll = () => console.log('a');
+  const cancelAll = () => navigation.navigate('Home');
 
   const renderMenu = () => (
     <Menu

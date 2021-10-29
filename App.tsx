@@ -29,10 +29,14 @@ export default () => (
             {console.log(auth)}
             <Stack.Navigator>
               { auth.token
-                ? <Stack.Screen name="Home" component={HomeScreen} />
+                ? (
+                  <>
+                    <Stack.Screen name="Home" component={HomeScreen} />
+                    <Stack.Screen name="Course" component={CourseCreationScreen} initialParams={{ id: 0 }} />
+                  </>
+                )
                 : (
                   <>
-                    <Stack.Screen name="Course" component={CourseCreationScreen} initialParams={{ id: 0 }} />
                     <Stack.Screen name="Login" component={LoginScreen} />
                     <Stack.Screen name="Registration" component={RegistrationScreen} />
                   </>
