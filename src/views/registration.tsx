@@ -1,8 +1,12 @@
 import React, { useState } from 'react';
 import { StyleSheet, View } from 'react-native';
-import { Button, Text, TextInput } from 'react-native-paper';
+import {
+  Button, Text, TextInput, HelperText,
+} from 'react-native-paper';
+import axios from 'axios';
 import Logo from '../components/Logo';
 import { GoogleLoginButton } from '../components/LoginButton';
+import { instance, configureAxiosHeaders } from '../utils/httpClient';
 
 const styles = StyleSheet.create({
   surface: {
@@ -26,15 +30,61 @@ const styles = StyleSheet.create({
 });
 
 const RegistrationScreen = () => {
+  const errorMessagesInitial : string[] = [];
   const [userName, _setUserName] = useState('');
   const [password, _setPassword] = useState('');
   const [passwordConfirm, _setPasswordConfirm] = useState('');
   const [email, _setEmail] = useState('');
+  const [errorMsgs, _setErrors] = useState(errorMessagesInitial);
 
   const setUserName = (name: string) => _setUserName(name);
   const setPassword = (text: string) => _setPassword(text);
   const setPasswordConfirm = (text: string) => _setPasswordConfirm(text);
   const setEmail = (text:string) => _setEmail(text);
+  const setErrorList = (errors: string[]) => _setErrors(errors);
+
+  const validate = () => {
+    let errorList : string[] = [];
+
+    if (!userName) {
+      errorList = errorList.concat(['User name empty.']);
+    }
+
+    if (!password) {
+      errorList = errorList.concat(['Password empty.']);
+    }
+
+    if (!email) {
+      errorList = errorList.concat(['Email empty.']);
+    }
+
+    if (!(password === passwordConfirm)) {
+      errorList = errorList.concat(['Passwords should match.']);
+    }
+
+    return (errorList);
+  };
+
+  const handleLogin = () => {
+    const errors = validate();
+    setErrorList(errors);
+    if (errors && errors.length === 0) {
+      instance.post('/register', {
+        first_name: userName,
+        last_name: 'mock',
+        email,
+        is_admin: false,
+      }).then((response) => {
+        console.log(response);
+      }, (error) => {
+        console.log('failed');
+        console.log(error);
+      });
+    }
+  };
+
+  const hasErrors = () => errorMsgs.length;
+
   return (
     <View style={styles.wrapper}>
       <View style={styles.surface}>
@@ -69,7 +119,12 @@ const RegistrationScreen = () => {
           textContentType="emailAddress"
         />
         <View style={styles.buttonWrapper}>
-          <Button mode="contained">Register</Button>
+          <Button onPress={handleLogin} mode="contained">Register</Button>
+        </View>
+        <View style={styles.buttonWrapper}>
+          <HelperText type="error" visible={hasErrors()}>
+            {errorMsgs.join('\r\n')}
+          </HelperText>
         </View>
       </View>
     </View>
