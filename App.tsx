@@ -6,6 +6,7 @@ import HomeScreen from './src/views/home.tsx';
 import LoginScreen from './src/views/login.tsx';
 import RegistrationScreen from './src/views/registration';
 import CourseCreationScreen from './src/views/courseCreation';
+import CourseViewScreen from './src/views/courseView';
 import { AuthContext, AuthProvider } from './src/context/AuthContext';
 import Colors from './src/styles/colors';
 
@@ -32,7 +33,8 @@ export default () => (
                 ? (
                   <>
                     <Stack.Screen name="Home" component={HomeScreen} />
-                    <Stack.Screen name="Course" component={CourseCreationScreen} initialParams={{ id: 0 }} />
+                    <Stack.Screen name="Course creation" component={CourseCreationScreen} initialParams={{ id: 0 }} />
+                    <Stack.Screen name="Course view" component={CourseViewScreen} initialParams={{ id: 0 }} />
                   </>
                 )
                 : (
