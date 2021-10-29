@@ -28,7 +28,7 @@ const styles = StyleSheet.create({
   },
 });
 
-const LoginScreen = () => {
+const LoginScreen = ({ navigation }) => {
   const [userName, _setUserName] = useState('');
   const [password, _setPassword] = useState('');
 
@@ -55,6 +55,7 @@ const LoginScreen = () => {
         <View style={styles.buttonWrapper}>
           <Button mode="contained">Log In</Button>
           <Button mode="text">Forgot password</Button>
+          <Button mode="text" onPress={() => navigation.navigate('Registration')}>You don&apos;t have an account? Register now!</Button>
         </View>
         <View style={styles.row}>
           <GoogleLoginButton />
