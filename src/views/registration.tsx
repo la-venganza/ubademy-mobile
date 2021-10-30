@@ -64,13 +64,14 @@ const RegistrationScreen = ({navigation}) => {
       errorList = errorList.concat(['Passwords should match.']);
     }
 
-    setErrorList(errorList);
+    return (errorList);
   };
 
   const handleLogin = async () => {
-    validate();
+    const errors = validate();
+    setErrorList(errors);
 
-    if (errorMsgs && errorMsgs.length === 0) {
+    if (errors && errors.length === 0) {
       const auth = getAuth();
       await createUserWithEmailAndPassword(auth, email, password)
         .then((result) => {

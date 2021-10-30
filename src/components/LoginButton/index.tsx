@@ -69,15 +69,15 @@ export const GoogleLoginButton = () => {
       const jwt = result.accessToken;
       const userName = result.user.givenName;
       const provider = new GoogleAuthProvider();
-      const cred = GoogleAuthProvider.credential(
+      const googleCredential = GoogleAuthProvider.credential(
         result.idToken,
         result.accessToken,
       );
 
       const authFb = getAuth();
-      const fbCred = await signInWithCredential(authFb, cred);
+      const firebaseCredential = await signInWithCredential(authFb, googleCredential);
       console.log('Firebase credentials');
-      console.log(fbCred);
+      console.log(firebaseCredential);
 
       auth.setAuth(jwt, userName);
       console.log(jwt, userName);
