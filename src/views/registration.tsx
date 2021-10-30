@@ -3,6 +3,8 @@ import { StyleSheet, View } from 'react-native';
 import {
   Button, Text, TextInput, HelperText,
 } from 'react-native-paper';
+import {
+  getAuth, createUserWithEmailAndPassword, FirebaseError, updateProfile } from 'firebase/auth';
 import axios from 'axios';
 import Logo from '../components/Logo';
 import { GoogleLoginButton } from '../components/LoginButton';
@@ -29,7 +31,7 @@ const styles = StyleSheet.create({
 
 });
 
-const RegistrationScreen = () => {
+const RegistrationScreen = ({navigation}) => {
   const errorMessagesInitial : string[] = [];
   const [userName, _setUserName] = useState('');
   const [password, _setPassword] = useState('');
@@ -65,21 +67,45 @@ const RegistrationScreen = () => {
     setErrorList(errorList);
   };
 
-  const handleLogin = () => {
+  const handleLogin = async () => {
     validate();
 
     if (errorMsgs && errorMsgs.length === 0) {
-      instance.post('/register', {
-        first_name: userName,
-        last_name: 'mock',
-        email,
-        is_admin: false,
-      }).then((response) => {
-        console.log(response);
-      }, (error) => {
-        console.log('failed');
-        console.log(error);
-      });
+      const auth = getAuth();
+      await createUserWithEmailAndPassword(auth, email, password)
+        .then((result) => {
+          // Voy a necesitar un endpoint para el /register
+          console.log(result);
+
+          updateProfile(auth.currentUser, {
+            displayName: userName,
+          }).then(() => {
+            console.log('Succesfully updated');
+            alert('Succesfully registered.');
+            navigation.navigate('Login');
+            // Update successful.
+          }, (error) => {
+            console.log(error);
+          });
+          // instance.post('/register', {
+          //   first_name: userName,
+          //   last_name: 'mock',
+          //   email,
+          //   is_admin: false,
+          // }).then((response) => {
+          //   console.log(response);
+          // }, (error) => {
+          //   console.log(error);
+          // });
+        })
+        .catch((error: Error) => {
+          const authError = error as FirebaseError;
+          const errorCode = authError.code;
+          const errorMessage = authError.message;
+          alert(errorMessage);
+          console.log(errorCode);
+          console.log(error);
+        });
     }
   };
 
