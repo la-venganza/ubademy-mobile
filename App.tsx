@@ -4,6 +4,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { Provider as PaperProvider, DefaultTheme } from 'react-native-paper';
 import HomeScreen from './src/views/home.tsx';
 import LoginScreen from './src/views/login.tsx';
+import ProfileScreen from './src/views/profile.tsx';
 import RegistrationScreen from './src/views/registration';
 import { AuthContext, AuthProvider } from './src/context/AuthContext';
 import Colors from './src/styles/colors';
@@ -41,7 +42,12 @@ export default () => (
             {console.log(auth)}
             <Stack.Navigator>
               { auth.token
-                ? <Stack.Screen name="Home" component={HomeScreen} />
+                ? (
+                  <>
+                    <Stack.Screen name="Home" component={HomeScreen} />
+                    <Stack.Screen name="Profile" component={ProfileScreen} />
+                  </>
+                )
                 : (
                   <>
                     <Stack.Screen name="Login" component={LoginScreen} />
