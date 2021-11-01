@@ -3,6 +3,7 @@ import { StyleSheet, View } from 'react-native';
 import { Button, Text, TextInput } from 'react-native-paper';
 import Logo from '../components/Logo';
 import { GoogleLoginButton } from '../components/LoginButton';
+import LogOnButton from '../components/LogOnButton';
 
 const styles = StyleSheet.create({
   surface: {
@@ -29,10 +30,10 @@ const styles = StyleSheet.create({
 });
 
 const LoginScreen = ({ navigation }) => {
-  const [userName, _setUserName] = useState('');
+  const [email, _setEmail] = useState('');
   const [password, _setPassword] = useState('');
 
-  const setUserName = (name: string) => _setUserName(name);
+  const setEmail = (name: string) => _setEmail(name);
   const setPassword = (text: string) => _setPassword(text);
   return (
     <View style={styles.wrapper}>
@@ -41,9 +42,9 @@ const LoginScreen = ({ navigation }) => {
         <Text>Welcome to Ubademy! Please log in</Text>
         <TextInput
           mode="outlined"
-          value={userName}
-          onChangeText={setUserName}
-          label="Username"
+          value={email}
+          onChangeText={setEmail}
+          label="Email"
         />
         <TextInput
           mode="outlined"
@@ -53,7 +54,7 @@ const LoginScreen = ({ navigation }) => {
           secureTextEntry
         />
         <View style={styles.buttonWrapper}>
-          <Button mode="contained">Log In</Button>
+          <LogOnButton email={email} password={password}>Log In</LogOnButton>
           <Button mode="text">Forgot password</Button>
           <Button mode="text" onPress={() => navigation.navigate('Registration')}>You don&apos;t have an account? Register now!</Button>
         </View>
