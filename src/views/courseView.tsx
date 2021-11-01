@@ -1,14 +1,17 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Image, StyleSheet, View } from 'react-native';
 import {
   Button,
   Divider, Surface, Text, Title,
 } from 'react-native-paper';
+import { ScrollView } from 'react-native-gesture-handler';
 import ICourse from '../interfaces/ICourse';
 import CourseService from '../services/courseService';
 import ISlide from '../interfaces/ISlide';
 import VideoPlayer from '../components/VideoPlayer';
 import SlideList from '../components/SlideList';
+import FileDownloadWebview from '../components/FileDownloadWebview';
+import PDFPlaceholder from '../assets/images/pdf-placeholder.png';
 
 interface Props {
     route: {params:{id: number}};
@@ -45,6 +48,15 @@ const dataMock = {
       title: 'Chapter 2: The idilic trip of an old man against the odds.',
       multimedia_type: 'image',
     },
+    {
+      position: 4,
+      id: 19,
+      active: true,
+      required: true,
+      multimediaUri: 'https://www.casarosada.gob.ar/images/stories/constitucion-nacional-argentina.pdf',
+      title: 'Chapter 3: Here we download a PDF. It\'s amazing!',
+      multimedia_type: 'PDF',
+    },
   ],
 };
 
@@ -60,16 +72,53 @@ const styles = StyleSheet.create({
   courseInfoWrapper: {
     margin: 16,
   },
+  pdfSlide: {
+    width: '100%',
+    aspectRatio: 2,
+    padding: 15,
+  },
+  pdfSlideTitle: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    alignSelf: 'center',
+  },
+  pdfButton: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginTop: 24,
+  },
 });
 
 const CourseView = ({ route, navigation }:Props) => {
   const { id } = route.params;
   const [course, setCourse] = useState<ICourse>({});
   const [currentStage, setCurrentStage] = useState<ISlide>({});
+  const [startDownload, setStartDownload] = useState(false);
+  const scrollRef = useRef();
+
+  const renderDownload = () => (<FileDownloadWebview uri={currentStage.multimediaUri} />);
+
+  const handleDownload = () => {
+    if (!startDownload) {
+      setStartDownload(true);
+      setTimeout(() => setStartDownload(false), 300);
+    }
+  };
 
   const renderVideo = () => <VideoPlayer src={currentStage.multimediaUri} />;
   const renderImage = () => <Image source={{ uri: 'https://i.vimeocdn.com/portrait/58832_300x300.jpg' }} style={{ width: '100%', aspectRatio: 2 }} />;
-  const renderPDF = () => <View><Button>CLICK HERE TO DOWNLOAD!</Button></View>;
+  const renderPDF = () => (
+    <View style={styles.pdfSlide}>
+      <Text style={styles.pdfSlideTitle}>This lesson is a PDF. Click here to download it!</Text>
+      <View style={styles.pdfButton}>
+        <Image source={PDFPlaceholder} resizeMethod="resize" resizeMode="contain" style={{ width: 40, height: 60 }} />
+        <Button onPress={handleDownload}>
+          {currentStage.title}
+        </Button>
+      </View>
+    </View>
+  );
 
   const renderMedia = () => {
     switch (currentStage.multimedia_type) {
@@ -103,21 +152,28 @@ const CourseView = ({ route, navigation }:Props) => {
   const handleCourseSelection = (id:number) => {
     const stage = course.stages.find((stage) => stage.id === id);
     setCurrentStage(stage);
+    scrollRef.current?.scrollTo({
+      y: 0,
+      animated: true,
+    });
   };
 
   return (
     <View>
-      <Surface>
-        {renderMedia()}
-      </Surface>
-      <View style={styles.courseInfoWrapper}>
-        <Title style={styles.title}>{course.title}</Title>
-        <Text>{course.description}</Text>
-      </View>
-      <Divider style={styles.divider} />
-      <Surface>
-        <SlideList slides={course.stages} handleSelect={handleCourseSelection} />
-      </Surface>
+      <ScrollView ref={scrollRef}>
+        <Surface>
+          {renderMedia()}
+        </Surface>
+        <View style={styles.courseInfoWrapper}>
+          <Title style={styles.title}>{course.title}</Title>
+          <Text>{course.description}</Text>
+        </View>
+        <Divider style={styles.divider} />
+        <Surface>
+          <SlideList slides={course.stages} handleSelect={handleCourseSelection} />
+        </Surface>
+        {startDownload && renderDownload()}
+      </ScrollView>
     </View>
   );
 };
