@@ -6,7 +6,7 @@ import {
 import axios from 'axios';
 import Logo from '../components/Logo';
 import { GoogleLoginButton } from '../components/LoginButton';
-import { instance, configureAxiosHeaders } from '../utils/httpClient';
+import instance from '../utils/httpClient';
 
 const styles = StyleSheet.create({
   surface: {
