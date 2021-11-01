@@ -17,9 +17,19 @@ const styles = StyleSheet.create({
   },
 });
 
-const VideoPlayer = ({ src }) => {
+const VideoPlayer = ({
+  src, seen, handleVideoIsSeen, handleVideoEnd,
+}) => {
   const video = React.useRef(null);
-  const [status, setStatus] = React.useState({});
+
+  const handleStatusUpdate = (status) => {
+    if ((status.playableDurationMillis - status.positionMillis) < 500) {
+      handleVideoEnd();
+    }
+    if (!seen && status.isPlaying && (status.playableDurationMillis - status.positionMillis) < 5000) {
+      handleVideoIsSeen();
+    }
+  };
   return (
     <View style={styles.container}>
       <Video
@@ -30,7 +40,7 @@ const VideoPlayer = ({ src }) => {
         style={styles.video}
         useNativeControls
         resizeMode="cover"
-        onPlaybackStatusUpdate={(status) => setStatus(() => status)}
+        onPlaybackStatusUpdate={handleStatusUpdate}
       />
     </View>
   );

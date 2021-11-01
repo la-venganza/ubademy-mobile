@@ -12,6 +12,7 @@ import VideoPlayer from '../components/VideoPlayer';
 import SlideList from '../components/SlideList';
 import FileDownloadWebview from '../components/FileDownloadWebview';
 import PDFPlaceholder from '../assets/images/pdf-placeholder.png';
+import courseService from '../services/courseService';
 
 interface Props {
     route: {params:{id: number}};
@@ -29,6 +30,7 @@ const dataMock = {
       multimediaUri: 'http://d23dyxeqlo5psv.cloudfront.net/big_buck_bunny.mp4',
       title: 'Course introduction',
       multimedia_type: 'video',
+      seen: true,
     },
     {
       position: 2,
@@ -38,6 +40,7 @@ const dataMock = {
       multimediaUri: 'http://d23dyxeqlo5psv.cloudfront.net/big_buck_bunny.mp4',
       title: 'Chapter 1: Why is this so hard?',
       multimedia_type: 'video',
+      seen: false,
     },
     {
       position: 3,
@@ -45,8 +48,9 @@ const dataMock = {
       active: true,
       required: true,
       multimediaUri: 'https://as.com/meristation/imagenes/2021/01/20/noticias/1611162270_013847_1611162672_noticia_normal.jpg',
-      title: 'Chapter 2: The idilic trip of an old man against the odds.',
+      title: 'Chapter 2: An image lalalalalalalalaala allala lala lal.',
       multimedia_type: 'image',
+      seen: false,
     },
     {
       position: 4,
@@ -56,6 +60,7 @@ const dataMock = {
       multimediaUri: 'https://www.casarosada.gob.ar/images/stories/constitucion-nacional-argentina.pdf',
       title: 'Chapter 3: Here we download a PDF. It\'s amazing!',
       multimedia_type: 'PDF',
+      seen: false,
     },
   ],
 };
@@ -94,7 +99,10 @@ const CourseView = ({ route, navigation }:Props) => {
   const { id } = route.params;
   const [course, setCourse] = useState<ICourse>({});
   const [currentStage, setCurrentStage] = useState<ISlide>({});
+  const currentStageRef = useRef(null);
   const [startDownload, setStartDownload] = useState(false);
+  const [activeTimeoutId, setActiveTimeoutId] = useState(0);
+  const [stages, setStages] = useState([]);
   const scrollRef = useRef();
 
   const renderDownload = () => (<FileDownloadWebview uri={currentStage.multimediaUri} />);
@@ -106,8 +114,11 @@ const CourseView = ({ route, navigation }:Props) => {
     }
   };
 
-  const renderVideo = () => <VideoPlayer src={currentStage.multimediaUri} />;
-  const renderImage = () => <Image source={{ uri: 'https://i.vimeocdn.com/portrait/58832_300x300.jpg' }} style={{ width: '100%', aspectRatio: 2 }} />;
+  const renderVideo = () => <VideoPlayer src={currentStage.multimediaUri} handleVideoIsSeen={handleIsSeen} seen={currentStage.seen} handleVideoEnd={handleVideoEnd} />;
+
+  const renderImage = () => (
+    <Image source={{ uri: 'https://i.vimeocdn.com/portrait/58832_300x300.jpg' }} style={{ width: '100%', aspectRatio: 2 }} />
+  );
   const renderPDF = () => (
     <View style={styles.pdfSlide}>
       <Text style={styles.pdfSlideTitle}>This lesson is a PDF. Click here to download it!</Text>
@@ -136,13 +147,12 @@ const CourseView = ({ route, navigation }:Props) => {
   useEffect(() => {
     const fetchCourse = async () => {
       const courseData = await CourseService.getCourse(id);
-      console.log(courseData);
       if (courseData) {
         setCourse(courseData);
-        setCurrentStage(courseData.stages[0]);
+        setStages(courseData.stages);
       } else {
         setCourse(dataMock);
-        setCurrentStage(dataMock.stages[0]);
+        setStages(dataMock.stages);
         // HANDLE ERROR
       }
     };
@@ -150,12 +160,40 @@ const CourseView = ({ route, navigation }:Props) => {
   }, []);
 
   const handleCourseSelection = (id:number) => {
-    const stage = course.stages.find((stage) => stage.id === id);
+    const stage = course.stages.find((stage, index) => stage.id === id);
     setCurrentStage(stage);
+    currentStageRef.current = stage;
     scrollRef.current?.scrollTo({
       y: 0,
       animated: true,
     });
+    if (activeTimeoutId) {
+      clearTimeout(activeTimeoutId);
+    }
+    if (stage?.multimedia_type === 'image' || stage?.multimedia_type === 'PDF') {
+      const timeoutId = setTimeout(handleIsSeen, 5000);
+      setActiveTimeoutId(timeoutId);
+    }
+  };
+
+  const handleIsSeen = () => {
+    // currentStage.seen = true;
+    courseService.setSeen(id, currentStageRef.current.id);
+    const stageIndex = stages.findIndex((stage) => stage.id === currentStageRef.current.id);
+    const aux = [...stages];
+    aux[stageIndex].seen = true;
+    setStages(aux);
+  };
+
+  const handleVideoEnd = () => {
+    if (!currentStage.seen) {
+      currentStage.seen = true;
+    }
+    const stageIndex = course.stages.findIndex((stage) => stage.id === currentStage.id);
+    if (stageIndex < course.stages.length - 1) {
+      setCurrentStage(course.stages[stageIndex + 1]);
+      currentStageRef.current = course.stages[stageIndex + 1];
+    }
   };
 
   return (
@@ -170,7 +208,7 @@ const CourseView = ({ route, navigation }:Props) => {
         </View>
         <Divider style={styles.divider} />
         <Surface>
-          <SlideList slides={course.stages} handleSelect={handleCourseSelection} />
+          <SlideList slides={stages} handleSelect={handleCourseSelection} activeSlide={currentStage} />
         </Surface>
         {startDownload && renderDownload()}
       </ScrollView>

@@ -12,6 +12,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
+    flex: 1,
   },
   activeSlide: {
     padding: 12,
@@ -20,6 +21,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
+    flex: 1,
   },
   seenWrapper: {
     flexDirection: 'column',
@@ -28,27 +30,27 @@ const styles = StyleSheet.create({
   centeredItem: {
     alignSelf: 'center',
   },
+  slideInfoWrapper: {
+    width: '80%',
+  },
 });
-const SlideList = ({ slides = [], handleSelect }) => {
-  const [activeSlideId, setActiveSlideId] = useState(-1);
-
+const SlideList = ({ slides = [], handleSelect, activeSlide }) => {
   useEffect(() => {
-    if (slides.length) {
+    if (slides.length && activeSlide.id === undefined) {
       let maxIndex = -1;
       slides.forEach((slide, index) => (slide.seen ? maxIndex = index : null));
-      if (maxIndex === slides.length + 1) {
+      if (maxIndex === slides.length - 1) {
         maxIndex = 0;
       } else {
         maxIndex += 1;
       }
-      setActiveSlideId(slides[maxIndex].id);
+      handleSelect(slides[maxIndex].id);
     }
   }, [slides]);
 
   const onSlideTouch = (id: number) => {
-    if (id !== activeSlideId) {
+    if (id !== activeSlide.id) {
       handleSelect(id);
-      setActiveSlideId(id);
     }
   };
 
@@ -58,14 +60,14 @@ const SlideList = ({ slides = [], handleSelect }) => {
     >
       <TouchableOpacity
         onPress={() => onSlideTouch(slide.id)}
-        style={slide.id === activeSlideId ? styles.activeSlide : styles.slide}
+        style={slide.id === activeSlide.id ? styles.activeSlide : styles.slide}
       >
-        <View>
+        <View style={styles.slideInfoWrapper}>
           <Title>{slide.title}</Title>
           <Text>{slide.multimedia_type}</Text>
         </View>
         <View style={styles.seenWrapper}>
-          <Badge style={styles.centeredItem} />
+          {slide.seen && <Badge style={styles.centeredItem} />}
         </View>
       </TouchableOpacity>
     </Surface>
