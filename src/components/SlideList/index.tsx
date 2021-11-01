@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 import {
   Badge, Surface, Text, Title,
 } from 'react-native-paper';
@@ -7,10 +8,18 @@ import {
 const styles = StyleSheet.create({
   slide: {
     padding: 12,
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
   },
   activeSlide: {
     padding: 12,
     backgroundColor: 'gray',
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
   },
   seenWrapper: {
     flexDirection: 'column',
@@ -20,7 +29,7 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
   },
 });
-const SlideList = ({ slides = [] }) => {
+const SlideList = ({ slides = [], handleSelect }) => {
   const [activeSlideId, setActiveSlideId] = useState(-1);
 
   useEffect(() => {
@@ -36,15 +45,29 @@ const SlideList = ({ slides = [] }) => {
     }
   }, [slides]);
 
+  const onSlideTouch = (id: number) => {
+    if (id !== activeSlideId) {
+      handleSelect(id);
+      setActiveSlideId(id);
+    }
+  };
+
   const renderSlide = (slide) => (
-    <Surface style={slide.id === activeSlideId ? styles.activeSlide : styles.slide}>
-      <View>
-        <Title>{slide.title}</Title>
-        <Text>{slide.multimedia_type}</Text>
-      </View>
-      <View style={styles.seenWrapper}>
-        <Badge style={styles.centeredItem} />
-      </View>
+    <Surface
+      key={slide.id}
+    >
+      <TouchableOpacity
+        onPress={() => onSlideTouch(slide.id)}
+        style={slide.id === activeSlideId ? styles.activeSlide : styles.slide}
+      >
+        <View>
+          <Title>{slide.title}</Title>
+          <Text>{slide.multimedia_type}</Text>
+        </View>
+        <View style={styles.seenWrapper}>
+          <Badge style={styles.centeredItem} />
+        </View>
+      </TouchableOpacity>
     </Surface>
   );
 

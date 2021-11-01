@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { Image, StyleSheet, View } from 'react-native';
 import {
+  Button,
   Divider, Surface, Text, Title,
 } from 'react-native-paper';
 import ICourse from '../interfaces/ICourse';
@@ -22,7 +23,7 @@ const dataMock = {
       id: 3,
       active: true,
       required: true,
-      multimedia_id: '',
+      multimediaUri: 'http://d23dyxeqlo5psv.cloudfront.net/big_buck_bunny.mp4',
       title: 'Course introduction',
       multimedia_type: 'video',
     },
@@ -31,7 +32,7 @@ const dataMock = {
       id: 4,
       active: true,
       required: true,
-      multimedia_id: '',
+      multimediaUri: 'http://d23dyxeqlo5psv.cloudfront.net/big_buck_bunny.mp4',
       title: 'Chapter 1: Why is this so hard?',
       multimedia_type: 'video',
     },
@@ -40,7 +41,7 @@ const dataMock = {
       id: 9,
       active: true,
       required: true,
-      multimedia_id: '',
+      multimediaUri: 'https://as.com/meristation/imagenes/2021/01/20/noticias/1611162270_013847_1611162672_noticia_normal.jpg',
       title: 'Chapter 2: The idilic trip of an old man against the odds.',
       multimedia_type: 'image',
     },
@@ -66,12 +67,18 @@ const CourseView = ({ route, navigation }:Props) => {
   const [course, setCourse] = useState<ICourse>({});
   const [currentStage, setCurrentStage] = useState<ISlide>({});
 
-  const renderVideo = () => <VideoPlayer />;
+  const renderVideo = () => <VideoPlayer src={currentStage.multimediaUri} />;
+  const renderImage = () => <Image source={{ uri: 'https://i.vimeocdn.com/portrait/58832_300x300.jpg' }} style={{ width: '100%', aspectRatio: 2 }} />;
+  const renderPDF = () => <View><Button>CLICK HERE TO DOWNLOAD!</Button></View>;
 
   const renderMedia = () => {
     switch (currentStage.multimedia_type) {
       case 'video':
         return renderVideo();
+      case 'image':
+        return renderImage();
+      case 'PDF':
+        return renderPDF();
       default:
         return null;
     }
@@ -93,6 +100,11 @@ const CourseView = ({ route, navigation }:Props) => {
     fetchCourse();
   }, []);
 
+  const handleCourseSelection = (id:number) => {
+    const stage = course.stages.find((stage) => stage.id === id);
+    setCurrentStage(stage);
+  };
+
   return (
     <View>
       <Surface>
@@ -104,7 +116,7 @@ const CourseView = ({ route, navigation }:Props) => {
       </View>
       <Divider style={styles.divider} />
       <Surface>
-        <SlideList slides={course.stages} />
+        <SlideList slides={course.stages} handleSelect={handleCourseSelection} />
       </Surface>
     </View>
   );

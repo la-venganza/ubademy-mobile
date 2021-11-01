@@ -17,7 +17,7 @@ const styles = StyleSheet.create({
   },
 });
 
-const VideoPlayer = ({ slide }) => {
+const VideoPlayer = ({ src }) => {
   const video = React.useRef(null);
   const [status, setStatus] = React.useState({});
   return (
@@ -25,7 +25,7 @@ const VideoPlayer = ({ slide }) => {
       <Video
         ref={video}
         source={{
-          uri: 'http://d23dyxeqlo5psv.cloudfront.net/big_buck_bunny.mp4',
+          uri: src,
         }}
         style={styles.video}
         useNativeControls
