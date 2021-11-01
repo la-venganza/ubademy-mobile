@@ -12,7 +12,7 @@ const formatCourse = (courseTitle:string, courseDescription:string, slides:Array
     position: element.position,
     active: true,
     required: true,
-    multimedia_id: element.media.uri,
+    multimediaUri: element.media.uri,
     title: element.title,
     multimedia_type: element.slideType,
   }));
