@@ -167,17 +167,17 @@ const CourseView = ({ route, navigation }:Props) => {
       y: 0,
       animated: true,
     });
-    if (activeTimeoutId) {
-      clearTimeout(activeTimeoutId);
-    }
-    if (stage?.multimedia_type === 'image' || stage?.multimedia_type === 'PDF') {
-      const timeoutId = setTimeout(handleIsSeen, 5000);
-      setActiveTimeoutId(timeoutId);
-    }
+    // Uncomment this section once seen is supported
+    // if (activeTimeoutId) {
+    //   clearTimeout(activeTimeoutId);
+    // }
+    // if (stage?.multimedia_type === 'image' || stage?.multimedia_type === 'PDF') {
+    //   const timeoutId = setTimeout(handleIsSeen, 5000);
+    //   setActiveTimeoutId(timeoutId);
+    // }
   };
 
   const handleIsSeen = () => {
-    // currentStage.seen = true;
     courseService.setSeen(id, currentStageRef.current.id);
     const stageIndex = stages.findIndex((stage) => stage.id === currentStageRef.current.id);
     const aux = [...stages];

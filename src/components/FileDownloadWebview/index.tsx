@@ -17,10 +17,13 @@ const FileDownloadWebview = ({ uri }) => {
       return error;
     }
   };
+
+  const documentPath = `${documentDirectory}name.pdf`;
+
   const downloadDocument = async (downloadUrl) => {
     const fileURI = await downloadAsync(
       downloadUrl,
-      `${documentDirectory}name.pdf`,
+      documentPath,
       {},
     );
     await onShare(fileURI.uri);

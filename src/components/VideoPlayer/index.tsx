@@ -17,18 +17,21 @@ const styles = StyleSheet.create({
   },
 });
 
+const timeToNextVideo = 500;
+
 const VideoPlayer = ({
   src, seen, handleVideoIsSeen, handleVideoEnd,
 }) => {
   const video = React.useRef(null);
 
   const handleStatusUpdate = (status) => {
-    if ((status.playableDurationMillis - status.positionMillis) < 500) {
+    if ((status.playableDurationMillis - status.positionMillis) < timeToNextVideo) {
       handleVideoEnd();
     }
-    if (!seen && status.isPlaying && (status.playableDurationMillis - status.positionMillis) < 5000) {
-      handleVideoIsSeen();
-    }
+    // Uncomment this once seen is supported
+    // if (!seen && status.isPlaying && (status.playableDurationMillis - status.positionMillis) < 5000) {
+    //   handleVideoIsSeen();
+    // }
   };
   return (
     <View style={styles.container}>
