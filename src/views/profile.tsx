@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { View, SafeAreaView, StyleSheet } from 'react-native';
 import {
   Avatar,
@@ -9,6 +9,8 @@ import {
 } from 'react-native-paper';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import Colors from '../styles/colors';
+import userService from '../services/userService';
+import IUser from '../interfaces/IUser';
 
 const styles = StyleSheet.create({
   container: {
@@ -60,84 +62,105 @@ const styles = StyleSheet.create({
   },
 });
 
-const ProfileScreen = () => (
-  <SafeAreaView style={styles.container}>
+interface Props {
+  route: {params:{email: string}};
+  navigation: object;
+}
 
-    <View style={styles.userInfoSection}>
-      <View style={{ flexDirection: 'row', marginTop: 15 }}>
-        <Avatar.Image
-          source={{
-            uri: 'https://lh3.googleusercontent.com/a/AATXAJzmbRfP0iie6cg_7tNSQfxZroDeLDolmuoc8tzA=s96-c',
-          }}
-          size={80}
-        />
-        <View style={{ marginLeft: 20 }}>
-          <Title style={[styles.title, {
-            marginTop: 15,
-            marginBottom: 5,
-          }]}
-          >
-            Luciana Piazzi
+const ProfileScreen = ({ route, navigation } : Props) => {
+  const [user, setUser] = useState<IUser>({});
 
-          </Title>
-          <Caption style={styles.caption}>@l_pzi</Caption>
+  useEffect(() => {
+    const fetchUser = async () => {
+      const userData = await userService.getUser(route.params.email);
+      if (userData) {
+        setUser(userData);
+      }
+    };
+    fetchUser();
+  }, []);
+
+  return (
+    <SafeAreaView style={styles.container}>
+
+      <View style={styles.userInfoSection}>
+        <View style={{ flexDirection: 'row', marginTop: 15 }}>
+          <Avatar.Image
+            source={{
+              uri: 'https://lh3.googleusercontent.com/a/AATXAJzmbRfP0iie6cg_7tNSQfxZroDeLDolmuoc8tzA=s96-c',
+            }}
+            size={80}
+          />
+          <View style={{ marginLeft: 20 }}>
+            <Title style={[styles.title, {
+              marginTop: 15,
+              marginBottom: 5,
+            }]}
+            >
+              {user.first_name}
+              {' '}
+              {user.last_name}
+
+            </Title>
+            <Caption style={styles.caption}>@{user.first_name}</Caption>
+          </View>
         </View>
       </View>
-    </View>
 
-    <View style={styles.userInfoSection}>
-      <View style={styles.row}>
-        <Icon name="head" color="#777777" size={20} />
-        <Text style={{ color: '#777777', marginLeft: 20 }}>Student</Text>
+      <View style={styles.userInfoSection}>
+        <View style={styles.row}>
+          <Icon name="head" color="#777777" size={20} />
+          <Text style={{ color: '#777777', marginLeft: 20 }}>{user.role}</Text>
+        </View>
+        <View style={styles.row}>
+          <Icon name="email" color="#777777" size={20} />
+          <Text style={{ color: '#777777', marginLeft: 20 }}>{user.email}</Text>
+        </View>
       </View>
-      <View style={styles.row}>
-        <Icon name="email" color="#777777" size={20} />
-        <Text style={{ color: '#777777', marginLeft: 20 }}>luciana_p@email.com</Text>
-      </View>
-    </View>
 
-    <View style={styles.infoBoxWrapper}>
-      <View style={[styles.infoBox, {
-        borderRightColor: '#dddddd',
-        borderRightWidth: 1,
-      }]}
-      >
-        <Title>$0.0</Title>
-        <Caption>Wallet</Caption>
+      <View style={styles.infoBoxWrapper}>
+        <View style={[styles.infoBox, {
+          borderRightColor: '#dddddd',
+          borderRightWidth: 1,
+        }]}
+        >
+          <Title>$0.0</Title>
+          <Caption>Wallet</Caption>
+        </View>
+        <View style={styles.infoBox}>
+          <Title>{user.subscription}</Title>
+          <Caption>Subscription</Caption>
+        </View>
       </View>
-      <View style={styles.infoBox}>
-        <Title>Free</Title>
-        <Caption>Subscription</Caption>
-      </View>
-    </View>
 
-    <View style={styles.menuWrapper}>
-      <TouchableRipple onPress={() => {}}>
-        <View style={styles.menuItem}>
-          <Icon name="book-open-variant" color={Colors.secondary} size={25} />
-          <Text style={styles.menuItemText}>Your Courses</Text>
-        </View>
-      </TouchableRipple>
-      <TouchableRipple onPress={() => {}}>
-        <View style={styles.menuItem}>
-          <Icon name="credit-card" color={Colors.secondary} size={25} />
-          <Text style={styles.menuItemText}>Payment</Text>
-        </View>
-      </TouchableRipple>
-      <TouchableRipple onPress={() => {}}>
-        <View style={styles.menuItem}>
-          <Icon name="account-edit-outline" color={Colors.secondary} size={25} />
-          <Text style={styles.menuItemText}>Edit</Text>
-        </View>
-      </TouchableRipple>
-      <TouchableRipple onPress={() => {}}>
-        <View style={styles.menuItem}>
-          <Icon name="account-check-outline" color={Colors.secondary} size={25} />
-          <Text style={styles.menuItemText}>Support</Text>
-        </View>
-      </TouchableRipple>
-    </View>
-  </SafeAreaView>
-);
+      <View style={styles.menuWrapper}>
+        <TouchableRipple onPress={() => {}}>
+          <View style={styles.menuItem}>
+            <Icon name="book-open-variant" color={Colors.secondary} size={25} />
+            <Text style={styles.menuItemText}>Your Courses</Text>
+          </View>
+        </TouchableRipple>
+        <TouchableRipple onPress={() => {}}>
+          <View style={styles.menuItem}>
+            <Icon name="credit-card" color={Colors.secondary} size={25} />
+            <Text style={styles.menuItemText}>Payment</Text>
+          </View>
+        </TouchableRipple>
+        <TouchableRipple onPress={() => navigation.navigate('ProfileEdit')}>
+          <View style={styles.menuItem}>
+            <Icon name="account-edit-outline" color={Colors.secondary} size={25} />
+            <Text style={styles.menuItemText}>Edit</Text>
+          </View>
+        </TouchableRipple>
+        <TouchableRipple onPress={() => {}}>
+          <View style={styles.menuItem}>
+            <Icon name="account-check-outline" color={Colors.secondary} size={25} />
+            <Text style={styles.menuItemText}>Support</Text>
+          </View>
+        </TouchableRipple>
+      </View>
+    </SafeAreaView>
+  );
+};
 
 export default ProfileScreen;

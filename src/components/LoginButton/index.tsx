@@ -66,7 +66,6 @@ export const GoogleLoginButton = () => {
     addLinkingListener();
     try {
       const result = await GoogleAuthentication.signInWithGoogleAsync();
-      const jwt = result.accessToken;
       const userName = result.user.givenName;
       const provider = new GoogleAuthProvider();
       const googleCredential = GoogleAuthProvider.credential(
@@ -78,6 +77,8 @@ export const GoogleLoginButton = () => {
       const firebaseCredential = await signInWithCredential(authFb, googleCredential);
       console.log('Firebase credentials');
       console.log(firebaseCredential);
+
+      const jwt = firebaseCredential.user.stsTokenManager.accessToken;
 
       auth.setAuth(jwt, userName);
       console.log(jwt, userName);

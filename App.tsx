@@ -10,6 +10,7 @@ import { AuthContext, AuthProvider } from './src/context/AuthContext';
 import Colors from './src/styles/colors';
 import Constants from 'expo-constants';
 import { initializeApp } from 'firebase/app';
+import ProfileEditScreen from './src/views/profileEdit';
 
 const firebaseConfig = {
   apiKey: Constants.manifest.extra.FIREBASE_API_KEY,
@@ -45,7 +46,8 @@ export default () => (
                 ? (
                   <>
                     <Stack.Screen name="Home" component={HomeScreen} />
-                    <Stack.Screen name="Profile" component={ProfileScreen} />
+                    <Stack.Screen name="Profile" component={ProfileScreen} initialParams={{ email: 'test' }} />
+                    <Stack.Screen name="ProfileEdit" component={ProfileEditScreen} />
                   </>
                 )
                 : (

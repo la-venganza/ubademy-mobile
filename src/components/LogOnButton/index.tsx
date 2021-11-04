@@ -30,16 +30,17 @@ interface Props {
   password: PropTypes.string,
 }
 
-function LogOnButton({ email, password, navigation }: Props) {
+function LogOnButton({ email, password }: Props) {
   const authCtx = useContext(AuthContext);
   const firebaseAuth = getAuth();
   const logon = () => {
     signInWithEmailAndPassword(firebaseAuth, email, password)
-      .then((userCredential) => {
+      .then(async (userCredential) => {
         // Signed in
         const { user } = userCredential;
-        console.log("Sucessfuly logged user.");
-        const jwt = user.stsTokenManager.accessToken;
+        const idToken = await user.getIdToken();
+        const jwt = idToken; // user.stsTokenManager.accessToken;
+        //const jwt = user.stsTokenManager.accessToken;
         const userName = user.displayName;
         authCtx.setAuth(jwt, userName);
       })
