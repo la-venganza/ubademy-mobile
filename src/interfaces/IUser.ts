@@ -1,10 +1,10 @@
 interface IUser {
-    firstName: string;
-    lastName: string;
+    first_name: string;
+    last_name: string;
     email: string;
     role: string;
-    isAdmin: boolean;
-    userId: string;
+    is_admin: boolean;
+    user_id: string;
     blocked: boolean;
 }
 

@@ -12,6 +12,7 @@ import GoogleLogo from '../../assets/images/google-logo.png';
 import ColorPalette from '../../styles/colors';
 import { AuthContext } from '../../context/AuthContext';
 import * as GoogleAuthentication from '../../actions/googleAuthentication';
+import userService from '../../services/userService';
 
 const styles = StyleSheet.create({
   googleButton: {
@@ -75,10 +76,25 @@ export const GoogleLoginButton = () => {
 
       const authFb = getAuth();
       const firebaseCredential = await signInWithCredential(authFb, googleCredential);
-      console.log('Firebase credentials');
-      console.log(firebaseCredential);
+      //      console.log('Firebase credentials');
+      //      console.log(firebaseCredential);
 
       const jwt = firebaseCredential.user.stsTokenManager.accessToken;
+      userService.setCookie(jwt);
+
+      const userData = {
+        first_name: result.user.givenName,
+        last_name: 'mock',
+        email: firebaseCredential.user.email,
+        age: 0,
+      };
+
+      console.log(firebaseCredential.user.email);
+      const backUser = userService.getUser(firebaseCredential.user.email);
+      console.log('register user');
+      if (!backUser) {
+        userService.registerUser(userData);
+      }
 
       auth.setAuth(jwt, userName);
       console.log(jwt, userName);

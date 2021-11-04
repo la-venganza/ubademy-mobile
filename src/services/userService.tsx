@@ -1,23 +1,24 @@
 import IUser from '../interfaces/IUser';
-import { instance } from '../utils/httpClient';
+import { instance, configureAxiosHeaders } from '../utils/httpClient';
 
 const formatUser = (firstName:string, lastName:string) => {
   const usr:IUser = {
-    firstName,
-    lastName,
+    first_name,
+    last_name,
   };
 
   return usr;
 };
 
+const setCookie = async (token) => {
+  configureAxiosHeaders(token);
+};
+
 // Hardcodeado
 const getUser = async (email) => {
-  console.log('trying to get user');
   try {
     // hardcodeo mi user id
     const response = await instance.get('/user/1adbd719-9188-46d7-bca6-483b2ad8368d');
-    console.log('recibo response');
-    console.log(response);
     return response.data;
   } catch (error) {
     console.log(error);
@@ -28,10 +29,10 @@ const getUser = async (email) => {
 const registerUser = async (user) => {
   try {
     const response = await instance.post('/user', {
-      firstName: 'Finn',
-      lastName: 'Williams',
-      age: 30,
-      email: 'testtesttest@gmail.com',
+      firstName: user.first_name,
+      lastName: user.last_name,
+      age: user.age,
+      email: user.email,
     });
 
     return response.data;
@@ -43,10 +44,10 @@ const registerUser = async (user) => {
 
 const updateUser = async (user) => {
   try {
-    const response = await HTTPClient.put('/user', {
-      firstName: 'Finn',
-      lastName: 'Williams',
-      age: 30,
+    const response = await instance.put('/user', {
+      firstName: user.first_name,
+      lastName: user.last_name,
+      age: user.age,
     });
 
     return response.data;
@@ -56,4 +57,6 @@ const updateUser = async (user) => {
   }
 };
 
-export default { getUser, updateUser, registerUser };
+export default {
+  getUser, updateUser, registerUser, setCookie,
+};
