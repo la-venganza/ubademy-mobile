@@ -51,8 +51,19 @@ const getCourse = async (id) => {
   }
 };
 
+const setSeen = async (courseId, slideId) => {
+  try {
+    await HTTPClient.patch(`/course/seen/${courseId}/${slideId}`);
+    return true;
+  } catch (error) {
+    console.log(error);
+    return false;
+  }
+};
+
 export default {
   createCourse,
   updateCourse,
   getCourse,
+  setSeen,
 };
