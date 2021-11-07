@@ -39,8 +39,7 @@ function LogOnButton({ email, password }: Props) {
         // Signed in
         const { user } = userCredential;
         const idToken = await user.getIdToken();
-        const jwt = idToken; // user.stsTokenManager.accessToken;
-        //const jwt = user.stsTokenManager.accessToken;
+        const jwt = idToken;
         const userName = user.displayName;
         authCtx.setAuth(jwt, userName, email);
       })
