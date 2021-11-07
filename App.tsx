@@ -47,11 +47,11 @@ export default () => (
                   <>
                     <Stack.Screen name="Home" component={HomeScreen} />
                     <Stack.Screen name="Course creation" component={CourseCreationScreen} initialParams={{ id: 0 }} />
+                    <Stack.Screen name="Course view" component={CourseViewScreen} initialParams={{ id: 0 }} />
                   </>
                 )
                 : (
                   <>
-                    <Stack.Screen name="Course view" component={CourseViewScreen} initialParams={{ id: 0 }} />
                     <Stack.Screen name="Login" component={LoginScreen} />
                     <Stack.Screen name="Registration" component={RegistrationScreen} />
                   </>
