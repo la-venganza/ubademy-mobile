@@ -42,7 +42,7 @@ function LogOnButton({ email, password }: Props) {
         const jwt = idToken; // user.stsTokenManager.accessToken;
         //const jwt = user.stsTokenManager.accessToken;
         const userName = user.displayName;
-        authCtx.setAuth(jwt, userName);
+        authCtx.setAuth(jwt, userName, email);
       })
       .catch((error) => {
         alert(error);

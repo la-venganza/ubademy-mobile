@@ -6,6 +6,7 @@ import HomeScreen from './src/views/home.tsx';
 import LoginScreen from './src/views/login.tsx';
 import ProfileScreen from './src/views/profile.tsx';
 import RegistrationScreen from './src/views/registration';
+import CourseCreationScreen from './src/views/courseCreation';
 import { AuthContext, AuthProvider } from './src/context/AuthContext';
 import Colors from './src/styles/colors';
 import Constants from 'expo-constants';
@@ -46,8 +47,9 @@ export default () => (
                 ? (
                   <>
                     <Stack.Screen name="Home" component={HomeScreen} />
-                    <Stack.Screen name="Profile" component={ProfileScreen} initialParams={{ email: 'test' }} />
+                    <Stack.Screen name="Profile" component={ProfileScreen} />
                     <Stack.Screen name="ProfileEdit" component={ProfileEditScreen} />
+                    <Stack.Screen name="Course" component={CourseCreationScreen} initialParams={{ id: 0 }} />
                   </>
                 )
                 : (

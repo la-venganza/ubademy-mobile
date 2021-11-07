@@ -1,15 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { StyleSheet, View } from 'react-native';
 import {
   Button, Text, TextInput, HelperText,
 } from 'react-native-paper';
-import {
-  getAuth, createUserWithEmailAndPassword, FirebaseError, updateProfile,
-} from 'firebase/auth';
-import axios from 'axios';
 import Logo from '../components/Logo';
-import { GoogleLoginButton } from '../components/LoginButton';
-import { instance, configureAxiosHeaders } from '../utils/httpClient';
+import IUser from '../interfaces/IUser';
+import userService from '../services/userService';
 
 const styles = StyleSheet.create({
   surface: {
@@ -32,19 +28,29 @@ const styles = StyleSheet.create({
 
 });
 
-const ProfileEditScreen = ({ navigation }) => {
+interface Props {
+  route: {params:{user: IUser}};
+  navigation: object;
+}
+
+const ProfileEditScreen = ({ navigation, route } : Props) => {
+  const user = route !== undefined && route.params;
   const errorMessagesInitial : string[] = [];
   const [firstName, _setFirstName] = useState('');
   const [lastName, _setLastName] = useState('');
-  const [age, _setAge] = useState('');
 
   const [errorMsgs, _setErrors] = useState(errorMessagesInitial);
 
   const setFirstName = (name: string) => _setFirstName(name);
   const setLastName = (text: string) => _setLastName(text);
-  const setAge = (text: string) => _setAge(text);
 
   const setErrorList = (errors: string[]) => _setErrors(errors);
+
+  useEffect(() => {
+    console.log(user.user.first_name);
+    setFirstName(user.user.first_name);
+    setLastName(user.user.last_name);
+  }, []);
 
   const validate = () => {
     let errorList : string[] = [];
@@ -65,7 +71,17 @@ const ProfileEditScreen = ({ navigation }) => {
     setErrorList(errors);
 
     if (errors.length === 0) {
-      // pegada a users
+      const updatedUser: IUser = {
+        first_name: firstName,
+        last_name: lastName,
+        email: user.email,
+        role: user.role,
+        is_admin: user.is_admin,
+        user_id: user.user_id,
+        blocked: user.blocked,
+      };
+
+      userService.updateUser(updatedUser);
 
       navigation.navigate('Profile');
     }
@@ -89,18 +105,10 @@ const ProfileEditScreen = ({ navigation }) => {
           value={lastName}
           onChangeText={setLastName}
           label="Last name"
-          secureTextEntry
         />
         <TextInput
           mode="outlined"
-          value={age}
-          onChangeText={setAge}
-          label="Age"
-          secureTextEntry
-        />
-        <TextInput
-          mode="outlined"
-          value="luciana@gmail.com"
+          value={user.user.email}
           label="Email"
           keyboardType="email-address"
           textContentType="emailAddress"

@@ -82,22 +82,30 @@ export const GoogleLoginButton = () => {
       const jwt = firebaseCredential.user.stsTokenManager.accessToken;
       userService.setCookie(jwt);
 
-      const userData = {
-        first_name: result.user.givenName,
-        last_name: 'mock',
-        email: firebaseCredential.user.email,
-        age: 0,
-      };
+      
 
-      console.log(firebaseCredential.user.email);
-      const backUser = userService.getUser(firebaseCredential.user.email);
-      console.log('register user');
-      if (!backUser) {
-        userService.registerUser(userData);
-      }
+      console.log(`User EMAIL: ${firebaseCredential.user.email}`);
 
-      auth.setAuth(jwt, userName);
-      console.log(jwt, userName);
+      let backUser = null;
+      backUser = userService.getUser(firebaseCredential.user.email);
+
+      console.log(`Returned user from  login: ${backUser}`);
+      console.log(backUser);
+
+      backUser.then((u) => {
+        if (!u) {
+          const userData = {
+            first_name: result.user.givenName,
+            last_name: 'mock',
+            email: firebaseCredential.user.email,
+            age: 0,
+          };
+          console.log('User not found, registering user.');
+          userService.registerUser(userData);
+        }
+        auth.setAuth(jwt, userName, firebaseCredential.user.email);
+        console.log(jwt, userName, firebaseCredential.user.email);
+      });
     } catch (err) {
       console.log('ERROR:', err);
     }

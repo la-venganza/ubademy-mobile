@@ -2,6 +2,7 @@ node_modules/
 .expo/
 cache/
 **/__snapshots__/
+coverage/
 Ubademy/
 google-services.json
 .env

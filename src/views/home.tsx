@@ -18,8 +18,6 @@ const styles = StyleSheet.create({
 
 const HomeScreen = ({ navigation }) => {
   const auth = useContext(AuthContext);
-  console.log('auth:', auth);
-  console.log('prov', AuthProvider);
   return (
     <View style={styles.container}>
       <Text>

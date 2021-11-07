@@ -14,30 +14,33 @@ const setCookie = async (token) => {
   configureAxiosHeaders(token);
 };
 
-// Hardcodeado
 const getUser = async (email) => {
   try {
-    // hardcodeo mi user id
-    const response = await instance.get('/user/1adbd719-9188-46d7-bca6-483b2ad8368d');
+    console.log('Trying to fetch user form back');
+    const response = await instance.get(`/user/${email}`);
     return response.data;
   } catch (error) {
-    console.log(error);
+    console.log('Exception rised when trying to fetch user from back.');
+    console.log(error.response.data);
+    console.log('Returning null');
     return null;
   }
 };
 
 const registerUser = async (user) => {
+  console.log('Registering user...');
+  console.log(user);
   try {
     const response = await instance.post('/user', {
-      firstName: user.first_name,
-      lastName: user.last_name,
+      first_name: user.first_name,
+      last_name: user.last_name,
       age: user.age,
       email: user.email,
     });
 
     return response.data;
   } catch (error) {
-    console.log(error);
+    console.log(error.response.data);
     return null;
   }
 };
@@ -52,7 +55,7 @@ const updateUser = async (user) => {
 
     return response.data;
   } catch (error) {
-    console.log(error);
+    console.log(error.response.data);
     return null;
   }
 };

@@ -74,13 +74,9 @@ const RegistrationScreen = ({navigation}) => {
       const auth = getAuth();
       await createUserWithEmailAndPassword(auth, email, password)
         .then((result) => {
-          // Voy a necesitar un endpoint para el /register
-          console.log(result);
-
           updateProfile(auth.currentUser, {
             displayName: userName,
           }).then(() => {
-            console.log('Succesfully updated');
             alert('Succesfully registered.');
 
             const user = {
@@ -90,8 +86,9 @@ const RegistrationScreen = ({navigation}) => {
               age: 0,
             };
 
+            userService.setCookie(auth.currentUser.stsTokenManager.accessToken);
+            console.log('Registering user...');
             userService.registerUser(user);
-
             navigation.navigate('Login');
             // Update successful.
           }, (error) => {

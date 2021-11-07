@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { View, SafeAreaView, StyleSheet } from 'react-native';
 import {
   Avatar,
@@ -11,6 +11,7 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import Colors from '../styles/colors';
 import userService from '../services/userService';
 import IUser from '../interfaces/IUser';
+import { AuthContext } from '../context/AuthContext';
 
 const styles = StyleSheet.create({
   container: {
@@ -63,22 +64,30 @@ const styles = StyleSheet.create({
 });
 
 interface Props {
-  route: {params:{email: string}};
   navigation: object;
 }
 
-const ProfileScreen = ({ route, navigation } : Props) => {
+const ProfileScreen = ({ navigation } : Props) => {
   const [user, setUser] = useState<IUser>({});
+
+  const auth = useContext(AuthContext);
 
   useEffect(() => {
     const fetchUser = async () => {
-      const userData = await userService.getUser(route.params.email);
-      if (userData) {
-        setUser(userData);
+      const userData = await userService.getUser(auth.auth.email);
+      if (userData.results[0]) {
+        setUser(userData.results[0]);
       }
     };
     fetchUser();
   }, []);
+
+  const userRole = (role) => {
+    if (role) {
+      return role;
+    }
+    return 'No role for user';
+  };
 
   return (
     <SafeAreaView style={styles.container}>
@@ -102,7 +111,10 @@ const ProfileScreen = ({ route, navigation } : Props) => {
               {user.last_name}
 
             </Title>
-            <Caption style={styles.caption}>@{user.first_name}</Caption>
+            <Caption style={styles.caption}>
+              @
+              {user.first_name}
+            </Caption>
           </View>
         </View>
       </View>
@@ -110,7 +122,7 @@ const ProfileScreen = ({ route, navigation } : Props) => {
       <View style={styles.userInfoSection}>
         <View style={styles.row}>
           <Icon name="head" color="#777777" size={20} />
-          <Text style={{ color: '#777777', marginLeft: 20 }}>{user.role}</Text>
+          <Text style={{ color: '#777777', marginLeft: 20 }}>{userRole(user.role)}</Text>
         </View>
         <View style={styles.row}>
           <Icon name="email" color="#777777" size={20} />
@@ -128,7 +140,7 @@ const ProfileScreen = ({ route, navigation } : Props) => {
           <Caption>Wallet</Caption>
         </View>
         <View style={styles.infoBox}>
-          <Title>{user.subscription}</Title>
+          <Title>Base</Title>
           <Caption>Subscription</Caption>
         </View>
       </View>
@@ -146,7 +158,7 @@ const ProfileScreen = ({ route, navigation } : Props) => {
             <Text style={styles.menuItemText}>Payment</Text>
           </View>
         </TouchableRipple>
-        <TouchableRipple onPress={() => navigation.navigate('ProfileEdit')}>
+        <TouchableRipple onPress={() => navigation.navigate('ProfileEdit', { user })}>
           <View style={styles.menuItem}>
             <Icon name="account-edit-outline" color={Colors.secondary} size={25} />
             <Text style={styles.menuItemText}>Edit</Text>
