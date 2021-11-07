@@ -74,11 +74,11 @@ const ProfileEditScreen = ({ navigation, route } : Props) => {
       const updatedUser: IUser = {
         first_name: firstName,
         last_name: lastName,
-        email: user.email,
-        role: user.role,
-        is_admin: user.is_admin,
-        user_id: user.user_id,
-        blocked: user.blocked,
+        email: user.user.email,
+        role: user.user.role,
+        is_admin: user.user.is_admin,
+        user_id: user.user.user_id,
+        blocked: user.user.blocked,
       };
 
       userService.updateUser(updatedUser);

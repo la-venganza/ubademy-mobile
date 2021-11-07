@@ -48,9 +48,10 @@ const registerUser = async (user) => {
 const updateUser = async (user) => {
   try {
     const response = await instance.put('/user', {
-      firstName: user.first_name,
-      lastName: user.last_name,
-      age: user.age,
+      first_name: user.first_name,
+      last_name: user.last_name,
+      user_id: user.user_id,
+      email: user.email,
     });
 
     return response.data;
