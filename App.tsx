@@ -3,7 +3,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { Provider as PaperProvider, DefaultTheme } from 'react-native-paper';
 import Constants from 'expo-constants';
-import firebase from 'firebase/app';
+import * as firebase from 'firebase/app';
 import HomeScreen from './src/views/home.tsx';
 import LoginScreen from './src/views/login.tsx';
 import RegistrationScreen from './src/views/registration';
