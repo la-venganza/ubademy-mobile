@@ -2,6 +2,7 @@ import React, { useContext } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { AuthContext, AuthProvider } from '../context/AuthContext';
 import LogoutButton from '../components/LogoutButton';
+import { Button } from 'react-native-paper';
 
 const styles = StyleSheet.create({
   container: {
@@ -15,7 +16,7 @@ const styles = StyleSheet.create({
   },
 });
 
-const HomeScreen = () => {
+const HomeScreen = ({ navigation }) => {
   const auth = useContext(AuthContext);
   return (
     <View style={styles.container}>
@@ -26,6 +27,7 @@ const HomeScreen = () => {
         . Welcome to Ubademy!
       </Text>
       <View style={styles.logoutButton}>
+        <Button onPress={() => navigation.navigate('Profile')}>My profile</Button>
         <LogoutButton />
       </View>
     </View>
