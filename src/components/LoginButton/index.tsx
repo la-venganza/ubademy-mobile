@@ -12,6 +12,7 @@ import GoogleLogo from '../../assets/images/google-logo.png';
 import ColorPalette from '../../styles/colors';
 import { AuthContext } from '../../context/AuthContext';
 import * as GoogleAuthentication from '../../actions/googleAuthentication';
+import userService from '../../services/userService';
 
 const styles = StyleSheet.create({
   googleButton: {
@@ -66,7 +67,6 @@ export const GoogleLoginButton = () => {
     addLinkingListener();
     try {
       const result = await GoogleAuthentication.signInWithGoogleAsync();
-      const jwt = result.accessToken;
       const userName = result.user.givenName;
       const provider = new GoogleAuthProvider();
       const googleCredential = GoogleAuthProvider.credential(
@@ -76,11 +76,36 @@ export const GoogleLoginButton = () => {
 
       const authFb = getAuth();
       const firebaseCredential = await signInWithCredential(authFb, googleCredential);
-      console.log('Firebase credentials');
-      console.log(firebaseCredential);
+      //      console.log('Firebase credentials');
+      //      console.log(firebaseCredential);
 
-      auth.setAuth(jwt, userName);
-      console.log(jwt, userName);
+      const jwt = firebaseCredential.user.stsTokenManager.accessToken;
+      userService.setCookie(jwt);
+
+      
+
+      console.log(`User EMAIL: ${firebaseCredential.user.email}`);
+
+      let backUser = null;
+      backUser = userService.getUser(firebaseCredential.user.email);
+
+      console.log(`Returned user from  login: ${backUser}`);
+      console.log(backUser);
+
+      backUser.then((u) => {
+        if (!u) {
+          const userData = {
+            first_name: result.user.givenName,
+            last_name: 'mock',
+            email: firebaseCredential.user.email,
+            age: 0,
+          };
+          console.log('User not found, registering user.');
+          userService.registerUser(userData);
+        }
+        auth.setAuth(jwt, userName, firebaseCredential.user.email);
+        console.log(jwt, userName, firebaseCredential.user.email);
+      });
     } catch (err) {
       console.log('ERROR:', err);
     }

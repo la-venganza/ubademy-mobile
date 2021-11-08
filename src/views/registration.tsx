@@ -1,14 +1,12 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import {
   Button, Text, TextInput, HelperText,
 } from 'react-native-paper';
 import {
   getAuth, createUserWithEmailAndPassword, FirebaseError, updateProfile } from 'firebase/auth';
-import axios from 'axios';
 import Logo from '../components/Logo';
-import { GoogleLoginButton } from '../components/LoginButton';
-import instance from '../utils/httpClient';
+import userService from '../services/userService';
 
 const styles = StyleSheet.create({
   surface: {
@@ -75,29 +73,26 @@ const RegistrationScreen = ({navigation}) => {
       const auth = getAuth();
       await createUserWithEmailAndPassword(auth, email, password)
         .then((result) => {
-          // Voy a necesitar un endpoint para el /register
-          console.log(result);
-
           updateProfile(auth.currentUser, {
             displayName: userName,
           }).then(() => {
-            console.log('Succesfully updated');
             alert('Succesfully registered.');
+
+            const user = {
+              first_name: userName,
+              last_name: 'mock',
+              email,
+              age: 0,
+            };
+
+            userService.setCookie(auth.currentUser.stsTokenManager.accessToken);
+            console.log('Registering user...');
+            userService.registerUser(user);
             navigation.navigate('Login');
             // Update successful.
           }, (error) => {
             console.log(error);
           });
-          // instance.post('/register', {
-          //   first_name: userName,
-          //   last_name: 'mock',
-          //   email,
-          //   is_admin: false,
-          // }).then((response) => {
-          //   console.log(response);
-          // }, (error) => {
-          //   console.log(error);
-          // });
         })
         .catch((error: Error) => {
           const authError = error as FirebaseError;

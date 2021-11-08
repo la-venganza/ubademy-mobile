@@ -5,6 +5,7 @@ import { AuthContext, AuthProvider } from '../context/AuthContext';
 import LogoutButton from '../components/LogoutButton';
 import CourseList from '../components/CourseList';
 import courseService from '../services/courseService';
+import { Button } from 'react-native-paper';
 
 const styles = StyleSheet.create({
   container: {
@@ -64,6 +65,7 @@ const HomeScreen = ({ navigation }) => {
         . Welcome to Ubademy!
       </Text>
       <View style={styles.logoutButton}>
+        <Button onPress={() => navigation.navigate('Profile')}>My profile</Button>
         <LogoutButton />
       </View>
       <Surface style={styles.coursesWrapper}>
