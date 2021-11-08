@@ -61,9 +61,20 @@ const setSeen = async (courseId, slideId) => {
   }
 };
 
+const getCourses = async () => {
+  try {
+    const response = await HTTPClient.get('/course');
+    return response.data;
+  } catch (error) {
+    console.log(error);
+    return null;
+  }
+};
+
 export default {
   createCourse,
   updateCourse,
   getCourse,
   setSeen,
+  getCourses,
 };
