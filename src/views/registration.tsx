@@ -1,11 +1,10 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import {
   Button, Text, TextInput, HelperText,
 } from 'react-native-paper';
 import {
   getAuth, createUserWithEmailAndPassword, FirebaseError, updateProfile } from 'firebase/auth';
-import axios from 'axios';
 import Logo from '../components/Logo';
 import userService from '../services/userService';
 

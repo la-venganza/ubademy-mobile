@@ -2,15 +2,16 @@ import React, { useContext } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { Provider as PaperProvider, DefaultTheme } from 'react-native-paper';
+import Constants from 'expo-constants';
+import firebase from 'firebase/app';
 import HomeScreen from './src/views/home.tsx';
 import LoginScreen from './src/views/login.tsx';
 import ProfileScreen from './src/views/profile.tsx';
 import RegistrationScreen from './src/views/registration';
 import CourseCreationScreen from './src/views/courseCreation';
+import CourseViewScreen from './src/views/courseView';
 import { AuthContext, AuthProvider } from './src/context/AuthContext';
 import Colors from './src/styles/colors';
-import Constants from 'expo-constants';
-import { initializeApp } from 'firebase/app';
 import ProfileEditScreen from './src/views/profileEdit';
 
 const firebaseConfig = {
@@ -23,7 +24,7 @@ const firebaseConfig = {
 };
 
 // Initialize Firebase
-initializeApp(firebaseConfig);
+firebase.initializeApp(firebaseConfig);
 const theme = {
   ...DefaultTheme,
   colors: {
@@ -49,7 +50,9 @@ export default () => (
                     <Stack.Screen name="Home" component={HomeScreen} />
                     <Stack.Screen name="Profile" component={ProfileScreen} />
                     <Stack.Screen name="ProfileEdit" component={ProfileEditScreen} />
-                    <Stack.Screen name="Course" component={CourseCreationScreen} initialParams={{ id: 0 }} />
+                    <Stack.Screen name="Course creation" component={CourseCreationScreen} initialParams={{ id: 0 }} />
+                    <Stack.Screen name="Course view" component={CourseViewScreen} initialParams={{ id: 0 }} />
+
                   </>
                 )
                 : (
