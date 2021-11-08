@@ -1,8 +1,8 @@
 import React, { useContext } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
+import { Button } from 'react-native-paper';
 import { AuthContext, AuthProvider } from '../context/AuthContext';
 import LogoutButton from '../components/LogoutButton';
-import { Button } from 'react-native-paper';
 
 const styles = StyleSheet.create({
   container: {
@@ -18,6 +18,31 @@ const styles = StyleSheet.create({
 
 const HomeScreen = ({ navigation }) => {
   const auth = useContext(AuthContext);
+  const [courses, setCourses] = useState([]);
+
+  useEffect(() => {
+    const fetchCourses = async () => {
+      courseService.setCookie(auth?.auth?.token);
+      const results = await courseService.getCourses();
+      console.log('===========>', results.results);
+      if (results?.results) {
+        setCourses(results.results);
+      } else {
+        // handle no courses
+        setCourses([{ title: 'test title' }, { title: 'otro title' }]);
+      }
+    };
+    fetchCourses();
+  }, []);
+
+  const handleGoToCourse = (id) => {
+    navigation.navigate('Course view', { id });
+  };
+
+  const handleNewCourse = () => {
+    navigation.navigate('Course creation');
+  };
+
   return (
     <View style={styles.container}>
       <Text>
