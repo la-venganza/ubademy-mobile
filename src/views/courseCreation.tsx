@@ -10,6 +10,7 @@ import SlideInEditor from '../components/SlideInEditor/index';
 import SlideEditor from '../components/SlideEditor';
 import ISlide from '../interfaces/ISlide';
 import CourseService from '../services/courseService';
+import cloudStorage from '../utils/cloudStorage';
 
 interface expandables {
   courseInfo: boolean;
@@ -93,6 +94,10 @@ const CourseCreationScreen = ({ route, navigation }) => {
   }, []);
 
   const submit = async () => {
+    await cloudStorage.upload(slides[0].media);
+    const response = await cloudStorage.downloadUrl(slides[0].media.name);
+    console.log(response);
+    return;
     if (courseId) {
       const response = await CourseService.updateCourse(id, courseTitle, courseDescription, slides);
       if (!response) {
@@ -167,6 +172,10 @@ const CourseCreationScreen = ({ route, navigation }) => {
   };
 
   const cancelAll = () => navigation.navigate('Home');
+
+  const swap = (data: [], from: number, to: number) => {
+    console.log(swap);
+  };
 
   const renderMenu = () => (
     <Menu
