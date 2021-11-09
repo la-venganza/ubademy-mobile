@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { DatePickerIOSBase, StyleSheet, View } from 'react-native';
 import {
   Button, Text, TextInput, HelperText,
 } from 'react-native-paper';
+import DateTimePicker from '@react-native-community/datetimepicker';
 import Logo from '../components/Logo';
 import IUser from '../interfaces/IUser';
 import userService from '../services/userService';
@@ -38,18 +39,21 @@ const ProfileEditScreen = ({ navigation, route } : Props) => {
   const errorMessagesInitial : string[] = [];
   const [firstName, _setFirstName] = useState('');
   const [lastName, _setLastName] = useState('');
+  const [birthDate, _setbirthDate] = useState('');
 
   const [errorMsgs, _setErrors] = useState(errorMessagesInitial);
 
   const setFirstName = (name: string) => _setFirstName(name);
   const setLastName = (text: string) => _setLastName(text);
+  const setBirthDate = (bdate: string) => _setbirthDate(bdate);
 
   const setErrorList = (errors: string[]) => _setErrors(errors);
 
   useEffect(() => {
-    console.log(user.user.first_name);
+    console.log(user.user);
     setFirstName(user.user.first_name);
     setLastName(user.user.last_name);
+    setBirthDate(user.user.birth_date);
   }, []);
 
   const validate = () => {
@@ -74,15 +78,18 @@ const ProfileEditScreen = ({ navigation, route } : Props) => {
       const updatedUser: IUser = {
         first_name: firstName,
         last_name: lastName,
-        email: user.user.email,
         role: user.user.role,
-        is_admin: user.user.is_admin,
         user_id: user.user.user_id,
-        blocked: user.user.blocked,
+        birth_date: birthDate,
       };
 
       userService.updateUser(updatedUser);
 
+      setFirstName(firstName);
+      setLastName(lastName);
+      setBirthDate(birthDate);
+
+      route.params.onGoBack();
       navigation.navigate('Profile');
     }
   };
@@ -92,7 +99,6 @@ const ProfileEditScreen = ({ navigation, route } : Props) => {
   return (
     <View style={styles.wrapper}>
       <View style={styles.surface}>
-        <Logo style={styles.image} />
         <Text>Edit profile info</Text>
         <TextInput
           mode="outlined"
@@ -105,6 +111,13 @@ const ProfileEditScreen = ({ navigation, route } : Props) => {
           value={lastName}
           onChangeText={setLastName}
           label="Last name"
+        />
+        <TextInput
+          mode="outlined"
+          value={birthDate}
+          onChangeText={setBirthDate}
+          label="Birth date"
+          keyboardType="default"
         />
         <TextInput
           mode="outlined"

@@ -4,6 +4,10 @@ interface IUser {
     email: string;
     age: number,
     role: string;
+    birth_date: string,
+    phone_type: string,
+    phone_number: string,
+    subscription:string,
     is_admin: boolean;
     user_id: string;
     blocked: boolean;
