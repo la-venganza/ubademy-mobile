@@ -44,13 +44,11 @@ function LogOnButton({ email, password }: Props) {
         const userName = user.displayName;
         authCtx.setAuth(jwt, userName, email);
 
-        console.log(email);
         userService.setCookie(jwt);
         userService.getUser(email).then((u) => {
           console.log(u);
-          authCtx.setUserId(u.user_id);
+          authCtx.setUserId(u.results[0].user_id);
         }).catch(error => {
-          console.log(email);
           console.log(error);
         });
       })

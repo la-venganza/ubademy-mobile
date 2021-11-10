@@ -36,7 +36,7 @@ const AuthProvider = ({ children }) => {
   };
 
   // Update AsyncStorage & context state
-  const setAuth = async (token:string, name:string = '', email:string = '',) => {
+  const setAuth = async (token:string, name:string = '', email:string = '') => {
     try {
       await AsyncStorage.setItem('auth', JSON.stringify({
         token, name, email, userId,
@@ -56,7 +56,10 @@ const AuthProvider = ({ children }) => {
   }, []);
 
   return (
-    <AuthContext.Provider value={{ auth, setAuth, userId, setUserId }}>
+    <AuthContext.Provider value={{
+      auth, setAuth, userId, setUserId,
+    }}
+    >
       {children}
     </AuthContext.Provider>
   );
