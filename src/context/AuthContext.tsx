@@ -27,7 +27,7 @@ const AuthProvider = ({ children }) => {
       setAuthState({
         token: authData.token, name: authData.name, email: authData.email,
       });
-      setTheUserId(userDataId);
+      setUserId(userDataId);
     } catch (err) {
       setAuthState({
         token: '', name: '', email: '',
