@@ -10,7 +10,6 @@ import SlideInEditor from '../components/SlideInEditor/index';
 import SlideEditor from '../components/SlideEditor';
 import ISlide from '../interfaces/ISlide';
 import CourseService from '../services/courseService';
-import cloudStorage from '../utils/cloudStorage';
 
 interface expandables {
   courseInfo: boolean;
@@ -94,11 +93,8 @@ const CourseCreationScreen = ({ route, navigation }) => {
   }, []);
 
   const submit = async () => {
-    await cloudStorage.upload(slides[0].media);
-    const response = await cloudStorage.downloadUrl(slides[0].media.name);
-    console.log(response);
-    return;
     if (courseId) {
+      console.log('UPDATE');
       const response = await CourseService.updateCourse(id, courseTitle, courseDescription, slides);
       if (!response) {
         setSnackbar({ show: true, message: 'There was an error while updating the course!', status: 'error' });
@@ -106,6 +102,7 @@ const CourseCreationScreen = ({ route, navigation }) => {
         setSnackbar({ show: true, message: 'Course successfully updated!', status: 'ok' });
       }
     } else {
+      console.log('CREATE');
       const response = await CourseService.createCourse(courseTitle, courseDescription, slides);
       if (!response) {
         setSnackbar({ show: true, message: 'There was an error while creating the course!', status: 'error' });
@@ -171,11 +168,16 @@ const CourseCreationScreen = ({ route, navigation }) => {
     handleAccordionClick(Sections.slideEditor);
   };
 
-  const cancelAll = () => navigation.navigate('Home');
-
-  const swap = (data: [], from: number, to: number) => {
-    console.log(swap);
+  const swap = ({ from, to }) => {
+    const aux = slides[from];
+    const auxArray = [...slides];
+    auxArray.splice(from, 1);
+    auxArray.splice(to, 0, aux);
+    auxArray.forEach((slide:ISlide, index:number) => { slide.position = index; });
+    setSlides(auxArray);
   };
+
+  const cancelAll = () => navigation.navigate('Home');
 
   const renderMenu = () => (
     <Menu

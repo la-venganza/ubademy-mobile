@@ -13,6 +13,7 @@ import SlideList from '../components/SlideList';
 import FileDownloadWebview from '../components/FileDownloadWebview';
 import PDFPlaceholder from '../assets/images/pdf-placeholder.png';
 import courseService from '../services/courseService';
+import cloudStorage from '../utils/cloudStorage';
 
 interface Props {
     route: {params:{id: number}};
@@ -47,7 +48,7 @@ const dataMock = {
       id: 9,
       active: true,
       required: true,
-      multimediaUri: 'https://as.com/meristation/imagenes/2021/01/20/noticias/1611162270_013847_1611162672_noticia_normal.jpg',
+      multimediaUri: '1636513956224edd35c84-b37b-4157-80f5-afb2efead5c5.jpg',
       title: 'Chapter 2: An image lalalalalalalalaala allala lala lal.',
       multimedia_type: 'image',
       seen: false,
@@ -101,7 +102,7 @@ const CourseView = ({ route, navigation }:Props) => {
   const [currentStage, setCurrentStage] = useState<ISlide>({});
   const currentStageRef = useRef(null);
   const [startDownload, setStartDownload] = useState(false);
-  const [activeTimeoutId, setActiveTimeoutId] = useState(0);
+  // const [activeTimeoutId, setActiveTimeoutId] = useState(0);
   const [stages, setStages] = useState([]);
   const scrollRef = useRef();
 
@@ -117,7 +118,7 @@ const CourseView = ({ route, navigation }:Props) => {
   const renderVideo = () => <VideoPlayer src={currentStage.multimediaUri} handleVideoIsSeen={handleIsSeen} seen={currentStage.seen} handleVideoEnd={handleVideoEnd} />;
 
   const renderImage = () => (
-    <Image source={{ uri: 'https://i.vimeocdn.com/portrait/58832_300x300.jpg' }} style={{ width: '100%', aspectRatio: 2 }} />
+    <Image source={{ uri: currentStage.url }} style={{ width: '100%', aspectRatio: 2 }} />
   );
   const renderPDF = () => (
     <View style={styles.pdfSlide}>
@@ -147,7 +148,7 @@ const CourseView = ({ route, navigation }:Props) => {
   useEffect(() => {
     const fetchCourse = async () => {
       const courseData = await CourseService.getCourse(id);
-      if (courseData) {
+      if (courseData?.results?.length) {
         setCourse(courseData);
         setStages(courseData.stages);
       } else {
@@ -159,9 +160,16 @@ const CourseView = ({ route, navigation }:Props) => {
     fetchCourse();
   }, []);
 
-  const handleCourseSelection = (id:number) => {
+  const handleCourseSelection = async (id:number) => {
     const stage = course.stages.find((stage, index) => stage.id === id);
-    setCurrentStage(stage);
+    let mediaUrl = '';
+    try {
+      mediaUrl = await cloudStorage.downloadUrl(stage.multimediaUri);
+      console.log('=================>', mediaUrl);
+    } catch (error) {
+      mediaUrl = stage.multimediaUri;
+    }
+    setCurrentStage({ ...stage, url: mediaUrl });
     currentStageRef.current = stage;
     scrollRef.current?.scrollTo({
       y: 0,

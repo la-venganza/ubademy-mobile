@@ -1,15 +1,14 @@
-import { utils } from '@react-native-firebase/app';
-// import storage from '@react-native-firebase/storage';
-// import { ref, StorageReference} from 'firebase/storage';
 import {
   ref, getStorage, uploadBytes, getDownloadURL,
 } from 'firebase/storage';
 
-const upload = async (file) => {
-  const filename = file.name + Date.now();
+const upload = async (file, mediaType) => {
+  const filename = `${mediaType}/${Date.now().toString()}-${file.uri.split('/').pop()}`;
   const storage = getStorage();
   const storageRef = ref(storage, filename);
-  const snapshot = uploadBytes(storageRef, file);
+  const response = await fetch(file.uri);
+  const blob = await response.blob();
+  uploadBytes(storageRef, blob);
   return filename;
 };
 

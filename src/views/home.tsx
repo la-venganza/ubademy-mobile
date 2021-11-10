@@ -40,11 +40,11 @@ const HomeScreen = ({ navigation }) => {
     const fetchCourses = async () => {
       courseService.setCookie(auth?.auth?.token);
       const results = await courseService.getCourses();
-      if (results?.results) {
+      if (results?.results?.length) {
         setCourses(results.results);
       } else {
         // handle no courses
-        setCourses([{ title: 'test title' }, { title: 'otro title' }]);
+        setCourses([{ title: 'test title', id: 1 }, { title: 'otro title', id: 2 }]);
       }
     };
     fetchCourses();
