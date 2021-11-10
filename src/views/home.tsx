@@ -64,7 +64,7 @@ const HomeScreen = ({ navigation }) => {
         Hello
         {' '}
         {auth.auth.name}
-        . Welcome to Ubademy!
+        . Welcome to Ubademy! My user Id: {auth.userId}
       </Text>
       <View style={styles.logoutButton}>
         <Button onPress={() => navigation.navigate('Profile')}>My profile</Button>
