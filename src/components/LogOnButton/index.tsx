@@ -5,6 +5,7 @@ import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
 import PropTypes from 'prop-types';
 import { AuthContext } from '../../context/AuthContext';
 import ColorPalette from '../../styles/colors';
+import userService from '../../services/userService';
 
 const styles = StyleSheet.create({
   Button: {
@@ -42,6 +43,16 @@ function LogOnButton({ email, password }: Props) {
         const jwt = idToken;
         const userName = user.displayName;
         authCtx.setAuth(jwt, userName, email);
+
+        console.log(email);
+        userService.setCookie(jwt);
+        userService.getUser(email).then((u) => {
+          console.log(u);
+          authCtx.setUserId(u.user_id);
+        }).catch(error => {
+          console.log(email);
+          console.log(error);
+        });
       })
       .catch((error) => {
         alert(error);
