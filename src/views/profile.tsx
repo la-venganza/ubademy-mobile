@@ -80,7 +80,6 @@ const ProfileScreen = ({ navigation } : Props) => {
   };
 
   useEffect(() => {
-    console.log('called');
     fetchUser();
   }, []);
 

@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { DatePickerIOSBase, StyleSheet, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import {
   Button, Text, TextInput, HelperText,
 } from 'react-native-paper';
-import DateTimePicker from '@react-native-community/datetimepicker';
 import Logo from '../components/Logo';
 import IUser from '../interfaces/IUser';
 import userService from '../services/userService';
