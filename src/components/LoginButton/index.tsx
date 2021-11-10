@@ -82,10 +82,6 @@ export const GoogleLoginButton = () => {
       const jwt = firebaseCredential.user.stsTokenManager.accessToken;
       userService.setCookie(jwt);
 
-      
-
-      console.log(`User EMAIL: ${firebaseCredential.user.email}`);
-
       let backUser = null;
       backUser = userService.getUser(firebaseCredential.user.email);
 
@@ -104,6 +100,7 @@ export const GoogleLoginButton = () => {
           userService.registerUser(userData);
         }
         auth.setAuth(jwt, userName, firebaseCredential.user.email);
+        //auth.setTheUserId(u.user_id);
         console.log(jwt, userName, firebaseCredential.user.email);
       });
     } catch (err) {
