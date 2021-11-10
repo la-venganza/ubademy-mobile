@@ -5,6 +5,7 @@ import processSlide from '../utils/processSlide';
 
 const formatCourse = async (courseTitle:string, courseDescription:string, slides:Array<ISlide>) => {
   const course:ICourse = {
+    user_id: 'e2492f27-7c55-47e2-8d8f-ec315ee7915f',
     title: courseTitle,
     description: courseDescription,
     stages: [],

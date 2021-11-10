@@ -7,7 +7,7 @@ const processSlide = async (slide) => {
     position: slide.position,
     active: true,
     required: true,
-    multimediaUri: filename,
+    multimedia_id: filename,
     title: slide.title,
     multimedia_type: slide.slideType,
   };

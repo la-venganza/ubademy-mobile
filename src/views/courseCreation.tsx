@@ -94,7 +94,6 @@ const CourseCreationScreen = ({ route, navigation }) => {
 
   const submit = async () => {
     if (courseId) {
-      console.log('UPDATE');
       const response = await CourseService.updateCourse(id, courseTitle, courseDescription, slides);
       if (!response) {
         setSnackbar({ show: true, message: 'There was an error while updating the course!', status: 'error' });
@@ -102,7 +101,6 @@ const CourseCreationScreen = ({ route, navigation }) => {
         setSnackbar({ show: true, message: 'Course successfully updated!', status: 'ok' });
       }
     } else {
-      console.log('CREATE');
       const response = await CourseService.createCourse(courseTitle, courseDescription, slides);
       if (!response) {
         setSnackbar({ show: true, message: 'There was an error while creating the course!', status: 'error' });

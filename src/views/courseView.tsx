@@ -14,6 +14,7 @@ import FileDownloadWebview from '../components/FileDownloadWebview';
 import PDFPlaceholder from '../assets/images/pdf-placeholder.png';
 import courseService from '../services/courseService';
 import cloudStorage from '../utils/cloudStorage';
+import lessonMapper from '../utils/lessonMapper';
 
 interface Props {
     route: {params:{id: number}};
@@ -148,9 +149,9 @@ const CourseView = ({ route, navigation }:Props) => {
   useEffect(() => {
     const fetchCourse = async () => {
       const courseData = await CourseService.getCourse(id);
-      if (courseData?.results?.length) {
+      if (courseData?.id) {
         setCourse(courseData);
-        setStages(courseData.stages);
+        setStages(courseData.lessons.map((lesson) => lessonMapper(lesson)));
       } else {
         setCourse(dataMock);
         setStages(dataMock.stages);
@@ -161,11 +162,10 @@ const CourseView = ({ route, navigation }:Props) => {
   }, []);
 
   const handleCourseSelection = async (id:number) => {
-    const stage = course.stages.find((stage, index) => stage.id === id);
+    const stage = stages.find((stage, index) => stage.id === id);
     let mediaUrl = '';
     try {
       mediaUrl = await cloudStorage.downloadUrl(stage.multimediaUri);
-      console.log('=================>', mediaUrl);
     } catch (error) {
       mediaUrl = stage.multimediaUri;
     }
