@@ -116,7 +116,7 @@ const CourseView = ({ route, navigation }:Props) => {
     }
   };
 
-  const renderVideo = () => <VideoPlayer src={currentStage.multimediaUri} handleVideoIsSeen={handleIsSeen} seen={currentStage.seen} handleVideoEnd={handleVideoEnd} />;
+  const renderVideo = () => <VideoPlayer src={currentStage.url} handleVideoIsSeen={handleIsSeen} seen={currentStage.seen} handleVideoEnd={handleVideoEnd} />;
 
   const renderImage = () => (
     <Image source={{ uri: currentStage.url }} style={{ width: '100%', aspectRatio: 2 }} />

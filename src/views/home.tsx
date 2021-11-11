@@ -3,6 +3,7 @@ import { StyleSheet, Text, View } from 'react-native';
 import {
   Surface, Title, IconButton, Button,
 } from 'react-native-paper';
+import { useIsFocused } from '@react-navigation/native';
 import { AuthContext, AuthProvider } from '../context/AuthContext';
 import LogoutButton from '../components/LogoutButton';
 import CourseList from '../components/CourseList';
@@ -35,6 +36,7 @@ const styles = StyleSheet.create({
 const HomeScreen = ({ navigation }) => {
   const auth = useContext(AuthContext);
   const [courses, setCourses] = useState([]);
+  const isFocused = useIsFocused();
 
   useEffect(() => {
     const fetchCourses = async () => {
@@ -48,7 +50,7 @@ const HomeScreen = ({ navigation }) => {
       }
     };
     fetchCourses();
-  }, []);
+  }, [isFocused]);
 
   const handleGoToCourse = (id) => {
     navigation.navigate('Course view', { id });
@@ -64,7 +66,7 @@ const HomeScreen = ({ navigation }) => {
         Hello
         {' '}
         {auth.auth.name}
-        . Welcome to Ubademy! My user Id: {auth.userId}
+        . Welcome to Ubademy!
       </Text>
       <View style={styles.logoutButton}>
         <Button onPress={() => navigation.navigate('Profile')}>My profile</Button>

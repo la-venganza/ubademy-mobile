@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import {
   StyleSheet, View, ScrollView, Text,
 } from 'react-native';
@@ -10,6 +10,7 @@ import SlideInEditor from '../components/SlideInEditor/index';
 import SlideEditor from '../components/SlideEditor';
 import ISlide from '../interfaces/ISlide';
 import CourseService from '../services/courseService';
+import { AuthContext } from '../context/AuthContext';
 
 interface expandables {
   courseInfo: boolean;
@@ -74,6 +75,7 @@ const CourseCreationScreen = ({ route, navigation }) => {
   const [isExpanded, setIsExpanded] = useState<expandables>(IDefaultAccordionStatus);
   const [courseId, setCourseId] = useState(id);
   const [snackbar, setSnackbar] = useState({ show: false, message: '', status: 'ok' });
+  const auth = useContext(AuthContext);
 
   useEffect(() => {
     async function getCourse() {
@@ -94,14 +96,14 @@ const CourseCreationScreen = ({ route, navigation }) => {
 
   const submit = async () => {
     if (courseId) {
-      const response = await CourseService.updateCourse(id, courseTitle, courseDescription, slides);
+      const response = await CourseService.updateCourse(id, courseTitle, courseDescription, slides, auth.userId);
       if (!response) {
         setSnackbar({ show: true, message: 'There was an error while updating the course!', status: 'error' });
       } else {
         setSnackbar({ show: true, message: 'Course successfully updated!', status: 'ok' });
       }
     } else {
-      const response = await CourseService.createCourse(courseTitle, courseDescription, slides);
+      const response = await CourseService.createCourse(courseTitle, courseDescription, slides, auth.userId);
       if (!response) {
         setSnackbar({ show: true, message: 'There was an error while creating the course!', status: 'error' });
       } else {

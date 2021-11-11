@@ -5,6 +5,7 @@ interface ICourse {
     title: string;
     description: string;
     stages: Array<ISlide>;
+    user_id: string;
 }
 
 export default ICourse;
