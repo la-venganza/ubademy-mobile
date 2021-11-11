@@ -166,6 +166,15 @@ const CourseCreationScreen = ({ route, navigation }) => {
     handleAccordionClick(Sections.slideEditor);
   };
 
+  const swap = ({ from, to }) => {
+    const aux = slides[from];
+    const auxArray = [...slides];
+    auxArray.splice(from, 1);
+    auxArray.splice(to, 0, aux);
+    auxArray.forEach((slide:ISlide, index:number) => { slide.position = index; });
+    setSlides(auxArray);
+  };
+
   const cancelAll = () => navigation.navigate('Home');
 
   const renderMenu = () => (

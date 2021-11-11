@@ -76,8 +76,6 @@ export const GoogleLoginButton = () => {
 
       const authFb = getAuth();
       const firebaseCredential = await signInWithCredential(authFb, googleCredential);
-      //      console.log('Firebase credentials');
-      //      console.log(firebaseCredential);
 
       const jwt = firebaseCredential.user.stsTokenManager.accessToken;
       userService.setCookie(jwt);
