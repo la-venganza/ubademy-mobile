@@ -107,14 +107,22 @@ const ProfileScreen = ({ navigation } : Props) => {
               marginBottom: 5,
             }]}
             >
-              {user.first_name}
-              {' '}
-              {user.last_name}
+              { user.first_name ? (
+                <>
+                  {user.first_name}
+                  {' '}
+                  {user.last_name}
+                </>
+              ) : (
+                <>
+                  Smart Student
+                </>
+              ) }
 
             </Title>
             <Caption style={styles.caption}>
               @
-              {user.first_name}
+              {user.username}
             </Caption>
           </View>
         </View>

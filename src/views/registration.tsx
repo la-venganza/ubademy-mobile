@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { StyleSheet, View } from 'react-native';
 import {
   Button, Text, TextInput, HelperText,
@@ -79,10 +79,8 @@ const RegistrationScreen = ({navigation}) => {
             alert('Succesfully registered.');
 
             const user = {
-              first_name: userName,
-              last_name: 'mock',
+              username: userName,
               email,
-              age: 0,
             };
 
             userService.setCookie(auth.currentUser.stsTokenManager.accessToken);
