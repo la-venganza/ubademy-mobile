@@ -32,6 +32,7 @@ const registerUser = async (user) => {
   console.log(user);
   try {
     const response = await instance.post('/user', {
+      username: user.username,
       first_name: user.first_name,
       last_name: user.last_name,
       age: user.age,

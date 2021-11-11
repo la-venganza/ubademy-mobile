@@ -87,12 +87,14 @@ export const GoogleLoginButton = () => {
       console.log(backUser);
 
       backUser.then((u) => {
-        if (!u) {
+        console.log('Test test test');
+        console.log(result.user);
+        if (u.results.length === 0) {
           const userData = {
+            username: result.user.name,
             first_name: result.user.givenName,
             last_name: 'mock',
             email: firebaseCredential.user.email,
-            age: 0,
           };
           console.log('User not found, registering user.');
           userService.registerUser(userData);
