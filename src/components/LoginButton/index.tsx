@@ -87,8 +87,6 @@ export const GoogleLoginButton = () => {
       console.log(backUser);
 
       backUser.then((u) => {
-        console.log('Test test test');
-        console.log(result.user);
         if (u.results.length === 0) {
           const userData = {
             username: result.user.name,
