@@ -11,6 +11,7 @@ import SlideEditor from '../components/SlideEditor';
 import ISlide from '../interfaces/ISlide';
 import CourseService from '../services/courseService';
 import { AuthContext } from '../context/AuthContext';
+import { LoadingContext } from '../context/LoadingContext';
 
 interface expandables {
   courseInfo: boolean;
@@ -84,6 +85,7 @@ const CourseCreationScreen = ({ route, navigation }) => {
   const [courseId, setCourseId] = useState(id);
   const [snackbar, setSnackbar] = useState({ show: false, message: '', status: 'ok' });
   const auth = useContext(AuthContext);
+  const loadingCtx = useContext(LoadingContext);
 
   useEffect(() => {
     async function getCourse() {
@@ -102,7 +104,22 @@ const CourseCreationScreen = ({ route, navigation }) => {
     getCourse();
   }, []);
 
+  const validate = () => {
+    const errors = [];
+    if (!courseTitle) errors.push('Title is mandatory');
+    if (!courseDescription) errors.push('Description is mandatory');
+    if (!slides.length) errors.push('You need at least one slide');
+    return errors;
+  };
+
   const submit = async () => {
+    const validationResult = validate();
+    if (validationResult.length) {
+      const errorMessage = `Error: ${validationResult[0]}`;
+      setSnackbar({ show: true, status: 'error', message: errorMessage });
+      return;
+    }
+    loadingCtx.setLoading(true);
     if (courseId) {
       const response = await CourseService.updateCourse(courseId, courseTitle, courseDescription, slides, auth.userId);
       if (!response) {
@@ -121,6 +138,7 @@ const CourseCreationScreen = ({ route, navigation }) => {
         setSnackbar({ show: true, message: 'Course successfully created!', status: 'ok' });
       }
     }
+    loadingCtx.setLoading(false);
   };
 
   const clearActiveSlide = (mediaType:string = 'image') => {
