@@ -72,13 +72,14 @@ const ProfileScreen = ({ navigation } : Props) => {
 
   const auth = useContext(AuthContext);
 
+  const fetchUser = async () => {
+    const userData = await userService.getUser(auth.auth.email);
+    if (userData.results[0]) {
+      setUser(userData.results[0]);
+    }
+  };
+
   useEffect(() => {
-    const fetchUser = async () => {
-      const userData = await userService.getUser(auth.auth.email);
-      if (userData.results[0]) {
-        setUser(userData.results[0]);
-      }
-    };
     fetchUser();
   }, []);
 
@@ -140,7 +141,7 @@ const ProfileScreen = ({ navigation } : Props) => {
           <Caption>Wallet</Caption>
         </View>
         <View style={styles.infoBox}>
-          <Title>Base</Title>
+          <Title>{user.subscription}</Title>
           <Caption>Subscription</Caption>
         </View>
       </View>
@@ -158,7 +159,10 @@ const ProfileScreen = ({ navigation } : Props) => {
             <Text style={styles.menuItemText}>Payment</Text>
           </View>
         </TouchableRipple>
-        <TouchableRipple onPress={() => navigation.navigate('ProfileEdit', { user })}>
+        <TouchableRipple onPress={() => navigation.navigate('ProfileEdit', {
+          user, onGoBack: () => fetchUser(),
+        })}
+        >
           <View style={styles.menuItem}>
             <Icon name="account-edit-outline" color={Colors.secondary} size={25} />
             <Text style={styles.menuItemText}>Edit</Text>

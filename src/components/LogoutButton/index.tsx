@@ -25,7 +25,7 @@ const styles = StyleSheet.create({
 
 function LogoutButton() {
   const auth = useContext(AuthContext);
-  const logout = () => auth.setAuth('', '');
+  const logout = () => auth.setAuth('', '', '');
   return (
     <Button mode="contained" onPress={logout}>
       <Text style={styles.TextStyle}>Log me out!</Text>
