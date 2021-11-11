@@ -45,6 +45,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-around',
     marginTop: 20,
+    marginBottom: 12,
   },
   addWrapper: {
     alignItems: 'flex-end',
@@ -59,6 +60,13 @@ const styles = StyleSheet.create({
   snackbarError: {
     backgroundColor: 'red',
     color: 'white',
+  },
+  accordionEditor: {
+    marginTop: 16,
+  },
+  courseInfoSurface: {
+    padding: 12,
+    backgroundColor: 'white',
   },
 });
 
@@ -96,18 +104,20 @@ const CourseCreationScreen = ({ route, navigation }) => {
 
   const submit = async () => {
     if (courseId) {
-      const response = await CourseService.updateCourse(id, courseTitle, courseDescription, slides, auth.userId);
+      const response = await CourseService.updateCourse(courseId, courseTitle, courseDescription, slides, auth.userId);
       if (!response) {
         setSnackbar({ show: true, message: 'There was an error while updating the course!', status: 'error' });
       } else {
         setSnackbar({ show: true, message: 'Course successfully updated!', status: 'ok' });
+        setSlides(slides.map((slide, index) => ({ ...slide, id: response.lessons[index].id })));
       }
     } else {
       const response = await CourseService.createCourse(courseTitle, courseDescription, slides, auth.userId);
       if (!response) {
         setSnackbar({ show: true, message: 'There was an error while creating the course!', status: 'error' });
       } else {
-        setCourseId(response.courseId);
+        setCourseId(response.id);
+        setSlides(slides.map((slide, index) => ({ ...slide, id: response.lessons[index].id })));
         setSnackbar({ show: true, message: 'Course successfully created!', status: 'ok' });
       }
     }
@@ -234,10 +244,13 @@ const CourseCreationScreen = ({ route, navigation }) => {
       <Title>Course creation!</Title>
       <List.Section>
         <List.Accordion title="Course information" id="1" expanded={isExpanded.courseInfo} onPress={() => handleAccordionClick(Sections.courseInfo)}>
-          <TextInput mode="flat" value={courseTitle} placeholder="Course title" onChangeText={(text) => setCourseTitle(text)} />
-          <TextInput mode="flat" value={courseDescription} multiline numberOfLines={4} placeholder="Course description" onChangeText={(text) => setCourseDescription(text)} />
+          <Surface style={styles.courseInfoSurface}>
+            <TextInput mode="flat" value={courseTitle} placeholder="Course title" onChangeText={(text) => setCourseTitle(text)} />
+            <TextInput mode="flat" value={courseDescription} multiline numberOfLines={4} placeholder="Course description" style={{ marginTop: 12 }} onChangeText={(text) => setCourseDescription(text)} />
+          </Surface>
         </List.Accordion>
-        <List.Accordion title="Slide Editor" id="2" expanded={isExpanded.slideEditor} onPress={() => handleAccordionClick(Sections.slideEditor)}>
+        <Divider style={styles.divide} />
+        <List.Accordion title="Slide Editor" id="2" expanded={isExpanded.slideEditor} style={styles.accordionEditor} onPress={() => handleAccordionClick(Sections.slideEditor)}>
           <SlideEditor slide={activeSlide} setSlide={setActiveslide} />
           <View style={styles.menuWrapper}>
             <Button onPress={clearActiveSlide}>Cancel</Button>

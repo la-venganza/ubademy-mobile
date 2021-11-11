@@ -36,7 +36,7 @@ const SlideInEditor = ({
   const renderType = () => {
     switch (slideType) {
       case 'video':
-        return <View><Image source={VideoPlaceholder} /></View>;
+        return <View><Image source={VideoPlaceholder} style={styles.image} /></View>;
       case 'image':
         return <View><Image source={ImagePlaceholder} style={styles.image} /></View>;
       case 'PDF':
