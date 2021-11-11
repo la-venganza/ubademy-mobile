@@ -32,7 +32,7 @@ const createCourse = async (courseTitle:string, courseDescription:string, slides
 const updateCourse = async (id:number, courseTitle:string, courseDescription:string, slides:Array<ISlide>, userId:string) => {
   try {
     const course = await formatCourse(courseTitle, courseDescription, slides, userId);
-    const response = await HTTPClient.patch(`/course/${id}`, course);
+    const response = await HTTPClient.put(`/course/${id}`, course);
     return response.data;
   } catch (error) {
     console.log(error);
