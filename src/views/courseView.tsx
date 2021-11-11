@@ -1,4 +1,6 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, {
+  useState, useEffect, useRef, useContext,
+} from 'react';
 import { Image, StyleSheet, View } from 'react-native';
 import {
   Button,
@@ -15,6 +17,7 @@ import PDFPlaceholder from '../assets/images/pdf-placeholder.png';
 import courseService from '../services/courseService';
 import cloudStorage from '../utils/cloudStorage';
 import lessonMapper from '../utils/lessonMapper';
+import { LoadingContext } from '../context/LoadingContext';
 
 interface Props {
     route: {params:{id: number}};
@@ -106,6 +109,7 @@ const CourseView = ({ route, navigation }:Props) => {
   // const [activeTimeoutId, setActiveTimeoutId] = useState(0);
   const [stages, setStages] = useState([]);
   const scrollRef = useRef();
+  const loadingCtx = useContext(LoadingContext);
 
   const renderDownload = () => (<FileDownloadWebview uri={currentStage.multimediaUri} />);
 
@@ -116,7 +120,7 @@ const CourseView = ({ route, navigation }:Props) => {
     }
   };
 
-  const renderVideo = () => <VideoPlayer src={currentStage.multimediaUri} handleVideoIsSeen={handleIsSeen} seen={currentStage.seen} handleVideoEnd={handleVideoEnd} />;
+  const renderVideo = () => <VideoPlayer src={currentStage.url} handleVideoIsSeen={handleIsSeen} seen={currentStage.seen} handleVideoEnd={handleVideoEnd} />;
 
   const renderImage = () => (
     <Image source={{ uri: currentStage.url }} style={{ width: '100%', aspectRatio: 2 }} />
@@ -148,6 +152,7 @@ const CourseView = ({ route, navigation }:Props) => {
 
   useEffect(() => {
     const fetchCourse = async () => {
+      loadingCtx.setLoading(true);
       const courseData = await CourseService.getCourse(id);
       if (courseData?.id) {
         setCourse(courseData);
@@ -157,6 +162,7 @@ const CourseView = ({ route, navigation }:Props) => {
         setStages(dataMock.stages);
         // HANDLE ERROR
       }
+      loadingCtx.setLoading(false);
     };
     fetchCourse();
   }, []);
@@ -165,7 +171,9 @@ const CourseView = ({ route, navigation }:Props) => {
     const stage = stages.find((stage, index) => stage.id === id);
     let mediaUrl = '';
     try {
+      loadingCtx.setLoading(true);
       mediaUrl = await cloudStorage.downloadUrl(stage.multimediaUri);
+      loadingCtx.setLoading(false);
     } catch (error) {
       mediaUrl = stage.multimediaUri;
     }

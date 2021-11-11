@@ -3,9 +3,9 @@ import ICourse from '../interfaces/ICourse';
 import { instance as HTTPClient, configureAxiosHeaders } from '../utils/httpClient';
 import processSlide from '../utils/processSlide';
 
-const formatCourse = async (courseTitle:string, courseDescription:string, slides:Array<ISlide>) => {
+const formatCourse = async (courseTitle:string, courseDescription:string, slides:Array<ISlide>, userId:string) => {
   const course:ICourse = {
-    user_id: 'e2492f27-7c55-47e2-8d8f-ec315ee7915f',
+    user_id: userId,
     title: courseTitle,
     description: courseDescription,
     stages: [],
@@ -18,9 +18,9 @@ const setCookie = async (token) => {
   configureAxiosHeaders(token);
 };
 
-const createCourse = async (courseTitle:string, courseDescription:string, slides:Array<ISlide>) => {
+const createCourse = async (courseTitle:string, courseDescription:string, slides:Array<ISlide>, userId:string) => {
   try {
-    const course = await formatCourse(courseTitle, courseDescription, slides);
+    const course = await formatCourse(courseTitle, courseDescription, slides, userId);
     const response = await HTTPClient.post('/course', course);
     return response.data;
   } catch (error) {
@@ -29,10 +29,10 @@ const createCourse = async (courseTitle:string, courseDescription:string, slides
   }
 };
 
-const updateCourse = async (id:number, courseTitle:string, courseDescription:string, slides:Array<ISlide>) => {
+const updateCourse = async (id:number, courseTitle:string, courseDescription:string, slides:Array<ISlide>, userId:string) => {
   try {
-    const course = await formatCourse(courseTitle, courseDescription, slides);
-    const response = await HTTPClient.patch(`/course/${id}`, course);
+    const course = await formatCourse(courseTitle, courseDescription, slides, userId);
+    const response = await HTTPClient.put(`/course/${id}`, course);
     return response.data;
   } catch (error) {
     console.log(error);

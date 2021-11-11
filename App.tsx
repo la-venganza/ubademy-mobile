@@ -11,6 +11,7 @@ import RegistrationScreen from './src/views/registration';
 import CourseCreationScreen from './src/views/courseCreation';
 import CourseViewScreen from './src/views/courseView';
 import { AuthContext, AuthProvider } from './src/context/AuthContext';
+import { LoadingContext, LoadingProvider } from './src/context/LoadingContext';
 import Colors from './src/styles/colors';
 import ProfileEditScreen from './src/views/profileEdit';
 
@@ -39,31 +40,33 @@ const Stack = createNativeStackNavigator();
 export default () => (
   <PaperProvider theme={theme}>
     <AuthProvider>
-      <AuthContext.Consumer>
-        { ({ auth }) => (
-          <NavigationContainer>
-            <Stack.Navigator>
-              { auth.token
-                ? (
-                  <>
-                    <Stack.Screen name="Home" component={HomeScreen} />
-                    <Stack.Screen name="Profile" component={ProfileScreen} />
-                    <Stack.Screen name="ProfileEdit" component={ProfileEditScreen} />
-                    <Stack.Screen name="Course creation" component={CourseCreationScreen} initialParams={{ id: 0 }} />
-                    <Stack.Screen name="Course view" component={CourseViewScreen} initialParams={{ id: 0 }} />
+      <LoadingProvider>
+        <AuthContext.Consumer>
+          { ({ auth }) => (
+            <NavigationContainer>
+              <Stack.Navigator>
+                { auth.token
+                  ? (
+                    <>
+                      <Stack.Screen name="Home" component={HomeScreen} />
+                      <Stack.Screen name="Profile" component={ProfileScreen} />
+                      <Stack.Screen name="ProfileEdit" component={ProfileEditScreen} />
+                      <Stack.Screen name="Course creation" component={CourseCreationScreen} initialParams={{ id: 0 }} />
+                      <Stack.Screen name="Course view" component={CourseViewScreen} initialParams={{ id: 0 }} />
 
-                  </>
-                )
-                : (
-                  <>
-                    <Stack.Screen name="Login" component={LoginScreen} />
-                    <Stack.Screen name="Registration" component={RegistrationScreen} />
-                  </>
-                )}
-            </Stack.Navigator>
-          </NavigationContainer>
-        )}
-      </AuthContext.Consumer>
+                    </>
+                  )
+                  : (
+                    <>
+                      <Stack.Screen name="Login" component={LoginScreen} />
+                      <Stack.Screen name="Registration" component={RegistrationScreen} />
+                    </>
+                  )}
+              </Stack.Navigator>
+            </NavigationContainer>
+          )}
+        </AuthContext.Consumer>
+      </LoadingProvider>
     </AuthProvider>
   </PaperProvider>
 );

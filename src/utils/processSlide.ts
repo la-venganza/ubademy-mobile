@@ -9,6 +9,7 @@ const processSlide = async (slide) => {
     multimedia_id: filename,
     title: slide.title,
     multimedia_type: slide.slideType,
+    id: slide.id,
   };
 };
 
