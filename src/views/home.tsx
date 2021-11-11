@@ -1,11 +1,12 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
-import { Surface, Title, IconButton } from 'react-native-paper';
+import {
+  Surface, Title, IconButton, Button,
+} from 'react-native-paper';
 import { AuthContext, AuthProvider } from '../context/AuthContext';
 import LogoutButton from '../components/LogoutButton';
 import CourseList from '../components/CourseList';
 import courseService from '../services/courseService';
-import { Button } from 'react-native-paper';
 
 const styles = StyleSheet.create({
   container: {
@@ -37,12 +38,13 @@ const HomeScreen = ({ navigation }) => {
 
   useEffect(() => {
     const fetchCourses = async () => {
+      courseService.setCookie(auth?.auth?.token);
       const results = await courseService.getCourses();
-      if (results) {
-        setCourses(results);
+      if (results?.results?.length) {
+        setCourses(results.results);
       } else {
         // handle no courses
-        setCourses([{ title: 'test title' }, { title: 'otro title' }]);
+        setCourses([{ title: 'test title', id: 1 }, { title: 'otro title', id: 2 }]);
       }
     };
     fetchCourses();
@@ -62,7 +64,7 @@ const HomeScreen = ({ navigation }) => {
         Hello
         {' '}
         {auth.auth.name}
-        . Welcome to Ubademy!
+        . Welcome to Ubademy! My user Id: {auth.userId}
       </Text>
       <View style={styles.logoutButton}>
         <Button onPress={() => navigation.navigate('Profile')}>My profile</Button>

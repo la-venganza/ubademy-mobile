@@ -42,7 +42,6 @@ export default () => (
       <AuthContext.Consumer>
         { ({ auth }) => (
           <NavigationContainer>
-            {console.log(auth)}
             <Stack.Navigator>
               { auth.token
                 ? (

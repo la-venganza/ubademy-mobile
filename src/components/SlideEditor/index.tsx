@@ -56,7 +56,6 @@ const SlideEditor = ({ slide, setSlide }: Props) => {
       aspect: [4, 3],
       quality: 1,
     });
-
     if (!result.cancelled) {
       setSlide({ ...slide, media: result });
     }
