@@ -1,11 +1,10 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext } from 'react';
 import { Text, StyleSheet } from 'react-native';
 import { Button } from 'react-native-paper';
-import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
 import PropTypes from 'prop-types';
 import { AuthContext } from '../../context/AuthContext';
 import ColorPalette from '../../styles/colors';
-import userService from '../../services/userService';
+import loginService from '../../services/loginService';
 
 const styles = StyleSheet.create({
   Button: {
@@ -33,31 +32,9 @@ interface Props {
 
 function LogOnButton({ email, password }: Props) {
   const authCtx = useContext(AuthContext);
-  const firebaseAuth = getAuth();
-  const logon = () => {
-    signInWithEmailAndPassword(firebaseAuth, email, password)
-      .then(async (userCredential) => {
-        // Signed in
-        const { user } = userCredential;
-        const idToken = await user.getIdToken();
-        const jwt = idToken;
-        const userName = user.displayName;
-        authCtx.setAuth(jwt, userName, email);
 
-        userService.setCookie(jwt);
-        userService.getUser(email).then((u) => {
-          console.log(u);
-          authCtx.setUserId(u.results[0].user_id);
-        }).catch(error => {
-          console.log(error);
-        });
-      })
-      .catch((error) => {
-        alert(error);
-        console.log(error);
-        const errorCode = error.code;
-        const errorMessage = error.message;
-      });
+  const logon = () => {
+    loginService.loginWithUserAndPassword(authCtx, email, password);
   };
   return (
     <Button mode="contained" onPress={logon}>
