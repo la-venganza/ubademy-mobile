@@ -28,9 +28,6 @@ const loginWithGoogle = async (auth: AuthContext) => {
   let backUser = null;
   backUser = userService.getUser(firebaseCredential.user.email);
 
-  console.log(`Returned user from  login: ${backUser}`);
-  console.log(backUser);
-
   backUser.then((u: { results: string | any[]; }): void => {
     if (u.results.length === 0) {
       const userData = {
@@ -42,15 +39,15 @@ const loginWithGoogle = async (auth: AuthContext) => {
       console.log('User not found, registering user.');
       userService.registerUser(userData);
     }
-    auth.setAuth(jwt, userName, firebaseCredential.user.email);
+
     userService.getUser(firebaseCredential.user.email)
       .then((user: any) => {
         auth.setUserId(u.results[0].user_id);
+        auth.setAuth(jwt, userName, firebaseCredential.user.email);
       })
       .catch((error: any) => {
         console.log(error);
       });
-    console.log(jwt, userName, firebaseCredential.user.email);
   });
 };
 
@@ -64,10 +61,9 @@ const loginWithUserAndPassword = async (authCtx: AuthContext, email: string, pas
       const jwt = idToken;
       const userName = user.displayName;
       authCtx.setAuth(jwt, userName, email);
-
       userService.setCookie(jwt);
+      // Obtaining userId from back.
       userService.getUser(email).then((u) => {
-        console.log(u);
         authCtx.setUserId(u.results[0].user_id);
       }).catch((error) => {
         console.log(error);
