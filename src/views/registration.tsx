@@ -4,9 +4,11 @@ import {
   Button, Text, TextInput, HelperText,
 } from 'react-native-paper';
 import {
-  getAuth, createUserWithEmailAndPassword, FirebaseError, updateProfile } from 'firebase/auth';
+  getAuth, createUserWithEmailAndPassword, FirebaseError, updateProfile,
+} from 'firebase/auth';
 import Logo from '../components/Logo';
 import userService from '../services/userService';
+import RegisterButton from '../components/RegisterButton';
 
 const styles = StyleSheet.create({
   surface: {
@@ -29,7 +31,7 @@ const styles = StyleSheet.create({
 
 });
 
-const RegistrationScreen = ({navigation}) => {
+const RegistrationScreen = ({ navigation }) => {
   const errorMessagesInitial : string[] = [];
   const [userName, _setUserName] = useState('');
   const [password, _setPassword] = useState('');
@@ -65,42 +67,19 @@ const RegistrationScreen = ({navigation}) => {
     return (errorList);
   };
 
-  const handleLogin = async () => {
+  const isAnyErrorInFields = () => {
     const errors = validate();
     setErrorList(errors);
 
     if (errors && errors.length === 0) {
-      const auth = getAuth();
-      await createUserWithEmailAndPassword(auth, email, password)
-        .then((result) => {
-          updateProfile(auth.currentUser, {
-            displayName: userName,
-          }).then(() => {
-            alert('Succesfully registered.');
-
-            const user = {
-              username: userName,
-              email,
-            };
-
-            userService.setCookie(auth.currentUser.stsTokenManager.accessToken);
-            console.log('Registering user...');
-            userService.registerUser(user);
-            navigation.navigate('Login');
-            // Update successful.
-          }, (error) => {
-            console.log(error);
-          });
-        })
-        .catch((error: Error) => {
-          const authError = error as FirebaseError;
-          const errorCode = authError.code;
-          const errorMessage = authError.message;
-          alert(errorMessage);
-          console.log(errorCode);
-          console.log(error);
-        });
+      return false;
     }
+
+    return true;
+  };
+
+  const navigateToLogin = () => {
+    navigation.navigate('Login');
   };
 
   const hasErrors = () => errorMsgs.length;
@@ -139,7 +118,13 @@ const RegistrationScreen = ({navigation}) => {
           textContentType="emailAddress"
         />
         <View style={styles.buttonWrapper}>
-          <Button onPress={handleLogin} mode="contained">Register</Button>
+          <RegisterButton
+            email={email}
+            password={password}
+            userName={userName}
+            hasErrorsCallback={isAnyErrorInFields}
+            navigationCallback={navigateToLogin}
+          />
         </View>
         <View style={styles.buttonWrapper}>
           <HelperText type="error" visible={hasErrors()}>
