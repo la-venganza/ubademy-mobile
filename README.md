@@ -4,3 +4,25 @@
 
 # ubademy-mobile
 React Native Android app for Taller 2
+
+# How to build
+```
+yarn install 
+```
+
+# How to build with expo
+Bajarse la app de expo en el celular (Buscar expo go en el marketplace y bajarlo).
+
+Instalar expo en la compu
+```
+npm install --global expo-cli
+```
+
+Correr la app con expo
+```
+expo start
+```
+
+Escanear el QR con la app expo go bajada en el celular (o correrla en el browser)
+
+
