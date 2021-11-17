@@ -10,7 +10,7 @@ React Native Android app for Taller 2
 yarn install 
 ```
 
-# How to build with expo
+# How to run with expo
 Bajarse la app de expo en el celular (Buscar expo go en el marketplace y bajarlo).
 
 Instalar expo en la compu
