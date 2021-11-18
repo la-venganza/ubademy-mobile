@@ -6,12 +6,15 @@ import {
   Title, TextInput, Button, Divider, Surface, IconButton, Menu, List, Snackbar,
 } from 'react-native-paper';
 import DraggableFlatList from 'react-native-draggable-flatlist';
+import DropDown from 'react-native-paper-dropdown';
 import SlideInEditor from '../components/SlideInEditor/index';
 import SlideEditor from '../components/SlideEditor';
 import ISlide from '../interfaces/ISlide';
 import CourseService from '../services/courseService';
 import { AuthContext } from '../context/AuthContext';
 import { LoadingContext } from '../context/LoadingContext';
+import categories from '../data/categories.json';
+import plans from '../data/plans.json';
 
 interface expandables {
   courseInfo: boolean;
@@ -80,6 +83,10 @@ const CourseCreationScreen = ({ route, navigation }) => {
   const [slides, setSlides] = useState<ISlide[]>([]);
   const [courseTitle, setCourseTitle] = useState('');
   const [courseDescription, setCourseDescription] = useState('');
+  const [category, setCategory] = useState('');
+  const [plan, setPlan] = useState('');
+  const [categoryDropdownIsOpen, setCategoryDropdownIsOpen] = useState(false);
+  const [planDropdownIsOpen, setPlanDropdownIsOpen] = useState(false);
   const [menuVisible, setMenuVisible] = useState(false);
   const [isExpanded, setIsExpanded] = useState<expandables>(IDefaultAccordionStatus);
   const [courseId, setCourseId] = useState(id);
@@ -121,7 +128,7 @@ const CourseCreationScreen = ({ route, navigation }) => {
     }
     loadingCtx.setLoading(true);
     if (courseId) {
-      const response = await CourseService.updateCourse(courseId, courseTitle, courseDescription, slides, auth.userId);
+      const response = await CourseService.updateCourse(courseId, courseTitle, courseDescription, slides, auth.userId, plan, category);
       if (!response) {
         setSnackbar({ show: true, message: 'There was an error while updating the course!', status: 'error' });
       } else {
@@ -129,7 +136,7 @@ const CourseCreationScreen = ({ route, navigation }) => {
         setSlides(slides.map((slide, index) => ({ ...slide, id: response.lessons[index].id })));
       }
     } else {
-      const response = await CourseService.createCourse(courseTitle, courseDescription, slides, auth.userId);
+      const response = await CourseService.createCourse(courseTitle, courseDescription, slides, auth.userId, plan, category);
       if (!response) {
         setSnackbar({ show: true, message: 'There was an error while creating the course!', status: 'error' });
       } else {
@@ -265,6 +272,26 @@ const CourseCreationScreen = ({ route, navigation }) => {
           <Surface style={styles.courseInfoSurface}>
             <TextInput mode="flat" value={courseTitle} placeholder="Course title" onChangeText={(text) => setCourseTitle(text)} />
             <TextInput mode="flat" value={courseDescription} multiline numberOfLines={4} placeholder="Course description" style={{ marginTop: 12 }} onChangeText={(text) => setCourseDescription(text)} />
+            <DropDown
+              label="Category"
+              mode="outlined"
+              visible={categoryDropdownIsOpen}
+              showDropDown={() => setCategoryDropdownIsOpen(true)}
+              onDismiss={() => setCategoryDropdownIsOpen(false)}
+              value={category}
+              setValue={setCategory}
+              list={categories}
+            />
+            <DropDown
+              label="Plan"
+              mode="outlined"
+              visible={planDropdownIsOpen}
+              showDropDown={() => setPlanDropdownIsOpen(true)}
+              onDismiss={() => setPlanDropdownIsOpen(false)}
+              value={plan}
+              setValue={setPlan}
+              list={plans}
+            />
           </Surface>
         </List.Accordion>
         <Divider style={styles.divide} />
