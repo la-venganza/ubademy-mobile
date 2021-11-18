@@ -60,9 +60,12 @@ const setSeen = async (courseId, slideId) => {
   }
 };
 
-const getCourses = async () => {
+const getCourses = async (searchTerm:string = '', plan:string = '') => {
   try {
-    const response = await HTTPClient.get('/course');
+    let path = '/course?';
+    path += searchTerm ? `category=${searchTerm}` : '';
+    path += plan ? `plan=${plan}` : '';
+    const response = await HTTPClient.get(path);
     return response.data;
   } catch (error) {
     console.log(error);

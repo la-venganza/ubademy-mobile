@@ -221,7 +221,7 @@ const CourseCreationScreen = ({ route, navigation }) => {
     >
       <Menu.Item onPress={() => handleAdd('video')} title="Add video slide" />
       <Menu.Item onPress={() => handleAdd('image')} title="Add image slide" />
-      <Menu.Item onPress={() => handleAdd('PDF')} title="Add PDF slide" />
+      {/* <Menu.Item onPress={() => handleAdd('PDF')} title="Add PDF slide" /> */}
     </Menu>
   );
 
