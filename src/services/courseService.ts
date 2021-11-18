@@ -10,7 +10,7 @@ const formatCourse = async (courseTitle:string, courseDescription:string, slides
     description: courseDescription,
     stages: [],
     plan,
-    category,
+    type: category,
   };
   course.stages = await Promise.all(slides.map(async (element:ISlide) => processSlide(element)));
   return course;

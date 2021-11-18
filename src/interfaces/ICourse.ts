@@ -7,7 +7,7 @@ interface ICourse {
     stages: Array<ISlide>;
     user_id: string;
     plan: string;
-    category: string;
+    type: string;
 }
 
 export default ICourse;
