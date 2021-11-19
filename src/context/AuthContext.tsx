@@ -25,15 +25,15 @@ const AuthProvider = ({ children }) => {
       // Configure axios headers
       configureAxiosHeaders(authData.token);
       setAuthState({
-        token: authData.token, 
-        name: authData.name, 
-        email: authData.email, 
+        token: authData.token,
+        name: authData.name,
+        email: authData.email,
         loading: authData.loading,
       });
       setUserId(userDataId);
     } catch (err) {
       setAuthState({
-        token: '', name: '', email: '', loading:false,  
+        token: '', name: '', email: '', loading: false,
       });
     }
   };
