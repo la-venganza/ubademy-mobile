@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { Provider as PaperProvider, DefaultTheme } from 'react-native-paper';
+import { Provider as PaperProvider, DefaultTheme, ActivityIndicator } from 'react-native-paper';
 import Constants from 'expo-constants';
 import * as firebase from 'firebase/app';
 import HomeScreen from './src/views/home.tsx';
@@ -14,6 +14,7 @@ import { AuthContext, AuthProvider } from './src/context/AuthContext';
 import { LoadingContext, LoadingProvider } from './src/context/LoadingContext';
 import Colors from './src/styles/colors';
 import ProfileEditScreen from './src/views/profileEdit';
+import LoadingScreen from './src/views/loading';
 
 const firebaseConfig = {
   apiKey: Constants.manifest.extra.FIREBASE_API_KEY,
@@ -45,23 +46,33 @@ export default () => (
           { ({ auth }) => (
             <NavigationContainer>
               <Stack.Navigator>
-                { auth.token
-                  ? (
-                    <>
-                      <Stack.Screen name="Home" component={HomeScreen} />
-                      <Stack.Screen name="Profile" component={ProfileScreen} />
-                      <Stack.Screen name="ProfileEdit" component={ProfileEditScreen} />
-                      <Stack.Screen name="Course creation" component={CourseCreationScreen} initialParams={{ id: 0 }} />
-                      <Stack.Screen name="Course view" component={CourseViewScreen} initialParams={{ id: 0 }} />
+                { (() => {
+                  if (auth.token) {
+                    return (
+                      <>
+                        <Stack.Screen name="Home" component={HomeScreen} />
+                        <Stack.Screen name="Profile" component={ProfileScreen} />
+                        <Stack.Screen name="ProfileEdit" component={ProfileEditScreen} />
+                        <Stack.Screen name="Course creation" component={CourseCreationScreen} initialParams={{ id: 0 }} />
+                        <Stack.Screen name="Course view" component={CourseViewScreen} initialParams={{ id: 0 }} />
 
-                    </>
-                  )
-                  : (
+                      </>
+                    );
+                  }
+                  if (!auth.loading) {
+                    return (
+                      <>
+                        <Stack.Screen name="Login" component={LoginScreen} />
+                        <Stack.Screen name="Registration" component={RegistrationScreen} />
+                      </>
+                    );
+                  }
+                  return (
                     <>
-                      <Stack.Screen name="Login" component={LoginScreen} />
-                      <Stack.Screen name="Registration" component={RegistrationScreen} />
+                      <Stack.Screen name="Loading" component={LoadingScreen} />
                     </>
-                  )}
+                  );
+                })()}
               </Stack.Navigator>
             </NavigationContainer>
           )}
