@@ -5,12 +5,12 @@ import { configureAxiosHeaders } from '../utils/httpClient';
 // Create a context
 const AuthContext = React.createContext({});
 const defaultData = JSON.stringify({
-  token: '', name: '', email: '',
+  token: '', name: '', email: '', loading: false,
 });
 
 const AuthProvider = ({ children }) => {
   const [auth, setAuthState] = useState({
-    token: '', name: '', email: '',
+    token: '', name: '', email: '', loading: false,
   });
 
   const [userId, setUserId] = useState('');
@@ -25,26 +25,29 @@ const AuthProvider = ({ children }) => {
       // Configure axios headers
       configureAxiosHeaders(authData.token);
       setAuthState({
-        token: authData.token, name: authData.name, email: authData.email,
+        token: authData.token, 
+        name: authData.name, 
+        email: authData.email, 
+        loading: authData.loading,
       });
       setUserId(userDataId);
     } catch (err) {
       setAuthState({
-        token: '', name: '', email: '',
+        token: '', name: '', email: '', loading:false,  
       });
     }
   };
 
   // Update AsyncStorage & context state
-  const setAuth = async (token:string, name:string = '', email:string = '') => {
+  const setAuth = async (token:string, name:string = '', email:string = '', loading:boolean = false) => {
     try {
       await AsyncStorage.setItem('auth', JSON.stringify({
-        token, name, email, userId,
+        token, name, email, userId, loading,
       }));
       // Configure axios headers
       configureAxiosHeaders(token);
       setAuthState({
-        token, name, email,
+        token, name, email, loading,
       });
     } catch (error) {
       Promise.reject(error);
