@@ -6,6 +6,7 @@ import CourseCreationScreen from '../views/courseCreation';
 import CourseViewScreen from '../views/courseView';
 import ProfileEditScreen from '../views/profileEdit';
 import ExamToCompleteScreen from '../views/exam/examToComplete';
+import ExamEditScreen from '../views/exam/examEdit';
 
 const Stack = createNativeStackNavigator();
 
@@ -32,6 +33,7 @@ const CoursesStackNavigator = () => (
 const ExamsToCompleteStackNavigator = () => (
   <Stack.Navigator>
     <Stack.Screen name="Exam" component={ExamToCompleteScreen} options={{ headerShown: false }} />
+    <Stack.Screen name="ExamEdit" component={ExamEditScreen} options={{ headerShown: false }} />
   </Stack.Navigator>
 );
 

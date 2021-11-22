@@ -1,12 +1,11 @@
 import React, { useState } from 'react';
 import {
-  View, StyleSheet,
+  StyleSheet,
 } from 'react-native';
 import {
-  Surface, TextInput, Button, Text, RadioButton,
+  Surface, TextInput,
 } from 'react-native-paper';
 import ColorPalette from '../../styles/colors';
-import IExamDevelopQuestion from '../../interfaces/IExamDevelopQuestion';
 
 const styles = StyleSheet.create({
   surface: {
@@ -33,34 +32,25 @@ const styles = StyleSheet.create({
 });
 
 interface Props {
-    examDevelopQuestion: IExamDevelopQuestion;
-    returnAnwser: (answerSet: string) => void;
+    saveQuestion: (question: string) => void;
 }
 
-const ExamDevelopQuestion = ({ examDevelopQuestion, returnAnwser }: Props) => {
-  const [answer, _setAnswer] = useState('');
+const ExamDevelopQuestionEditor = ({ saveQuestion }: Props) => {
+  const [question, _setQuestion] = useState('');
 
-  const setAnswer = (answerSet: string) => {
-    _setAnswer(answerSet);
-    returnAnwser(answerSet);
+  const setQuestion = (questionText: string) => {
+    _setQuestion(questionText);
+    saveQuestion(questionText);
   };
 
   return (
     <Surface style={styles.surface}>
-      <Text
-        onPressIn={undefined}
-        onPressOut={undefined}
-        android_hyphenationFrequency={undefined}
-      >
-        {examDevelopQuestion.text}
-
-      </Text>
       <TextInput
         multiline
         mode="outlined"
-        numberOfLines={4}
-        value={answer}
-        onChangeText={(answ) => { setAnswer(answ); }}
+        numberOfLines={2}
+        value={question}
+        onChangeText={(text) => { setQuestion(text); }}
         onPressIn={undefined}
         onPressOut={undefined}
       />
@@ -68,4 +58,4 @@ const ExamDevelopQuestion = ({ examDevelopQuestion, returnAnwser }: Props) => {
   );
 };
 
-export default ExamDevelopQuestion;
+export default ExamDevelopQuestionEditor;

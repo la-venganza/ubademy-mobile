@@ -1,11 +1,10 @@
-import IExamMultipleChoice from './IExamMultipleChoice';
-import IExamDevelopQuestion from './IExamDevelopQuestion'
+import IExamQuestion from './IExamQuestion'
 
 interface IExam {
   title: string,
   description: string,
   minimumQualification: 0,
-  questions: Array<IExamDevelopQuestion | IExamMultipleChoice>
+  questions: Array<IExamQuestion>
   id: number,
   creationDate: string,
 }
