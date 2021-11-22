@@ -15,19 +15,16 @@ const mockedExam = () => ({
         choices: [
           {
             text: '234',
-            isCorrect: true,
             id: 0,
             multipleChoiceQuestionId: 0,
           },
           {
             text: '12',
-            isCorrect: false,
             id: 1,
             multipleChoiceQuestionId: 1,
           },
           {
             text: 'Todas las anteriores son correctas',
-            isCorrect: false,
             id: 2,
             multipleChoiceQuestionId: 2,
           },
