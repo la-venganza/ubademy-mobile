@@ -1,0 +1,62 @@
+import React, { useState } from 'react';
+import {
+  View, StyleSheet,
+} from 'react-native';
+import {
+  Surface, TextInput, Button, Text, RadioButton,
+} from 'react-native-paper';
+import ColorPalette from '../../styles/colors';
+import IExamDevelopQuestion from '../../interfaces/IExamDevelopQuestion';
+
+const styles = StyleSheet.create({
+  surface: {
+    padding: 20,
+    elevation: 4,
+    marginTop: 20,
+  },
+  Button: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: ColorPalette.primary,
+    borderWidth: 0.5,
+    borderColor: ColorPalette.gray,
+    height: 40,
+    borderRadius: 5,
+    margin: 5,
+    padding: 10,
+    alignSelf: 'center',
+  },
+  TextStyle: {
+    color: ColorPalette.white,
+    fontWeight: 'bold',
+  },
+});
+
+interface Props {
+    examDevelopQuestion: IExamDevelopQuestion;
+    returnAnwser: (answerId: string) => void;
+}
+
+const ExamDevelopQuestion = ({ examDevelopQuestion, returnAnwser }: Props) => {
+  const [answer, _setAnswer] = useState('');
+
+  const setAnswer = (answer: string) => {
+    _setAnswer(answer);
+    returnAnwser(answer);
+  };
+
+  return (
+    <Surface style={styles.surface}>
+      <Text>{examDevelopQuestion.developQuestion.text}</Text>
+      <TextInput
+        multiline
+        mode="outlined"
+        numberOfLines={4}
+        value={answer}
+        onChangeText={(answ) => { setAnswer(answ); }}
+      />
+    </Surface>
+  );
+};
+
+export default ExamDevelopQuestion;

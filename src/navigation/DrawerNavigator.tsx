@@ -3,7 +3,7 @@ import React from 'react';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import Colors from '../styles/colors';
-import { MainStackNavigator, ProfileStackNavigator, CoursesStackNavigator } from './StackNavigator';
+import { MainStackNavigator, ProfileStackNavigator, CoursesStackNavigator, ExamsToCompleteStackNavigator } from './StackNavigator';
 
 const Drawer = createDrawerNavigator();
 
@@ -34,6 +34,16 @@ const DrawerNavigator = () => (
       component={CoursesStackNavigator}
       options={{
         title: 'Courses',
+        drawerIcon: ({ focused, size }) => (
+          <Icon name="book" color={Colors.primary} size={25} />
+        ),
+      }}
+    />
+    <Drawer.Screen
+      name="Exams"
+      component={ExamsToCompleteStackNavigator}
+      options={{
+        title: 'Exams',
         drawerIcon: ({ focused, size }) => (
           <Icon name="book" color={Colors.primary} size={25} />
         ),
