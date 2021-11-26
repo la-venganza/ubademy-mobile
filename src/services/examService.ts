@@ -1,4 +1,60 @@
+import { base64 } from '@firebase/util';
+import IExam from '../interfaces/IExam';
+import IExamDevelopQuestion from '../interfaces/IExamDevelopQuestion';
+import { IExamChoiceOption, IExamMultipleChoice } from '../interfaces/IExamMultipleChoice';
+import IExamQuestion from '../interfaces/IExamQuestion';
 import { instance } from '../utils/httpClient';
+
+const formatChoiceOption = (choiceOption: IExamChoiceOption) => ({
+  text: choiceOption.text,
+  multiple_choice_question_id: choiceOption.multipleChoiceQuestionId,
+  is_correct: choiceOption.isCorrect,
+});
+
+const formatDevelopQuestion = (developQuestion: IExamDevelopQuestion) => ({
+  text: developQuestion.text,
+  id: developQuestion.id,
+  question_id: developQuestion.questionId,
+});
+
+const formatMultipleChoice = (multipleChoice: IExamMultipleChoice | undefined) => ({
+  id: multipleChoice.id,
+  text: multipleChoice.text,
+  amount_of_options: multipleChoice.amountOfOptions,
+  choices: multipleChoice.choices.map((x) => formatChoiceOption(x)),
+  question_id: multipleChoice.questionId,
+});
+
+const formatQuestion = (question: IExamQuestion) => {
+  const base = {
+    sequence_number: question.sequenceNumber,
+    type: question.type,
+    score: question.score,
+
+  };
+
+  if (question.type === 'multiple') {
+    return {
+      ...base,
+      multiple_choice_question: formatMultipleChoice(question.multipleChoiceQuestion),
+    };
+  }
+  return {
+    base,
+    develop_question: formatDevelopQuestion(question.developQuestion),
+  };
+};
+
+const formatExam = (exam: IExam, courseId: number, lessonId: number, userId: number) => ({
+  lesson_id: lessonId,
+  course_id: courseId,
+  user_id: userId,
+  title: exam.title,
+  description: exam.description,
+  minimum_qualification: exam.minimumQualification,
+  questions: exam.questions.map((x) => formatQuestion(x)),
+  creation_date: exam.creationDate,
+});
 
 const mockedExam = () => ({
   title: 'Algebra VII',
@@ -66,6 +122,22 @@ const getExam = async (courseId, lessonId) => {
   }
 };
 
+const createExam = async (exam: IExam, courseId, lessonId, userId) => {
+  try {
+    console.log(`Submitting exam to course ${courseId} to lesson ${lessonId}`);
+
+    console.log(formatExam(exam, courseId, lessonId, userId));
+    const response = await instance.post('/exam', formatExam(exam, courseId, lessonId, userId));
+
+    return response.data;
+  } catch (error) {
+    console.log('Could not get exam from backend.');
+    console.log(error.response.data);
+    console.log('Returning null');
+    return null;
+  }
+};
+
 export default {
-  getExam,
+  getExam, createExam,
 };

@@ -3,12 +3,10 @@ import { IExamDevelopQuestion } from './IExamDevelopQuestion';
 
 interface IExamQuestion {
     id?: number;
+    questionId?: number;
     sequenceNumber: number;
-    text: string;
-    amountOfOptions: number;
     multipleChoiceQuestion?: IExamMultipleChoice;
     developQuestion?: IExamDevelopQuestion;
-    questionId: number;
     type: string;
     score: number;
 }

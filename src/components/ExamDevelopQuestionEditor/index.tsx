@@ -5,6 +5,7 @@ import {
 import {
   Surface, TextInput,
 } from 'react-native-paper';
+import { IExamDevelopQuestion } from '../../interfaces/IExamDevelopQuestion';
 import ColorPalette from '../../styles/colors';
 
 const styles = StyleSheet.create({
@@ -32,15 +33,26 @@ const styles = StyleSheet.create({
 });
 
 interface Props {
-    saveQuestion: (question: string) => void;
+    saveQuestion: (question: IExamDevelopQuestion, score: number, questionId: number) => void;
+    questionId: number;
 }
 
-const ExamDevelopQuestionEditor = ({ saveQuestion }: Props) => {
+const ExamDevelopQuestionEditor = ({ saveQuestion, questionId }: Props) => {
   const [question, _setQuestion] = useState('');
 
   const setQuestion = (questionText: string) => {
     _setQuestion(questionText);
-    saveQuestion(questionText);
+
+    const newQuestion : IExamDevelopQuestion = {
+      text: questionText,
+    };
+    saveQuestion(newQuestion, 1, questionId);
+  };
+
+  const [score, _setScore] = useState('');
+
+  const setScore = (score) => {
+    _setScore(score);
   };
 
   return (
@@ -48,9 +60,18 @@ const ExamDevelopQuestionEditor = ({ saveQuestion }: Props) => {
       <TextInput
         multiline
         mode="outlined"
-        numberOfLines={2}
+        label="Question"
+        numberOfLines={4}
         value={question}
-        onChangeText={(text) => { setQuestion(text); }}
+        onChangeText={setQuestion}
+        onPressIn={undefined}
+        onPressOut={undefined}
+      />
+      <TextInput
+        mode="outlined"
+        value={score}
+        label="Score"
+        onChangeText={setScore}
         onPressIn={undefined}
         onPressOut={undefined}
       />

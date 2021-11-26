@@ -2,6 +2,7 @@ interface IExamChoiceOption {
     id: number;
     text: string;
     multipleChoiceQuestionId: string;
+    isCorrect?: boolean;
 }
 
 interface IExamMultipleChoice {
@@ -10,7 +11,6 @@ interface IExamMultipleChoice {
     amountOfOptions: number;
     choices: Array<IExamChoiceOption>;
     questionId: number;
-    isCorrect?: boolean;
 }
 
 export { IExamMultipleChoice, IExamChoiceOption };

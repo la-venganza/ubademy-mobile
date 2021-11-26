@@ -14,18 +14,6 @@ const styles = StyleSheet.create({
     elevation: 4,
     marginTop: 20,
   },
-  Button: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: ColorPalette.primary,
-    borderWidth: 0.5,
-    borderColor: ColorPalette.gray,
-    height: 40,
-    borderRadius: 5,
-    margin: 5,
-    padding: 10,
-    alignSelf: 'center',
-  },
   TextStyle: {
     color: ColorPalette.white,
     fontWeight: 'bold',
@@ -33,34 +21,69 @@ const styles = StyleSheet.create({
 });
 
 interface Props {
-    saveExamMultipleChoice: (choice: IExamMultipleChoice) => void;
+    saveExamMultipleChoice: (
+      choice: IExamMultipleChoice,
+      score: number,
+      sequenceId: number) => void;
+    questionId: number;
 }
 
-const ExamMultipleChoiceEditor = ({ saveExamMultipleChoice }: Props) => {
+const ExamMultipleChoiceEditor = ({ saveExamMultipleChoice, questionId }: Props) => {
   const emptyChoice: IExamMultipleChoice = {
     text: '',
     amountOfOptions: 0,
     choices: [],
     id: 0,
-    questionId: 0,
+    questionId,
   };
 
   const [multipleChoice, _setMultipleChoice] = useState(emptyChoice);
   const [questionText, _setQuestionText] = useState('');
-  const setQuestionText = (questionText: string) => _setQuestionText(questionText);
 
-  const [checked, _setChecked] = useState('');
-  const setChecked = (choiceOptionId: string) => {
-    _setChecked(choiceOptionId);
-  };
+  const [score, _setScore] = useState('');
 
-  const [choiceEdit, _setChoiceEdit] = useState('');
-  const setChoiceEdit = (choiceOption) => {
-    _setChoiceEdit(choiceOption);
+  const setScore = (score) => {
+    _setScore(score);
   };
 
   const setMultipleChoice = (choice: IExamMultipleChoice) => {
     _setMultipleChoice(choice);
+  };
+
+  const setQuestionText = (questionTextUpdate: string) => {
+    setMultipleChoice({
+      ...multipleChoice,
+      text: questionTextUpdate,
+    });
+    _setQuestionText(questionTextUpdate);
+  };
+
+  const [checked, _setChecked] = useState('');
+  const setChecked = (choiceOptionId: string) => {
+    const choicesUpdated = multipleChoice.choices.map((choiceV) => {
+      if (choiceV.multipleChoiceQuestionId === choiceOptionId) {
+        return {
+          ...choiceV,
+          isCorrect: true,
+        };
+      }
+      return choiceV;
+    });
+
+    const updatedChoice = {
+      ...multipleChoice,
+      choices: choicesUpdated,
+      amountOfOptions: multipleChoice.choices.length,
+    };
+
+    saveExamMultipleChoice(updatedChoice, Number(score), questionId);
+
+    _setChecked(choiceOptionId);
+  };
+
+  const [choiceEdit, _setChoiceEdit] = useState('');
+  const setChoiceEdit = (choiceOption: string) => {
+    _setChoiceEdit(choiceOption);
   };
 
   const renderAddChoice = () => (
@@ -79,11 +102,19 @@ const ExamMultipleChoiceEditor = ({ saveExamMultipleChoice }: Props) => {
       text: choiceEdit,
       id: 0,
       multipleChoiceQuestionId: multipleChoice.choices.length.toString(),
+      isCorrect: false,
     };
-    setMultipleChoice({
+
+    const updatedChoice = {
       ...multipleChoice,
       choices: [...multipleChoice.choices, choiceToAdd],
-    });
+      amountOfOptions: multipleChoice.choices.length,
+    };
+
+    setMultipleChoice(updatedChoice);
+    // Todo add score setting!
+
+    saveExamMultipleChoice(updatedChoice, Number(score), questionId);
     setChoiceEdit('');
   };
 
@@ -136,6 +167,15 @@ const ExamMultipleChoiceEditor = ({ saveExamMultipleChoice }: Props) => {
           onPress={clear}
         />
       </View>
+      <TextInput
+        mode="outlined"
+        value={score}
+        label="Score"
+        keyboardType="numeric"
+        onChangeText={setScore}
+        onPressIn={undefined}
+        onPressOut={undefined}
+      />
     </Surface>
   );
 };

@@ -1,17 +1,7 @@
-interface IExamDevelopSection {
-    id:number,
-    questionId:number,
-    text:string,
-}
-
 interface IExamDevelopQuestion {
+    text: string,
     id?: number,
-    examId: number,
-    score: number,
-    sequenceNumber: number,
-    type: string,
-    developQuestion: IExamDevelopSection;
-    questionId: number;
+    questionId?: number,
 }
 
-export { IExamDevelopQuestion, IExamDevelopSection };
+export default IExamDevelopQuestion;
