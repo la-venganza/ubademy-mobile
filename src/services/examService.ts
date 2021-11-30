@@ -30,7 +30,6 @@ const formatQuestion = (question: IExamQuestion) => {
     sequence_number: question.sequenceNumber,
     type: question.type,
     score: question.score,
-
   };
 
   if (question.type === 'multiple') {
@@ -40,7 +39,7 @@ const formatQuestion = (question: IExamQuestion) => {
     };
   }
   return {
-    base,
+    ...base,
     develop_question: formatDevelopQuestion(question.developQuestion),
   };
 };
@@ -49,11 +48,12 @@ const formatExam = (exam: IExam, courseId: number, lessonId: number, userId: num
   lesson_id: lessonId,
   course_id: courseId,
   user_id: userId,
-  title: exam.title,
-  description: exam.description,
-  minimum_qualification: exam.minimumQualification,
-  questions: exam.questions.map((x) => formatQuestion(x)),
-  creation_date: exam.creationDate,
+  exam: {
+    title: exam.title,
+    description: exam.description,
+    minimum_qualification: exam.minimumQualification,
+    questions: exam.questions.map((x) => formatQuestion(x)),
+  },
 });
 
 const mockedExam = () => ({

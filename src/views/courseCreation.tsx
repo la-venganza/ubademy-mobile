@@ -10,6 +10,7 @@ import DropDown from 'react-native-paper-dropdown';
 import SlideInEditor from '../components/SlideInEditor/index';
 import SlideEditor from '../components/SlideEditor';
 import ISlide from '../interfaces/ISlide';
+import IExam from '../interfaces/IExam';
 import CourseService from '../services/courseService';
 import { AuthContext } from '../context/AuthContext';
 import { LoadingContext } from '../context/LoadingContext';
@@ -93,6 +94,15 @@ const CourseCreationScreen = ({ route, navigation }) => {
   const [snackbar, setSnackbar] = useState({ show: false, message: '', status: 'ok' });
   const auth = useContext(AuthContext);
   const loadingCtx = useContext(LoadingContext);
+
+  const [examList, setExamList] = useState<IExam[]>([]);
+
+  const saveExam = (exam: IExam) => {
+    console.log('exam should be saved');
+    console.log(exam);
+    const ewExamList = [...examList, exam];
+    setExamList(ewExamList);
+  };
 
   useEffect(() => {
     async function getCourse() {
@@ -214,6 +224,10 @@ const CourseCreationScreen = ({ route, navigation }) => {
 
   const cancelAll = () => navigation.navigate('Home');
 
+  const addExamAction = () => navigation.navigate('CourseExamEdit', {
+    saveExam,
+  });
+
   const renderMenu = () => (
     <Menu
       visible={menuVisible}
@@ -296,7 +310,7 @@ const CourseCreationScreen = ({ route, navigation }) => {
         </List.Accordion>
         <Divider style={styles.divide} />
         <List.Accordion title="Slide Editor" id="2" expanded={isExpanded.slideEditor} style={styles.accordionEditor} onPress={() => handleAccordionClick(Sections.slideEditor)}>
-          <SlideEditor slide={activeSlide} setSlide={setActiveslide} />
+          <SlideEditor slide={activeSlide} setSlide={setActiveslide} examList={examList}/>
           <View style={styles.menuWrapper}>
             <Button onPress={clearActiveSlide}>Cancel</Button>
             <Button mode="contained" labelStyle={{ color: 'white' }} onPress={handleSave}>Save</Button>
@@ -326,6 +340,7 @@ const CourseCreationScreen = ({ route, navigation }) => {
           </Surface>
         </List.Accordion>
       </List.Section>
+      <Button onPress={addExamAction}>Add Exam</Button>
       <View style={styles.menuWrapper}>
         <Button onPress={cancelAll}>Cancel</Button>
         <Button mode="contained" labelStyle={{ color: 'white' }} onPress={submit}>Submit</Button>

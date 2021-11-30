@@ -47,9 +47,10 @@ const styles = StyleSheet.create({
 
 interface Props {
   navigation: object;
+  route: {params:{saveExam: (exam: IExam) => void}};
 }
 
-const ExamEditScreen = ({ navigation } : Props) => {
+const ExamEditScreen = ({ navigation, route } : Props) => {
   const emptyExam: IExam = {
     title: '',
     description: '',
@@ -103,9 +104,9 @@ const ExamEditScreen = ({ navigation } : Props) => {
     console.log(newExam);
     _setExam(newExam);
 
-    console.log('Calling back!!');
-    const examData = examService.createExam(newExam, 17, 17, auth.userId);
-    console.log(examData);
+    // Callback to be handled by course creation.
+    route.params.saveExam(newExam);
+    navigation.navigate("Course creation");
   };
 
   const cancelAll = () => {
