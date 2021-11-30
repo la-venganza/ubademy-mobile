@@ -34,26 +34,35 @@ const styles = StyleSheet.create({
 
 interface Props {
     examDevelopQuestion: IExamDevelopQuestion;
-    returnAnwser: (answerId: string) => void;
+    returnAnwser: (answerSet: string) => void;
 }
 
 const ExamDevelopQuestion = ({ examDevelopQuestion, returnAnwser }: Props) => {
   const [answer, _setAnswer] = useState('');
 
-  const setAnswer = (answer: string) => {
-    _setAnswer(answer);
-    returnAnwser(answer);
+  const setAnswer = (answerSet: string) => {
+    _setAnswer(answerSet);
+    returnAnwser(answerSet);
   };
 
   return (
     <Surface style={styles.surface}>
-      <Text>{examDevelopQuestion.developQuestion.text}</Text>
+      <Text
+        onPressIn={undefined}
+        onPressOut={undefined}
+        android_hyphenationFrequency={undefined}
+      >
+        {examDevelopQuestion.text}
+
+      </Text>
       <TextInput
         multiline
         mode="outlined"
         numberOfLines={4}
         value={answer}
         onChangeText={(answ) => { setAnswer(answ); }}
+        onPressIn={undefined}
+        onPressOut={undefined}
       />
     </Surface>
   );

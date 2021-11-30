@@ -6,7 +6,7 @@ import {
   Surface, TextInput, Button, Text, RadioButton,
 } from 'react-native-paper';
 import ColorPalette from '../../styles/colors';
-import IExamMultipleChoice from '../../interfaces/IExamMultipleChoice';
+import { IExamMultipleChoice } from '../../interfaces/IExamMultipleChoice';
 
 const styles = StyleSheet.create({
   surface: {
@@ -64,8 +64,8 @@ const ExamMultipleChoice = ({ examMultipleChoice, setAnswer }: Props) => {
 
   return (
     <Surface style={styles.surface}>
-      <Text>{examMultipleChoice.multipleChoiceQuestion.text}</Text>
-      {examMultipleChoice.multipleChoiceQuestion.choices.map((choice) => renderChoice(choice))}
+      <Text>{examMultipleChoice.text}</Text>
+      {examMultipleChoice && examMultipleChoice.choices.map((choice) => renderChoice(choice))}
     </Surface>
   );
 };

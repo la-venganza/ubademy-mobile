@@ -16,6 +16,7 @@ import Colors from './src/styles/colors';
 import ProfileEditScreen from './src/views/profileEdit';
 import LoadingScreen from './src/views/loading';
 import DrawerNavigator from './src/navigation/DrawerNavigator';
+import ExamEditScreen from './src/views/exam/examEdit';
 
 const firebaseConfig = {
   apiKey: Constants.manifest.extra.FIREBASE_API_KEY,

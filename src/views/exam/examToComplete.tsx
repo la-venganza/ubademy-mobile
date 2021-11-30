@@ -83,9 +83,9 @@ const ExamToCompleteScreen = ({ navigation } : Props) => {
                   />
                   {exam.questions.map((question) => {
                     if (question.type === 'develop') {
-                      return renderDevelopQuestion(question, setAnswer);
+                      return renderDevelopQuestion(question.developQuestion, setAnswer);
                     }
-                    return renderMultipleChoice(question, setAnswer);
+                    return renderMultipleChoice(question.multipleChoiceQuestion, setAnswer);
                   })}
                 </View>
                 <View style={styles.menuWrapper}>

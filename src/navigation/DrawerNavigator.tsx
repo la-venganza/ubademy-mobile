@@ -4,6 +4,7 @@ import { createDrawerNavigator } from '@react-navigation/drawer';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import Colors from '../styles/colors';
 import { MainStackNavigator, ProfileStackNavigator, CoursesStackNavigator, ExamsToCompleteStackNavigator } from './StackNavigator';
+import ExamEditScreen from '../views/exam/examEdit';
 
 const Drawer = createDrawerNavigator();
 
@@ -43,7 +44,17 @@ const DrawerNavigator = () => (
       name="Exams"
       component={ExamsToCompleteStackNavigator}
       options={{
-        title: 'Exams',
+        title: 'Exams - Render',
+        drawerIcon: ({ focused, size }) => (
+          <Icon name="book" color={Colors.primary} size={25} />
+        ),
+      }}
+    />
+    <Drawer.Screen
+      name="Exams edit"
+      component={ExamEditScreen}
+      options={{
+        title: 'Exams - Edit',
         drawerIcon: ({ focused, size }) => (
           <Icon name="book" color={Colors.primary} size={25} />
         ),

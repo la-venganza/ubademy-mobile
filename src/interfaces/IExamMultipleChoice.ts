@@ -1,11 +1,16 @@
-import IExamChoiceOption from './IExamChoiceOption';
+interface IExamChoiceOption {
+    id: number;
+    text: string;
+    multipleChoiceQuestionId: string;
+    isCorrect?: boolean;
+}
 
-interface IExamChoice {
-    id?: number;
+interface IExamMultipleChoice {
+    id: number;
     text: string;
     amountOfOptions: number;
     choices: Array<IExamChoiceOption>;
     questionId: number;
 }
 
-export default IExamChoice;
+export { IExamMultipleChoice, IExamChoiceOption };
