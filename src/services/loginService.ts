@@ -12,6 +12,7 @@ import * as GoogleAuthentication from '../actions/googleAuthentication';
 import userService from './userService';
 
 const loginWithGoogle = async (auth: AuthContext) => {
+  auth.setAuth('', '', '', true);
   const result = await GoogleAuthentication.signInWithGoogleAsync();
   const userName = result.user.givenName;
   const provider = new GoogleAuthProvider();
@@ -43,7 +44,7 @@ const loginWithGoogle = async (auth: AuthContext) => {
     userService.getUser(firebaseCredential.user.email)
       .then((user: any) => {
         auth.setUserId(u.results[0].user_id);
-        auth.setAuth(jwt, userName, firebaseCredential.user.email);
+        auth.setAuth(jwt, userName, firebaseCredential.user.email, false);
       })
       .catch((error: any) => {
         console.log(error);
@@ -60,11 +61,12 @@ const loginWithUserAndPassword = async (authCtx: AuthContext, email: string, pas
       const idToken = await user.getIdToken();
       const jwt = idToken;
       const userName = user.displayName;
-      authCtx.setAuth(jwt, userName, email);
+      authCtx.setAuth(jwt, userName, email, true);
       userService.setCookie(jwt);
       // Obtaining userId from back.
       userService.getUser(email).then((u) => {
         authCtx.setUserId(u.results[0].user_id);
+        authCtx.setAuth(jwt, userName, email, false);
       }).catch((error) => {
         console.log(error);
       });
