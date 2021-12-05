@@ -3,7 +3,8 @@ import ICourse from '../interfaces/ICourse';
 import { instance as HTTPClient, configureAxiosHeaders } from '../utils/httpClient';
 import processSlide from '../utils/processSlide';
 
-const formatCourse = async (courseTitle:string, courseDescription:string, slides:Array<ISlide>, userId:string, plan:string, category:string) => {
+const formatCourse = async (courseTitle:string,
+  courseDescription:string, slides:Array<ISlide>, userId:string, plan:string, category:string) => {
   const course:ICourse = {
     user_id: userId,
     title: courseTitle,
@@ -20,9 +21,11 @@ const setCookie = async (token) => {
   configureAxiosHeaders(token);
 };
 
-const createCourse = async (courseTitle:string, courseDescription:string, slides:Array<ISlide>, userId:string, plan:string, category:string) => {
+const createCourse = async (courseTitle:string,
+  courseDescription:string, slides:Array<ISlide>, userId:string, plan:string, category:string) => {
   try {
-    const course = await formatCourse(courseTitle, courseDescription, slides, userId, plan, category);
+    const course = await formatCourse(courseTitle,
+      courseDescription, slides, userId, plan, category);
     const response = await HTTPClient.post('/course', course);
     return response.data;
   } catch (error) {
@@ -31,9 +34,11 @@ const createCourse = async (courseTitle:string, courseDescription:string, slides
   }
 };
 
-const updateCourse = async (id:number, courseTitle:string, courseDescription:string, slides:Array<ISlide>, userId:string, plan:string, category:string) => {
+const updateCourse = async (id:number, courseTitle:string,
+  courseDescription:string, slides:Array<ISlide>, userId:string, plan:string, category:string) => {
   try {
-    const course = await formatCourse(courseTitle, courseDescription, slides, userId, plan, category);
+    const course = await formatCourse(courseTitle,
+      courseDescription, slides, userId, plan, category);
     const response = await HTTPClient.put(`/course/${id}`, course);
     return response.data;
   } catch (error) {

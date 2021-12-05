@@ -18,6 +18,7 @@ import courseService from '../services/courseService';
 import cloudStorage from '../utils/cloudStorage';
 import lessonMapper from '../utils/lessonMapper';
 import { LoadingContext } from '../context/LoadingContext';
+import { AuthContext } from '../context/AuthContext';
 
 interface Props {
     route: {params:{id: number}};
@@ -101,6 +102,7 @@ const styles = StyleSheet.create({
 });
 
 const CourseView = ({ route, navigation }:Props) => {
+  const auth = useContext(AuthContext);
   const { id } = route.params;
   const [course, setCourse] = useState<ICourse>({});
   const [currentStage, setCurrentStage] = useState<ISlide>({});
@@ -149,6 +151,21 @@ const CourseView = ({ route, navigation }:Props) => {
         return null;
     }
   };
+
+  const handleGoToExam = () => {
+    navigation.navigate('CourseExamToComplete', {
+      courseId: course.id,
+      lessonId: currentStage.id,
+      examId: currentStage.exam?.id,
+      userId: auth.userId,
+    });
+  };
+
+  const renderCompleteExam = () => (
+    <Button onPress={handleGoToExam}>
+      Complete Exam
+    </Button>
+  );
 
   useEffect(() => {
     const fetchCourse = async () => {
@@ -217,6 +234,7 @@ const CourseView = ({ route, navigation }:Props) => {
       <ScrollView ref={scrollRef}>
         <Surface>
           {renderMedia()}
+          {currentStage.exam && renderCompleteExam()}
         </Surface>
         <View style={styles.courseInfoWrapper}>
           <Title style={styles.title}>{course.title}</Title>
