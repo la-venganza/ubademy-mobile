@@ -40,26 +40,6 @@ const DrawerNavigator = () => (
         ),
       }}
     />
-    <Drawer.Screen
-      name="Exams"
-      component={ExamsToCompleteStackNavigator}
-      options={{
-        title: 'Exams - Render',
-        drawerIcon: ({ focused, size }) => (
-          <Icon name="book" color={Colors.primary} size={25} />
-        ),
-      }}
-    />
-    <Drawer.Screen
-      name="Exams edit"
-      component={ExamEditScreen}
-      options={{
-        title: 'Exams - Edit',
-        drawerIcon: ({ focused, size }) => (
-          <Icon name="book" color={Colors.primary} size={25} />
-        ),
-      }}
-    />
   </Drawer.Navigator>
 );
 

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import {
-  Badge, Surface, Text, Title,
+  Badge, Button, Surface, Text, Title,
 } from 'react-native-paper';
 
 const styles = StyleSheet.create({

@@ -35,14 +35,19 @@ const styles = StyleSheet.create({
 interface Props {
     examDevelopQuestion: IExamDevelopQuestion;
     returnAnwser: (answerSet: string) => void;
+    readOnly: boolean;
 }
 
-const ExamDevelopQuestion = ({ examDevelopQuestion, returnAnwser }: Props) => {
+const ExamDevelopQuestion = ({ examDevelopQuestion, returnAnwser, readOnly }: Props) => {
   const [answer, _setAnswer] = useState('');
 
   const setAnswer = (answerSet: string) => {
     _setAnswer(answerSet);
-    returnAnwser(answerSet);
+    const answerJson : IExamAnswer = {
+      questionId: examDevelopQuestion.questionId,
+      inputText: answerSet,
+    };
+    returnAnwser(answerJson);
   };
 
   return (
@@ -63,6 +68,7 @@ const ExamDevelopQuestion = ({ examDevelopQuestion, returnAnwser }: Props) => {
         onChangeText={(answ) => { setAnswer(answ); }}
         onPressIn={undefined}
         onPressOut={undefined}
+        disabled={readOnly}
       />
     </Surface>
   );
