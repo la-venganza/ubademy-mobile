@@ -13,6 +13,10 @@ const Stack = createNativeStackNavigator();
 const MainStackNavigator = () => (
   <Stack.Navigator>
     <Stack.Screen name="Home" component={HomeScreen} options={{ headerShown: false }} />
+    <Stack.Screen name="Course creation" component={CourseCreationScreen} initialParams={{ id: 0 }} options={{ headerShown: false }} />
+    <Stack.Screen name="Course view" component={CourseViewScreen} initialParams={{ id: 0 }} options={{ headerShown: false }} />
+    <Stack.Screen name="CourseExamEdit" component={ExamEditScreen} options={{ headerShown: false }} />
+    <Stack.Screen name="CourseExamToComplete" component={ExamToCompleteScreen} options={{ headerShown: false }} />
   </Stack.Navigator>
 );
 
@@ -32,13 +36,7 @@ const CoursesStackNavigator = () => (
   </Stack.Navigator>
 );
 
-const ExamsToCompleteStackNavigator = () => (
-  <Stack.Navigator>
-    <Stack.Screen name="Exam" component={ExamToCompleteScreen} options={{ headerShown: false }} />
-  </Stack.Navigator>
-);
-
 export {
   MainStackNavigator, ProfileStackNavigator,
-  CoursesStackNavigator, ExamsToCompleteStackNavigator,
+  CoursesStackNavigator,
 };

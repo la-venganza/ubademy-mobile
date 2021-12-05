@@ -310,7 +310,7 @@ const CourseCreationScreen = ({ route, navigation }) => {
         </List.Accordion>
         <Divider style={styles.divide} />
         <List.Accordion title="Slide Editor" id="2" expanded={isExpanded.slideEditor} style={styles.accordionEditor} onPress={() => handleAccordionClick(Sections.slideEditor)}>
-          <SlideEditor slide={activeSlide} setSlide={setActiveslide} examList={examList}/>
+          <SlideEditor slide={activeSlide} setSlide={setActiveslide} examList={examList} />
           <View style={styles.menuWrapper}>
             <Button onPress={clearActiveSlide}>Cancel</Button>
             <Button mode="contained" labelStyle={{ color: 'white' }} onPress={handleSave}>Save</Button>

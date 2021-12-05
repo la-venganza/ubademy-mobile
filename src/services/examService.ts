@@ -1,5 +1,6 @@
 import { base64 } from '@firebase/util';
 import IExam from '../interfaces/IExam';
+import IExamAnswer from '../interfaces/IExamAnswer';
 import IExamDevelopQuestion from '../interfaces/IExamDevelopQuestion';
 import { IExamChoiceOption, IExamMultipleChoice } from '../interfaces/IExamMultipleChoice';
 import IExamQuestion from '../interfaces/IExamQuestion';
@@ -9,6 +10,7 @@ const formatChoiceOption = (choiceOption: IExamChoiceOption) => ({
   text: choiceOption.text,
   multiple_choice_question_id: choiceOption.multipleChoiceQuestionId,
   is_correct: choiceOption.isCorrect,
+  id: choiceOption.id,
 });
 
 const formatDevelopQuestion = (developQuestion: IExamDevelopQuestion) => ({
@@ -44,76 +46,86 @@ const formatQuestion = (question: IExamQuestion) => {
   };
 };
 
+const formatInnerExam = (exam: IExam) => (exam ? {
+  title: exam.title,
+  description: exam.description,
+  minimum_qualification: exam.minimumQualification,
+  questions: exam.questions.map((x) => formatQuestion(x)),
+} : null);
+
 const formatExam = (exam: IExam, courseId: number, lessonId: number, userId: number) => ({
   lesson_id: lessonId,
   course_id: courseId,
   user_id: userId,
-  exam: {
-    title: exam.title,
-    description: exam.description,
-    minimum_qualification: exam.minimumQualification,
-    questions: exam.questions.map((x) => formatQuestion(x)),
-  },
+  exam: formatInnerExam(exam),
 });
 
-const mockedExam = () => ({
-  title: 'Algebra VII',
-  description: 'Matrices vectoriales y autovalores de poisson',
-  minimumQualification: 0,
-  questions: [
-    {
-      sequenceNumber: 0,
-      type: 'multiple',
-      score: 3,
-      multipleChoiceQuestion: {
-        text: 'Cuantos años tiene cauchi?',
-        amountOfOptions: 0,
-        choices: [
-          {
-            text: '234',
-            id: 0,
-            multipleChoiceQuestionId: 0,
-          },
-          {
-            text: '12',
-            id: 1,
-            multipleChoiceQuestionId: 1,
-          },
-          {
-            text: 'Todas las anteriores son correctas',
-            id: 2,
-            multipleChoiceQuestionId: 2,
-          },
-        ],
-        id: 0,
-        questionId: 0,
-      },
-      id: 0,
-      examId: 0,
-    },
-    {
-      sequenceNumber: 0,
-      type: 'develop',
-      score: 7,
-      developQuestion: {
-        text: 'Opine aquí',
-        id: 3,
-        questionId: 1,
-      },
-      id: 2,
-      examId: 0,
-    },
-  ],
-  id: 0,
-  creationDate: '2021-11-21T01:39:19.287Z',
+const deFormatChoiceOption = (choiceOption) => ({
+  text: choiceOption.text,
+  multipleChoiceQuestionId: choiceOption.multiple_choice_question_id,
+  isCorrect: choiceOption.is_correct,
+  id: choiceOption.id,
 });
 
-const getExam = async (courseId, lessonId) => {
+const deFormatDevelopQuestion = (developQuestion) => ({
+  text: developQuestion.text,
+  id: developQuestion.id,
+  questionId: developQuestion.question_id,
+});
+
+const deFormatMultipleChoice = (multipleChoice) => ({
+  id: multipleChoice.id,
+  text: multipleChoice.text,
+  amountOfOptions: multipleChoice.amount_of_options,
+  choices: multipleChoice.choices.map((x) => deFormatChoiceOption(x)),
+  questionId: multipleChoice.question_id,
+});
+
+const deFormatQuestion = (question) => {
+  const base = {
+    sequenceNumber: question.sequence_number,
+    type: question.type,
+    score: question.score,
+  };
+
+  if (question.type === 'multiple') {
+    return {
+      ...base,
+      multipleChoiceQuestion: deFormatMultipleChoice(question.multiple_choice_question),
+    };
+  }
+  return {
+    ...base,
+    developQuestion: deFormatDevelopQuestion(question.develop_question),
+  };
+};
+
+const deFormatExam = (exam) => ({
+  title: exam.title,
+  description: exam.description,
+  minimumQualification: exam.minimum_qualification,
+  questions: exam.questions.map((x) => deFormatQuestion(x)),
+});
+
+const formatAnswer = (answer: IExamAnswer) => ({
+  question_id: answer.questionId,
+  input_text: answer.inputText,
+  choice_id: answer.choiceId,
+});
+
+const formatExamAnswers = (courseId: number, lessonId: number, userId: string,
+  answers: Array<IExamAnswer>) => ({
+  lesson_id: lessonId,
+  course_id: courseId,
+  user_id: userId,
+  answers: answers.map((asw) => formatAnswer(asw)),
+});
+
+const getExam = async (courseId, lessonId, userId, examId) => {
   try {
     console.log(`Fetch exam ${courseId} from lesson ${lessonId}`);
-    // TODO
-    // const response = await instance.get(`/exam/${courseId}/{lessonId}`);
-    return mockedExam();
+    const response = await instance.get(`/exam/${examId}/course/${courseId}/lesson/${lessonId}/user/${userId}`);
+    return deFormatExam(response.data);
   } catch (error) {
     console.log('Could not get exam from backend.');
     console.log(error.response.data);
@@ -125,8 +137,6 @@ const getExam = async (courseId, lessonId) => {
 const createExam = async (exam: IExam, courseId, lessonId, userId) => {
   try {
     console.log(`Submitting exam to course ${courseId} to lesson ${lessonId}`);
-
-    console.log(formatExam(exam, courseId, lessonId, userId));
     const response = await instance.post('/exam', formatExam(exam, courseId, lessonId, userId));
 
     return response.data;
@@ -138,6 +148,24 @@ const createExam = async (exam: IExam, courseId, lessonId, userId) => {
   }
 };
 
+const submitExamAnswers = async (examId: number, courseId: number, lessonId: number, userId: string,
+  answers: Array<IExamAnswer>) => {
+  try {
+    console.log(`Submitting exam answers to course ${courseId} to lesson ${lessonId}`);
+    console.log('Answers were:');
+    console.log(answers);
+    console.log(formatExamAnswers(courseId, lessonId, userId, answers));
+    const response = await instance.post(`/exam/${examId}`, formatExamAnswers(courseId, lessonId, userId, answers));
+
+    return response.data;
+  } catch (error) {
+    console.log('Could not get exam from backend.');
+    console.log(error.response.data);
+    console.log('Returning null');
+    return null;
+  }
+};
+
 export default {
-  getExam, createExam,
+  getExam, createExam, formatInnerExam, submitExamAnswers,
 };
