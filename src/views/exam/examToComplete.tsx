@@ -64,6 +64,7 @@ const ExamToCompleteScreen = ({
 
   const submit = () => {
     examService.submitExamAnswers(examId, courseId, lessonId, userId, Object.values(answers));
+    navigation.goBack(null);
   };
 
   const cancelAll = () => {
