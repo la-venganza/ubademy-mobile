@@ -12,7 +12,6 @@ const Drawer = createDrawerNavigator();
 
 const DrawerNavigator = () => (
   <Drawer.Navigator>
-    <Drawer.Screen name="Plan" component={PlanSelectionScreen} />
     <Drawer.Screen
       name="Home"
       component={MainStackNavigator}

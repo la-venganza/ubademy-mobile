@@ -161,12 +161,6 @@ const ProfileScreen = ({ navigation } : Props) => {
             <Text style={styles.menuItemText}>Your Courses</Text>
           </View>
         </TouchableRipple>
-        <TouchableRipple onPress={() => {}}>
-          <View style={styles.menuItem}>
-            <Icon name="credit-card" color={Colors.secondary} size={25} />
-            <Text style={styles.menuItemText}>Payment</Text>
-          </View>
-        </TouchableRipple>
         <TouchableRipple onPress={() => navigation.navigate('ProfileEdit', {
           user, onGoBack: () => fetchUser(),
         })}
@@ -180,6 +174,12 @@ const ProfileScreen = ({ navigation } : Props) => {
           <View style={styles.menuItem}>
             <Icon name="account-check-outline" color={Colors.secondary} size={25} />
             <Text style={styles.menuItemText}>Support</Text>
+          </View>
+        </TouchableRipple>
+        <TouchableRipple onPress={() => navigation.navigate('Subscription')}>
+          <View style={styles.menuItem}>
+            <Icon name="credit-card" color={Colors.secondary} size={25} />
+            <Text style={styles.menuItemText}>Subscription</Text>
           </View>
         </TouchableRipple>
       </View>

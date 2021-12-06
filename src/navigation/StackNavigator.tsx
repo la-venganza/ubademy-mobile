@@ -19,9 +19,9 @@ const MainStackNavigator = () => (
 
 const ProfileStackNavigator = () => (
   <Stack.Navigator>
-    <Stack.Screen name="Plan" component={PlanSelectionScreen} />
     <Stack.Screen name="Profile" component={ProfileScreen} options={{ headerShown: false }} />
     <Stack.Screen name="ProfileEdit" component={ProfileEditScreen} options={{ headerShown: false }} />
+    <Stack.Screen name="Subscription" component={PlanSelectionScreen} />
   </Stack.Navigator>
 );
 
