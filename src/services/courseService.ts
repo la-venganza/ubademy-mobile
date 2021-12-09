@@ -70,7 +70,7 @@ const setSeen = async (courseId, slideId) => {
 const getCourses = async (searchTerm:string = '', plan:string = '') => {
   try {
     let path = '/course?';
-    path += searchTerm ? `category=${searchTerm}` : '';
+    path += searchTerm ? `category=${searchTerm}&` : '';
     path += plan ? `plan=${plan}` : '';
     const response = await HTTPClient.get(path);
     return response.data;
