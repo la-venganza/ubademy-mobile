@@ -10,6 +10,7 @@ import ProfileScreen from './src/views/profile.tsx';
 import RegistrationScreen from './src/views/registration';
 import CourseCreationScreen from './src/views/courseCreation';
 import CourseViewScreen from './src/views/courseView';
+import PlanSelectionScreen from './src/views/planSelection';
 import { AuthContext, AuthProvider } from './src/context/AuthContext';
 import { LoadingContext, LoadingProvider } from './src/context/LoadingContext';
 import Colors from './src/styles/colors';
@@ -47,6 +48,7 @@ export default () => (
         <AuthContext.Consumer>
           { ({ auth }) => (
             <NavigationContainer>
+              <Stack.Screen name="Plan" component={PlanSelectionScreen} />
 
               { (() => {
                 if (auth.token) {

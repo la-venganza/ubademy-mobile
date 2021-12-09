@@ -3,7 +3,9 @@ import React from 'react';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import Colors from '../styles/colors';
-import { MainStackNavigator, ProfileStackNavigator, CoursesStackNavigator, ExamsToCompleteStackNavigator } from './StackNavigator';
+import {
+  MainStackNavigator, ProfileStackNavigator, CoursesStackNavigator, ExamsToCompleteStackNavigator,
+} from './StackNavigator';
 import ExamEditScreen from '../views/exam/examEdit';
 
 const Drawer = createDrawerNavigator();

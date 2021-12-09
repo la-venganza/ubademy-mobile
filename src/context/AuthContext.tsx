@@ -10,7 +10,7 @@ const defaultData = JSON.stringify({
 
 const AuthProvider = ({ children }) => {
   const [auth, setAuthState] = useState({
-    token: '', name: '', email: '', loading: false,
+    token: '', name: '', email: '', loading: false, plan: '',
   });
 
   const [userId, setUserId] = useState('');
