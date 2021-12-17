@@ -61,6 +61,15 @@ const updateUser = async (user) => {
   }
 };
 
+const getAll = async () => {
+  try {
+    const response = await instance.get('/user/all');
+    return response.data;
+  } catch (error) {
+    console.log(error.response);
+  }
+};
+
 export default {
-  getUser, updateUser, registerUser, setCookie,
+  getUser, updateUser, registerUser, setCookie, getAll,
 };
