@@ -7,6 +7,7 @@ import {
   Divider, Surface, Text, Title,
 } from 'react-native-paper';
 import { ScrollView } from 'react-native-gesture-handler';
+import { createDownloadResumable } from 'expo-file-system';
 import ICourse from '../interfaces/ICourse';
 import CourseService from '../services/courseService';
 import ISlide from '../interfaces/ISlide';
@@ -19,6 +20,8 @@ import cloudStorage from '../utils/cloudStorage';
 import lessonMapper from '../utils/lessonMapper';
 import { LoadingContext } from '../context/LoadingContext';
 import { AuthContext } from '../context/AuthContext';
+import examService from '../services/examService';
+import IExam from '../interfaces/IExam';
 
 interface Props {
     route: {params:{id: number}};
@@ -110,6 +113,10 @@ const CourseView = ({ route, navigation }:Props) => {
   const [startDownload, setStartDownload] = useState(false);
   // const [activeTimeoutId, setActiveTimeoutId] = useState(0);
   const [stages, setStages] = useState([]);
+
+  const [loadingExam, setLoadingExam] = useState(false);
+  const [isCurrentExamCompleted, setIsCurrentExamCompleted] = useState(false);
+
   const scrollRef = useRef();
   const loadingCtx = useContext(LoadingContext);
 
@@ -152,18 +159,25 @@ const CourseView = ({ route, navigation }:Props) => {
     }
   };
 
-  const handleGoToExam = () => {
+  const handleGoToExam = (readOnly) => {
     navigation.navigate('CourseExamToComplete', {
       courseId: course.id,
       lessonId: currentStage.id,
       examId: currentStage.exam?.id,
       userId: auth.userId,
+      readOnly,
     });
   };
 
-  const renderCompleteExam = () => (
+  const renderCompleteExam = (exam : IExam) => (
     <Button onPress={handleGoToExam}>
       Complete Exam
+    </Button>
+  );
+
+  const renderViewExam = (exam : IExam) => (
+    <Button onPress={handleGoToExam}>
+      Exam submitted, view exam
     </Button>
   );
 
@@ -184,8 +198,8 @@ const CourseView = ({ route, navigation }:Props) => {
     fetchCourse();
   }, []);
 
-  const handleCourseSelection = async (id:number) => {
-    const stage = stages.find((stage, index) => stage.id === id);
+  const handleCourseSelection = async (stageId:number) => {
+    const stage = stages.find((stage, index) => stage.id === stageId);
     let mediaUrl = '';
     try {
       loadingCtx.setLoading(true);
@@ -200,6 +214,17 @@ const CourseView = ({ route, navigation }:Props) => {
       y: 0,
       animated: true,
     });
+
+    console.log(id);
+    console.log(stageId);
+    setLoadingExam(true);
+    examService
+      .getExamsCompleted(id, stageId, auth.userId, stage.exam.id)
+      .then((result) => {
+        setIsCurrentExamCompleted(result.length !== 0);
+        setLoadingExam(false);
+      });
+
     // Uncomment this section once seen is supported
     // if (activeTimeoutId) {
     //   clearTimeout(activeTimeoutId);
@@ -234,7 +259,15 @@ const CourseView = ({ route, navigation }:Props) => {
       <ScrollView ref={scrollRef}>
         <Surface>
           {renderMedia()}
-          {currentStage.exam && renderCompleteExam()}
+          {(currentStage.exam
+          && !loadingExam
+          && !isCurrentExamCompleted)
+          && renderCompleteExam(currentStage.exam)}
+          {
+            currentStage.exam
+            && isCurrentExamCompleted
+            && renderViewExam(currentStage.exam)
+          }
         </Surface>
         <View style={styles.courseInfoWrapper}>
           <Title style={styles.title}>{course.title}</Title>

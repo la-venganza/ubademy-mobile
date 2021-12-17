@@ -17,7 +17,8 @@ const setCookie = async (token) => {
 const getUser = async (email) => {
   try {
     console.log('Trying to fetch user form back');
-    const response = await instance.get(`/login/user/${email}`);
+
+    const response = await instance.get(`/user/login/${email}`);
     return response.data;
   } catch (error) {
     console.log('Exception rised when trying to fetch user from back.');

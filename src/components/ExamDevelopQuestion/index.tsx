@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View, StyleSheet,
 } from 'react-native';
@@ -36,10 +36,18 @@ interface Props {
     examDevelopQuestion: IExamDevelopQuestion;
     returnAnwser: (answerSet: string) => void;
     readOnly: boolean;
+    studentAnswer: string,
 }
 
-const ExamDevelopQuestion = ({ examDevelopQuestion, returnAnwser, readOnly }: Props) => {
+const ExamDevelopQuestion = ({ examDevelopQuestion, returnAnwser,
+  readOnly, studentAnswer }: Props) => {
   const [answer, _setAnswer] = useState('');
+
+  useEffect(() => {
+    if (readOnly) {
+      _setAnswer(studentAnswer);
+    }
+  }, []);
 
   const setAnswer = (answerSet: string) => {
     _setAnswer(answerSet);

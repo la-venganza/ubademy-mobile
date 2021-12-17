@@ -140,7 +140,7 @@ const SlideEditor = ({ slide, setSlide, examList }: Props) => {
       <Menu
         visible={visible}
         onDismiss={closeMenu}
-        anchor={<Button onPress={openMenu}>Asign Exam</Button>}
+        anchor={<Button onPress={openMenu}>Assign Exam</Button>}
       >
         {examList
          && examList.map((ex) => (
@@ -155,7 +155,6 @@ const SlideEditor = ({ slide, setSlide, examList }: Props) => {
   );
 
   const renderExamInSlide = () => {
-    console.log(examList);
     if (slide.exam) {
       return (
         <Chip icon="book" style={{ padding: 10 }}>

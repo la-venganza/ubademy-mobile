@@ -1,25 +1,26 @@
-import React, {  } from 'react';
-import {
-  StyleSheet,
-} from 'react-native';
+import React, { } from 'react';
 import ExamView from '../../components/ExamView';
+
 
 interface Props {
   navigation: object;
-  route: {params:{
+  route: {
+    params:{
       courseId: number;
       lessonId: number;
       userId: string;
       examId: number;
+      readOnly: boolean;
+      takenId: number;
     }
   };
 }
 
-const ExamToCompleteScreen = ({
+const ExamToCorrectScreen = ({
   navigation, route,
 } : Props) => {
   const {
-    courseId, lessonId, examId, userId,
+    courseId, lessonId, examId, userId, readOnly, takenId,
   } = route.params;
 
   return (
@@ -29,9 +30,10 @@ const ExamToCompleteScreen = ({
       lessonId={lessonId}
       examId={examId}
       userId={userId}
-      readOnly={false}
+      readOnly={readOnly}
+      takenId={takenId}
     />
   );
 };
 
-export default ExamToCompleteScreen;
+export default ExamToCorrectScreen;

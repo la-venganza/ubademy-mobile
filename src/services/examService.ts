@@ -109,7 +109,7 @@ const deFormatExam = (exam) => ({
 
 const formatAnswer = (answer: IExamAnswer) => ({
   question_id: answer.questionId,
-  input_text: answer.inputText,
+  input_answer: answer.inputText,
   choice_id: answer.choiceId,
 });
 
@@ -134,6 +134,57 @@ const getExam = async (courseId, lessonId, userId, examId) => {
   }
 };
 
+const getExamsCompleted = async (courseId, lessonId, userId, examId) => {
+  try {
+    console.log('check exam completion');
+    const response = await instance.get(`/user/${userId}?properties=all`);
+
+    const course = response.data.enroll_courses
+      .filter((enroll_course) => enroll_course.course.id === courseId);
+
+    console.log(course);
+
+    if (course.length > 0) {
+      const examTakenIds = course[0].exams.map((exam) => {
+        let takenId = -1;
+        if (exam.exam_id === examId && exam.lesson_id === lessonId) {
+          takenId = exam.exam_taken_id;
+        }
+        return takenId;
+      });
+
+      return examTakenIds.filter((takenId) => takenId !== -1);
+    }
+
+    return [];
+  } catch (error) {
+    console.log('Could not get exam from backend.');
+    console.log('Returning null');
+    console.log(error);
+    return null;
+  }
+};
+
+const getExamsListToCorrect = async (userId) => {
+  try {
+    console.log(`Fetching all exams from user ${userId} to correct. `);
+    const response = await instance.get(`/exam?user_id=${userId}`);
+    return response.data.results;
+  } catch (error) {
+    console.log('Could not get exam from backend.');
+    console.log(error.response.data);
+    console.log('Returning null');
+    return null;
+  }
+};
+
+const getExamSolution = async (examId, courseId, lessonId, userId, takenId) => {
+  const response = await instance
+    .get(`/exam/${examId}/course/${courseId}/lesson/${lessonId}/solution/${takenId}?user_id=${userId}`);
+  console.log(response.data);
+  return response.data;
+};
+
 const createExam = async (exam: IExam, courseId, lessonId, userId) => {
   try {
     console.log(`Submitting exam to course ${courseId} to lesson ${lessonId}`);
@@ -152,8 +203,6 @@ const submitExamAnswers = async (examId: number, courseId: number, lessonId: num
   answers: Array<IExamAnswer>) => {
   try {
     console.log(`Submitting exam answers to course ${courseId} to lesson ${lessonId}`);
-    console.log('Answers were:');
-    console.log(answers);
     console.log(formatExamAnswers(courseId, lessonId, userId, answers));
     const response = await instance.post(`/exam/${examId}`, formatExamAnswers(courseId, lessonId, userId, answers));
 
@@ -166,6 +215,121 @@ const submitExamAnswers = async (examId: number, courseId: number, lessonId: num
   }
 };
 
+const mockExamSolution = {
+  grade: null,
+  answers: [
+    {
+      choice_id: null,
+      text: 'soy una respuesta',
+      question: {
+        sequence_number: 1,
+        type: 'develop',
+        score: 1,
+        multiple_choice_question: null,
+        develop_question: {
+          text: 'Hola',
+        },
+      },
+      choice: null,
+    },
+    {
+      choice_id: 23,
+      text: 'soy otra respuesta',
+      question: {
+        sequence_number: 2,
+        type: 'multiple',
+        score: 0,
+        multiple_choice_question: {
+          text: 'Test',
+          amount_of_options: 2,
+          choices: [
+            {
+              text: '35',
+              is_correct: false,
+            },
+            {
+              text: '12',
+              is_correct: true,
+            },
+          ],
+        },
+        develop_question: null,
+      },
+      choice: {
+        text: '12',
+        is_correct: true,
+      },
+    },
+    {
+      choice_id: null,
+      text: 'soy una tercer respuesta',
+      question: {
+        sequence_number: 3,
+        type: 'develop',
+        score: 1,
+        multiple_choice_question: null,
+        develop_question: {
+          text: 'Test 2',
+        },
+      },
+      choice: null,
+    },
+  ],
+  exam: {
+    title: 'Exam 1',
+    description: 'Example',
+    minimum_qualification: 10,
+    active: false,
+    questions: [
+      {
+        sequence_number: 1,
+        type: 'develop',
+        score: 1,
+        multiple_choice_question: null,
+        develop_question: {
+          text: 'Hola',
+        },
+      },
+      {
+        sequence_number: 2,
+        type: 'multiple',
+        score: 0,
+        multiple_choice_question: {
+          text: 'Test',
+          amount_of_options: 2,
+          choices: [
+            {
+              text: '35',
+              is_correct: false,
+            },
+            {
+              text: '12',
+              is_correct: true,
+            },
+          ],
+        },
+        develop_question: null,
+      },
+      {
+        sequence_number: 3,
+        type: 'develop',
+        score: 1,
+        multiple_choice_question: null,
+        develop_question: {
+          text: 'Test 2',
+        },
+      },
+    ],
+  },
+  exam_date: '2021-12-17T02:17:26.672361+00:00',
+};
+
 export default {
-  getExam, createExam, formatInnerExam, submitExamAnswers,
+  getExam,
+  createExam,
+  formatInnerExam,
+  submitExamAnswers,
+  getExamsListToCorrect,
+  getExamsCompleted,
+  getExamSolution,
 };
