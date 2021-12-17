@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View, StyleSheet,
 } from 'react-native';
@@ -7,6 +7,7 @@ import {
 } from 'react-native-paper';
 import ColorPalette from '../../styles/colors';
 import { IExamMultipleChoice } from '../../interfaces/IExamMultipleChoice';
+import IExamAnswer from '../../interfaces/IExamAnswer';
 
 const styles = StyleSheet.create({
   surface: {
@@ -34,14 +35,27 @@ const styles = StyleSheet.create({
 
 interface Props {
     examMultipleChoice: IExamMultipleChoice;
-    setAnswer: (answerId: string) => void;
+    setAnswer: (answer: IExamAnswer) => void;
+    readOnly: boolean;
 }
 
-const ExamMultipleChoice = ({ examMultipleChoice, setAnswer }: Props) => {
+const ExamMultipleChoice = ({ examMultipleChoice, setAnswer, readOnly }: Props) => {
   const [checked, _setChecked] = useState('');
+  useEffect(() => {
+    if (readOnly) {
+      const checkedId = examMultipleChoice.choices.find((x) => x.isCorrect);
+      _setChecked(String(checkedId));
+    }
+  }, []);
+
   const setChecked = (choiceOptionId: string) => {
+    const answerJson : IExamAnswer = {
+      questionId: examMultipleChoice.questionId,
+      choiceId: Number(choiceOptionId),
+    };
+
     _setChecked(choiceOptionId);
-    setAnswer(choiceOptionId);
+    setAnswer(answerJson);
   };
 
   const renderChoice = (choice) => (
@@ -51,11 +65,12 @@ const ExamMultipleChoice = ({ examMultipleChoice, setAnswer }: Props) => {
       <View style={{ flexDirection: 'row', alignItems: 'flex-start' }}>
         <>
           <RadioButton.Item
+            disabled={readOnly}
             label={choice.text}
             position="leading"
-            value={choice.multipleChoiceQuestionId}
-            status={checked === choice.multipleChoiceQuestionId ? 'checked' : 'unchecked'}
-            onPress={() => setChecked(choice.multipleChoiceQuestionId)}
+            value={choice.id}
+            status={checked === choice.id ? 'checked' : 'unchecked'}
+            onPress={() => setChecked(choice.id)}
           />
         </>
       </View>

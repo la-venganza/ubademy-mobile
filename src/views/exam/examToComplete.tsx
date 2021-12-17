@@ -10,6 +10,7 @@ import examService from '../../services/examService';
 import IExam from '../../interfaces/IExam';
 import ExamMultipleChoice from '../../components/ExamMultipleChoice';
 import ExamDevelopQuestion from '../../components/ExamDevelopQuestion';
+import IExamAnswer from '../../interfaces/IExamAnswer';
 
 const styles = StyleSheet.create({
   container: {
@@ -25,46 +26,64 @@ const styles = StyleSheet.create({
 
 interface Props {
   navigation: object;
+  route: {params:{ courseId: number;
+    lessonId: number;
+    userId: string;
+    examId: number;}};
+
 }
 
-const ExamToCompleteScreen = ({ navigation } : Props) => {
+const ExamToCompleteScreen = ({
+  navigation, route,
+} : Props) => {
   const [exam, setExam] = useState<IExam>({});
 
-  const setAnswer = (idAnswer: string) => {
-    // todo
-    console.log(idAnswer);
+  const {
+    courseId, lessonId, examId, userId,
+  } = route.params;
+
+  const [answers, setAnswers] = useState({});
+
+  const setAnswer = (answer: IExamAnswer) => {
+    const qId = answer.questionId;
+    const newAnswers = {
+      ...answers,
+      [qId]: answer,
+    };
+    setAnswers(newAnswers);
   };
+
   const isFocused = useIsFocused();
 
   const fetchExam = async () => {
-    // todo
-    const examData = await examService.getExam('', '');
+    const examData = await examService.getExam(courseId, lessonId, userId, examId);
     if (examData) {
       setExam(examData);
     }
   };
 
   const submit = () => {
-    // TODO should submit the exam completed by te student to the back.
+    examService.submitExamAnswers(examId, courseId, lessonId, userId, Object.values(answers));
+    navigation.goBack(null);
   };
 
   const cancelAll = () => {
-    // TODO should go back to previous screen
+    navigation.goBack(null);
   };
 
   useEffect(() => {
     fetchExam();
-  }, []);
+  }, [isFocused]);
 
-  function renderMultipleChoice(choice, setAnswerCallback) {
-    return (<ExamMultipleChoice examMultipleChoice={choice} setAnswer={setAnswerCallback} />);
+  function renderMultipleChoice(choice) {
+    return (<ExamMultipleChoice examMultipleChoice={choice} setAnswer={setAnswer} />);
   }
 
-  function renderDevelopQuestion(developQuestion, setAnswerCallback) {
+  function renderDevelopQuestion(developQuestion) {
     return (
       <ExamDevelopQuestion
         examDevelopQuestion={developQuestion}
-        returnAnwser={setAnswerCallback}
+        returnAnwser={setAnswer}
       />
     );
   }
@@ -83,9 +102,9 @@ const ExamToCompleteScreen = ({ navigation } : Props) => {
                   />
                   {exam.questions.map((question) => {
                     if (question.type === 'develop') {
-                      return renderDevelopQuestion(question.developQuestion, setAnswer);
+                      return renderDevelopQuestion(question.developQuestion);
                     }
-                    return renderMultipleChoice(question.multipleChoiceQuestion, setAnswer);
+                    return renderMultipleChoice(question.multipleChoiceQuestion);
                   })}
                 </View>
                 <View style={styles.menuWrapper}>

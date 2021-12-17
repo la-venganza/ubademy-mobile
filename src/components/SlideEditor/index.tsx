@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { View, StyleSheet, Image } from 'react-native';
 import {
-  Surface, TextInput, Button, Text,
+  Surface, TextInput, Button, Text, Divider, Menu, Chip,
 } from 'react-native-paper';
 import * as ImagePicker from 'expo-image-picker';
 import * as DocumentPicker from 'expo-document-picker';
@@ -9,10 +9,12 @@ import ISlide from '../../interfaces/ISlide';
 import ImagePlaceholder from '../../assets/images/image-placeholder.jpg';
 import VideoPlaceholder from '../../assets/images/video-placeholder.png';
 import PDFPlaceholder from '../../assets/images/pdf-placeholder.png';
+import IExam from '../../interfaces/IExam';
 
 interface Props {
     slide: ISlide;
     setSlide: (ISlide) => void;
+    examList: Array<IExam>;
 }
 
 const styles = StyleSheet.create({
@@ -39,7 +41,7 @@ const styles = StyleSheet.create({
   },
 });
 
-const SlideEditor = ({ slide, setSlide }: Props) => {
+const SlideEditor = ({ slide, setSlide, examList }: Props) => {
   const setSlideTitle = (title: string) => {
     setSlide({ ...slide, title });
   };
@@ -116,6 +118,57 @@ const SlideEditor = ({ slide, setSlide }: Props) => {
     }
   };
 
+  const [visible, setVisible] = useState(false);
+
+  const openMenu = () => setVisible(true);
+
+  const closeMenu = () => setVisible(false);
+
+  const saveExamInSlide = (ex) => {
+    setSlide({ ...slide, exam: ex });
+    setVisible(false);
+  };
+
+  const renderAddExamDropdown = () => (
+    <View
+      style={{
+        paddingTop: 50,
+        flexDirection: 'row',
+        justifyContent: 'center',
+      }}
+    >
+      <Menu
+        visible={visible}
+        onDismiss={closeMenu}
+        anchor={<Button onPress={openMenu}>Asign Exam</Button>}
+      >
+        {examList
+         && examList.map((ex) => (
+           <Menu.Item
+             onPress={() => saveExamInSlide(ex)}
+             title={ex.title}
+           />
+         ))}
+
+      </Menu>
+    </View>
+  );
+
+  const renderExamInSlide = () => {
+    console.log(examList);
+    if (slide.exam) {
+      return (
+        <Chip icon="book" style={{ padding: 10 }}>
+          Exam:
+          {' '}
+          {slide.exam.title}
+        </Chip>
+      );
+    } if (examList.length > 0) {
+      return renderAddExamDropdown();
+    } return null;
+  };
+
   return (
     <Surface style={styles.surface}>
       <View>
@@ -123,6 +176,9 @@ const SlideEditor = ({ slide, setSlide }: Props) => {
       </View>
       <View>
         {renderEditor()}
+      </View>
+      <View>
+        {renderExamInSlide()}
       </View>
     </Surface>
   );

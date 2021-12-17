@@ -77,8 +77,13 @@ const PlanSelection = ({ navigation }) => {
       const balance = await walletService.getBalance(authContext.userId);
       setAvailableMoney(balance?.balance ?? 0);
       const subscription = await subscriptionService.getSubscription(authContext.userId);
+<<<<<<< HEAD
       setCurrentPlan(subscription?.subscription?.title ?? 'Free');
       setSelectedPlan(subscription?.subscription?.title ?? 'Free');
+=======
+      setCurrentPlan(subscription?.results[0].subscription.title ?? 'Free');
+      setSelectedPlan(subscription?.results[0].subscription.title ?? 'Free');
+>>>>>>> development
     };
     getBalance();
   }, []);
