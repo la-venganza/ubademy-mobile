@@ -52,7 +52,7 @@ const getCourse = async (id) => {
     const response = await HTTPClient.get(`/course/${id}`);
     return response.data;
   } catch (error) {
-    console.log(error);
+    console.log('Error at /course/id: ', error);
     return null;
   }
 };
@@ -80,6 +80,16 @@ const getCourses = async (searchTerm:string = '', plan:string = '') => {
   }
 };
 
+const enroll = async (id, userId) => {
+  try {
+    const response = await HTTPClient.post(`course/${id}/registration`, { user_id: userId });
+    return response.data;
+  } catch (error) {
+    console.log('Error while enrolling: ', error);
+    return null;
+  }
+};
+
 export default {
   createCourse,
   updateCourse,
@@ -87,4 +97,5 @@ export default {
   setSeen,
   getCourses,
   setCookie,
+  enroll,
 };

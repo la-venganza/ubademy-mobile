@@ -19,14 +19,14 @@ const styles = StyleSheet.create({
   },
 });
 
-const CourseList = ({ courses = [], handleGoToCourse }) => (
+const UsersList = ({ users = [], handleGoToUser }) => (
   <Surface style={styles.surface}>
-    {courses && courses.length ? courses.map((course) => (
-      <TouchableOpacity style={styles.course} key={course.id} onPress={() => handleGoToCourse(course.id)}>
-        <Text>{course.title}</Text>
+    {users && users.map((user) => (
+      <TouchableOpacity style={styles.course} key={user.id} onPress={() => handleGoToUser(user.user_id)}>
+        <Text>{user.username}</Text>
       </TouchableOpacity>
-    )) : <Text>There are no courses available</Text>}
+    ))}
   </Surface>
 );
 
-export default CourseList;
+export default UsersList;

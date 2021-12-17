@@ -17,8 +17,24 @@ const setCookie = async (token) => {
 const getUser = async (email) => {
   try {
     console.log('Trying to fetch user form back');
+<<<<<<< HEAD
 
     const response = await instance.get(`/user/login/${email}`);
+=======
+    const response = await instance.get(`/user/login/${email}?properties=all`);
+    return response.data;
+  } catch (error) {
+    console.log('Exception rised when trying to fetch user from back.');
+    console.log(error.response.data);
+    console.log('Returning null');
+    return null;
+  }
+};
+
+const getUserById = async (id) => {
+  try {
+    const response = await instance.get(`/user/${id}`);
+>>>>>>> development
     return response.data;
   } catch (error) {
     console.log('Exception rised when trying to fetch user from back.');
@@ -62,6 +78,15 @@ const updateUser = async (user) => {
   }
 };
 
+const getAll = async () => {
+  try {
+    const response = await instance.get('/user/all');
+    return response.data;
+  } catch (error) {
+    console.log(error.response);
+  }
+};
+
 export default {
-  getUser, updateUser, registerUser, setCookie,
+  getUser, updateUser, registerUser, setCookie, getAll, getUserById,
 };
