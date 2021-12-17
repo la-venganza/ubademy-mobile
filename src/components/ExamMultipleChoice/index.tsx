@@ -3,7 +3,7 @@ import {
   View, StyleSheet,
 } from 'react-native';
 import {
-  Surface, TextInput, Button, Text, RadioButton,
+  Surface, TextInput, Button, Text, RadioButton, Colors, Badge,
 } from 'react-native-paper';
 import ColorPalette from '../../styles/colors';
 import { IExamMultipleChoice } from '../../interfaces/IExamMultipleChoice';
@@ -30,6 +30,9 @@ const styles = StyleSheet.create({
   TextStyle: {
     color: ColorPalette.white,
     fontWeight: 'bold',
+  },
+  badge: {
+    alignSelf: 'center',
   },
 });
 
@@ -67,7 +70,7 @@ const ExamMultipleChoice = ({
 
   const renderChoice = (choice) => (
     <Surface>
-      <View style={{ flexDirection: 'row', alignItems: 'flex-start' }}>
+      <View style={{ flexDirection: 'row', alignItems: 'flex-start', flexWrap: 'wrap' }}>
         <>
           <RadioButton.Item
             disabled={readOnly}
@@ -77,12 +80,13 @@ const ExamMultipleChoice = ({
             status={checked === choice.id ? 'checked' : 'unchecked'}
             onPress={() => setChecked(choice.id)}
           />
-          {selected === choice.id
-            && (
-            <>
-              <Text>Selected</Text>
-            </>
-            )}
+          <Badge
+            visible={selected === choice.id}
+            style={[styles.badge, { backgroundColor: Colors.blue500 }]}
+          >
+            Selected
+          </Badge>
+
         </>
       </View>
     </Surface>
