@@ -10,10 +10,11 @@ const defaultData = JSON.stringify({
 
 const AuthProvider = ({ children }) => {
   const [auth, setAuthState] = useState({
-    token: '', name: '', email: '', loading: false, plan: '',
+    token: '', name: '', email: '', loading: false, plan: '', courses: [],
   });
 
   const [userId, setUserId] = useState('');
+  const [subscription, setSubscription] = useState(null);
 
   // Get current auth state from AsyncStorage
   const getAuthState = async () => {
@@ -29,29 +30,34 @@ const AuthProvider = ({ children }) => {
         name: authData.name,
         email: authData.email,
         loading: authData.loading,
+        courses: authData.courses,
       });
       setUserId(userDataId);
     } catch (err) {
       setAuthState({
-        token: '', name: '', email: '', loading: false,
+        token: '', name: '', email: '', loading: false, courses: [],
       });
     }
   };
 
   // Update AsyncStorage & context state
-  const setAuth = async (token:string, name:string = '', email:string = '', loading:boolean = false) => {
+  const setAuth = async (token:string, name:string = '', email:string = '', loading:boolean = false, courses:Array = []) => {
     try {
       await AsyncStorage.setItem('auth', JSON.stringify({
-        token, name, email, userId, loading,
+        token, name, email, userId, loading, courses,
       }));
       // Configure axios headers
       configureAxiosHeaders(token);
       setAuthState({
-        token, name, email, loading,
+        token, name, email, loading, courses,
       });
     } catch (error) {
       Promise.reject(error);
     }
+  };
+
+  const setCourses = async (enrolledCourses) => {
+    setAuthState({ ...auth, courses: enrolledCourses });
   };
 
   useEffect(() => {
@@ -60,7 +66,7 @@ const AuthProvider = ({ children }) => {
 
   return (
     <AuthContext.Provider value={{
-      auth, setAuth, userId, setUserId,
+      auth, setAuth, userId, setUserId, setCourses, subscription, setSubscription,
     }}
     >
       {children}

@@ -4,6 +4,7 @@ import HomeScreen from '../views/home.tsx';
 import ProfileScreen from '../views/profile.tsx';
 import CourseCreationScreen from '../views/courseCreation';
 import CourseViewScreen from '../views/courseView';
+import CourseEnrollScreen from '../views/courseEnroll';
 import PlanSelectionScreen from '../views/planSelection';
 import ProfileEditScreen from '../views/profileEdit';
 import ExamToCompleteScreen from '../views/exam/examToComplete';
@@ -16,6 +17,7 @@ const MainStackNavigator = () => (
     <Stack.Screen name="Home" component={HomeScreen} options={{ headerShown: false }} />
     <Stack.Screen name="Course creation" component={CourseCreationScreen} initialParams={{ id: 0 }} options={{ headerShown: false }} />
     <Stack.Screen name="Course view" component={CourseViewScreen} initialParams={{ id: 0 }} options={{ headerShown: false }} />
+    <Stack.Screen name="Course Enroll" component={CourseEnrollScreen} initialParams={{ id: 0 }} options={{ headerShown: false }} />
     <Stack.Screen name="CourseExamEdit" component={ExamEditScreen} options={{ headerShown: false }} />
     <Stack.Screen name="CourseExamToComplete" component={ExamToCompleteScreen} options={{ headerShown: false }} />
   </Stack.Navigator>
@@ -34,6 +36,7 @@ const CoursesStackNavigator = () => (
     <Stack.Screen name="Course creation" component={CourseCreationScreen} initialParams={{ id: 0 }} options={{ headerShown: false }} />
     <Stack.Screen name="Course view" component={CourseViewScreen} initialParams={{ id: 0 }} options={{ headerShown: false }} />
     <Stack.Screen name="CourseExamEdit" component={ExamEditScreen} options={{ headerShown: false }} />
+    <Stack.Screen name="Course Enroll" component={CourseEnrollScreen} initialParams={{ id: 0 }} options={{ headerShown: false }} />
     <Stack.Screen name="CourseExamToComplete" component={ExamToCompleteScreen} options={{ headerShown: false }} />
   </Stack.Navigator>
 );
