@@ -21,11 +21,11 @@ const styles = StyleSheet.create({
 
 const CourseList = ({ courses = [], handleGoToCourse }) => (
   <Surface style={styles.surface}>
-    {courses && courses.map((course) => (
+    {courses && courses.length ? courses.map((course) => (
       <TouchableOpacity style={styles.course} key={course.id} onPress={() => handleGoToCourse(course.id)}>
         <Text>{course.title}</Text>
       </TouchableOpacity>
-    ))}
+    )) : <Text>There are no courses available</Text>}
   </Surface>
 );
 

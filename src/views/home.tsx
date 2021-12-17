@@ -7,7 +7,6 @@ import {
 } from 'react-native-paper';
 import { useIsFocused } from '@react-navigation/native';
 import { AuthContext, AuthProvider } from '../context/AuthContext';
-import LogoutButton from '../components/LogoutButton';
 import CourseList from '../components/CourseList';
 import courseService from '../services/courseService';
 import Header from '../components/Header';
@@ -56,9 +55,6 @@ const HomeScreen = ({ navigation }) => {
       const results = await courseService.getCourses(searchTerm, selectedPlan);
       if (results?.results?.length) {
         setCourses(results.results);
-      } else {
-        // handle no courses
-        setCourses([{ title: 'test title', id: 1 }, { title: 'otro title', id: 2 }]);
       }
     };
     fetchCourses();

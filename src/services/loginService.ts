@@ -30,7 +30,7 @@ const loginWithGoogle = async (auth: AuthContext) => {
   backUser = userService.getUser(firebaseCredential.user.email);
 
   backUser.then((u: { results: string | any[]; }): void => {
-    if (u.results.length === 0) {
+    if (u.user_id) {
       const userData = {
         username: result.user.name,
         first_name: result.user.givenName,
@@ -43,8 +43,9 @@ const loginWithGoogle = async (auth: AuthContext) => {
 
     userService.getUser(firebaseCredential.user.email)
       .then((user: any) => {
-        auth.setUserId(u.results[0].user_id);
-        auth.setAuth(jwt, userName, firebaseCredential.user.email, false);
+        auth.setUserId(u.user_id);
+        auth.setAuth(jwt, userName, firebaseCredential.user.email, false, user.enroll_courses);
+        auth.setSubscription(user.subscriptions);
       })
       .catch((error: any) => {
         console.log(error);
@@ -66,7 +67,7 @@ const loginWithUserAndPassword = async (authCtx: AuthContext, email: string, pas
       // Obtaining userId from back.
       userService.getUser(email).then((u) => {
         authCtx.setUserId(u.results[0].user_id);
-        authCtx.setAuth(jwt, userName, email, false);
+        authCtx.setAuth(jwt, userName, email, false, u.results[0].enroll_courses);
       }).catch((error) => {
         console.log(error);
       });

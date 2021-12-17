@@ -155,7 +155,6 @@ const SlideEditor = ({ slide, setSlide, examList }: Props) => {
   );
 
   const renderExamInSlide = () => {
-    console.log(examList);
     if (slide.exam) {
       return (
         <Chip icon="book" style={{ padding: 10 }}>
