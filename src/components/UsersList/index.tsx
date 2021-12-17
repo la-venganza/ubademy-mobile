@@ -22,7 +22,7 @@ const styles = StyleSheet.create({
 const UsersList = ({ users = [], handleGoToUser }) => (
   <Surface style={styles.surface}>
     {users && users.map((user) => (
-      <TouchableOpacity style={styles.course} key={user.id} onPress={() => handleGoToUser(user.id)}>
+      <TouchableOpacity style={styles.course} key={user.id} onPress={() => handleGoToUser(user.user_id)}>
         <Text>{user.username}</Text>
       </TouchableOpacity>
     ))}

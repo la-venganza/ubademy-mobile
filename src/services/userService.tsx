@@ -27,6 +27,18 @@ const getUser = async (email) => {
   }
 };
 
+const getUserById = async (id) => {
+  try {
+    const response = await instance.get(`/user/${id}`);
+    return response.data;
+  } catch (error) {
+    console.log('Exception rised when trying to fetch user from back.');
+    console.log(error.response.data);
+    console.log('Returning null');
+    return null;
+  }
+};
+
 const registerUser = async (user) => {
   console.log('Registering user...');
   console.log(user);
@@ -71,5 +83,5 @@ const getAll = async () => {
 };
 
 export default {
-  getUser, updateUser, registerUser, setCookie, getAll,
+  getUser, updateUser, registerUser, setCookie, getAll, getUserById,
 };

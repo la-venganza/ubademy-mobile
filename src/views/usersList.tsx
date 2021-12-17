@@ -54,7 +54,7 @@ const HomeScreen = ({ navigation }) => {
     fetchUsers();
   }, [isFocused]);
 
-  const handleGoToUser = (id) => navigation.navigate('Profile', { screen: 'ProfileEdit', params: { id } });
+  const handleGoToUser = (id) => navigation.navigate('Profile', { screen: 'OtherProfile', params: { id } });
 
   return (
     <ScrollView>
