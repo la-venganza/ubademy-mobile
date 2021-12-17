@@ -79,17 +79,17 @@ const PlanSelection = ({ navigation }) => {
       const subscription = await subscriptionService.getSubscription(authContext.userId);
       setSelectedPlan(subscription?.subscription?.title ?? 'Free');
     };
-    if (currentPlan === selectedPlan) {
-      // do nothing?
-    } else {
-      const planUpdatedResponse = await subscriptionService.updateSubscription(authContext.userId, selectedPlan);
-      if (planUpdatedResponse) {
-        setSnackbar({ show: true, message: 'Plan updated!', type: 'success' });
-      } else {
-        setSnackbar({ show: false, message: 'There was an error while updating your plan. Try again later!', type: 'error' });
-      }
-    }
-  };
+    // if (currentPlan === selectedPlan) {
+    //   // do nothing?
+    // } else {
+    //   const planUpdatedResponse = await subscriptionService.updateSubscription(authContext.userId, selectedPlan);
+    //   if (planUpdatedResponse) {
+    //     setSnackbar({ show: true, message: 'Plan updated!', type: 'success' });
+    //   } else {
+    //     setSnackbar({ show: false, message: 'There was an error while updating your plan. Try again later!', type: 'error' });
+    //   }
+    // }
+  });
   return (
     <View style={styles.surface}>
       <View style={styles.wrapper}>
