@@ -69,6 +69,9 @@ const ExamView = ({
     if (readOnly) {
       const res = await examService.getExamSolution(examId, courseId, lessonId, userId, takenId);
       setResolution(res);
+      if (!enrollId) {
+        setScore(examData.grade);
+      }
     }
 
     if (examData) {
@@ -78,10 +81,8 @@ const ExamView = ({
 
   // fixme: deberia este objeto recibir una funcion onsubmit en vez de tantos if.
   const submit = () => {
-    console.log('enroll id');
     console.log(enrollId && readOnly);
     if (readOnly && enrollId) {
-      console.log('set exam grade!');
       examService.setExamGrade(examId, userId, takenId, enrollId, score);
     } else {
       examService.submitExamAnswers(examId, courseId, lessonId, userId, Object.values(answers));
@@ -170,11 +171,26 @@ const ExamView = ({
                   })}
                 </View>
                 {readOnly && renderScoreButton()}
-                <View style={styles.menuWrapper}>
-                  <Button onPress={cancelAll}>Cancel</Button>
-                  <Button mode="contained" labelStyle={{ color: 'white' }} onPress={submit}>Submit</Button>
-                </View>
+                {(readOnly && !enrollId)
+                  ? (
+                    <>
+                      <View>
+                        <Button mode="contained" labelStyle={{ color: 'white' }} onPress={cancelAll}>Back</Button>
+                      </View>
+
+                    </>
+                  )
+                  : (
+                    <>
+                      <View style={styles.menuWrapper}>
+                        <Button onPress={cancelAll}>Cancel</Button>
+                        <Button mode="contained" labelStyle={{ color: 'white' }} onPress={submit}>Submit</Button>
+                      </View>
+
+                    </>
+                  )}
               </ScrollView>
+
             </>
           ) : <ActivityIndicator size="large" color="#00ff00" /> }
       </View>
