@@ -40,19 +40,17 @@ interface Props {
   userId: string;
   readOnly: boolean;
   takenId: number;
+  enrollId: number;
 }
 
 const ExamView = ({
   navigation, courseId, lessonId, examId, userId,
-  readOnly, takenId,
+  readOnly, takenId, enrollId,
 } : Props) => {
   const [exam, setExam] = useState<IExam>({});
-
   const [resolution, setResolution] = useState({});
-
   const [answers, setAnswers] = useState({});
-
-  const [score, setScore] = useState(0);
+  const [score, setScore] = useState();
 
   const setAnswer = (answer: IExamAnswer) => {
     const qId = answer.questionId;
@@ -67,6 +65,7 @@ const ExamView = ({
 
   const fetchExam = async () => {
     const examData = await examService.getExam(courseId, lessonId, userId, examId);
+
     if (readOnly) {
       const res = await examService.getExamSolution(examId, courseId, lessonId, userId, takenId);
       setResolution(res);
@@ -77,8 +76,18 @@ const ExamView = ({
     }
   };
 
+  // fixme: deberia este objeto recibir una funcion onsubmit en vez de tantos if.
   const submit = () => {
-    examService.submitExamAnswers(examId, courseId, lessonId, userId, Object.values(answers));
+    console.log('enroll id');
+    console.log(enrollId && readOnly);
+    if (readOnly && enrollId) {
+      console.log('set exam grade!');
+      examService.setExamGrade(examId, userId, takenId, enrollId, score);
+    } else {
+      examService.submitExamAnswers(examId, courseId, lessonId, userId, Object.values(answers));
+    }
+
+    // fixme
     navigation.goBack(null);
   };
 
@@ -130,8 +139,9 @@ const ExamView = ({
     return (
       <View style={styles.wrapper}>
         <TextInput
+          disabled={enrollId === undefined}
           mode="outlined"
-          value={score}
+          value={score && score.toString()}
           onChangeText={setScore}
           label="Score"
         />

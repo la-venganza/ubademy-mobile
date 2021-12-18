@@ -6,18 +6,6 @@ export const instance = Axios.create({
   withCredentials: true,
 });
 
-// uncomment to log requests and responses.
-// // Those interceptors log the https requests and responses made with axios.
-// instance.interceptors.request.use((request) => {
-//   console.log('Starting Request', JSON.stringify(request, null, 2));
-//   return request;
-// });
-
-// instance.interceptors.response.use((response) => {
-//   console.log('Response:', JSON.stringify(response, null, 2));
-//   return response;
-// });
-
 export const configureAxiosHeaders = (token:string) => {
   instance.defaults.headers['X-Auth-Token'] = token;
   instance.defaults.headers.Cookie = `firebaseAuth=${token}`;

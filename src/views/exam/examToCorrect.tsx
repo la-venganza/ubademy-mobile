@@ -1,6 +1,5 @@
-import React, { } from 'react';
+import React, { useEffect } from 'react';
 import ExamView from '../../components/ExamView';
-
 
 interface Props {
   navigation: object;
@@ -12,6 +11,7 @@ interface Props {
       examId: number;
       readOnly: boolean;
       takenId: number;
+      enrollId: number;
     }
   };
 }
@@ -20,7 +20,7 @@ const ExamToCorrectScreen = ({
   navigation, route,
 } : Props) => {
   const {
-    courseId, lessonId, examId, userId, readOnly, takenId,
+    courseId, lessonId, examId, userId, readOnly, takenId, enrollId,
   } = route.params;
 
   return (
@@ -32,6 +32,7 @@ const ExamToCorrectScreen = ({
       userId={userId}
       readOnly={readOnly}
       takenId={takenId}
+      enrollId={enrollId}
     />
   );
 };

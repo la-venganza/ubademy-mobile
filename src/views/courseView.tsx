@@ -116,6 +116,7 @@ const CourseView = ({ route, navigation }:Props) => {
 
   const [loadingExam, setLoadingExam] = useState(false);
   const [isCurrentExamCompleted, setIsCurrentExamCompleted] = useState(false);
+  const [currentExamLastTakenId, setCurrentExamLastTakenId] = useState(0);
 
   const scrollRef = useRef();
   const loadingCtx = useContext(LoadingContext);
@@ -159,13 +160,25 @@ const CourseView = ({ route, navigation }:Props) => {
     }
   };
 
-  const handleGoToExam = (readOnly) => {
+  const handleGoToExam = () => {
     navigation.navigate('CourseExamToComplete', {
       courseId: course.id,
       lessonId: currentStage.id,
       examId: currentStage.exam?.id,
       userId: auth.userId,
-      readOnly,
+      readOnly: false,
+    });
+  };
+
+  const handleGoToExamReadOnlyView = () => {
+    navigation.navigate('CourseExamReadOnly', {
+      courseId: course.id,
+      lessonId: currentStage.id,
+      examId: currentStage.exam?.id,
+      userId: auth.userId,
+      takenId: currentExamLastTakenId,
+      readOnly: true,
+
     });
   };
 
@@ -176,7 +189,7 @@ const CourseView = ({ route, navigation }:Props) => {
   );
 
   const renderViewExam = (exam : IExam) => (
-    <Button onPress={handleGoToExam}>
+    <Button onPress={handleGoToExamReadOnlyView}>
       Exam submitted, view exam
     </Button>
   );
@@ -225,6 +238,8 @@ const CourseView = ({ route, navigation }:Props) => {
     examService
       .getExamsCompleted(id, stageId, auth.userId, stage.exam.id)
       .then((result) => {
+        console.log(result);
+        setCurrentExamLastTakenId(result[0]);
         setIsCurrentExamCompleted(result.length !== 0);
         setLoadingExam(false);
       });
@@ -279,7 +294,11 @@ const CourseView = ({ route, navigation }:Props) => {
         </View>
         <Divider style={styles.divider} />
         <Surface>
-          <SlideList slides={stages} handleSelect={handleCourseSelection} activeSlide={currentStage} />
+          <SlideList
+            slides={stages}
+            handleSelect={handleCourseSelection}
+            activeSlide={currentStage}
+          />
         </Surface>
         {startDownload && renderDownload()}
       </ScrollView>

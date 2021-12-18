@@ -66,8 +66,8 @@ const loginWithUserAndPassword = async (authCtx: AuthContext, email: string, pas
       userService.setCookie(jwt);
       // Obtaining userId from back.
       userService.getUser(email).then((u) => {
-        authCtx.setUserId(u.results[0].user_id);
-        authCtx.setAuth(jwt, userName, email, false, u.results[0].enroll_courses);
+        authCtx.setUserId(u.user_id);
+        authCtx.setAuth(jwt, userName, email, false, u.enroll_courses);
       }).catch((error) => {
         console.log(error);
       });
