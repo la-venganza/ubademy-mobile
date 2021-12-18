@@ -232,13 +232,10 @@ const CourseView = ({ route, navigation }:Props) => {
       animated: true,
     });
 
-    console.log(id);
-    console.log(stageId);
     setLoadingExam(true);
     examService
       .getExamsCompleted(id, stageId, auth.userId, stage.exam.id)
       .then((result) => {
-        console.log(result);
         setCurrentExamLastTakenId(result[0]);
         setIsCurrentExamCompleted(result.length !== 0);
         setLoadingExam(false);

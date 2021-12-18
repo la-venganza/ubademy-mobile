@@ -83,7 +83,6 @@ const CourseEnroll = ({ route, navigation }:Props) => {
     } else {
       setShowSnackbar(true);
     }
-    console.log(response);
   };
 
   const renderSnackbar = () => (

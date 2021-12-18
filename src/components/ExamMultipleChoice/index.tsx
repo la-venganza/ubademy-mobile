@@ -50,10 +50,8 @@ const ExamMultipleChoice = ({
   const [selected, _setSelected] = useState(0);
   useEffect(() => {
     if (readOnly) {
-      console.log(examMultipleChoice);
       const correctChoice = examMultipleChoice.choices.find((x) => x.isCorrect);
       const checkedId = correctChoice ? correctChoice.id : -1;
-      console.log(checkedId);
       _setChecked(checkedId);
       _setSelected(answerSet);
     }

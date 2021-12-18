@@ -142,8 +142,6 @@ const getExamsCompleted = async (courseId, lessonId, userId, examId) => {
     const course = response.data.enroll_courses
       .filter((enroll_course) => enroll_course.course.id === courseId);
 
-    console.log(course);
-
     if (course.length > 0) {
       const examTakenIds = course[0].exams.map((exam) => {
         let takenId = -1;

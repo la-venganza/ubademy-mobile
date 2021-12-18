@@ -24,7 +24,7 @@ const MainStackNavigator = () => (
     <Stack.Screen name="Course Enroll" component={CourseEnrollScreen} initialParams={{ id: 0 }} options={{ headerShown: false }} />
     <Stack.Screen name="CourseExamEdit" component={ExamEditScreen} options={{ headerShown: false }} />
     <Stack.Screen name="CourseExamToComplete" component={ExamToCompleteScreen} options={{ headerShown: false }} />
-    <Stack.Screen name="CourseExamReadOnly" component={ExamToCorrectScreen} initialParams={{ id: 0 }} options={{ headerShown: false }} />
+    <Stack.Screen name="CourseExamToCorrect" component={ExamToCorrectScreen} initialParams={{ id: 0 }} options={{ headerShown: false }} />
 
   </Stack.Navigator>
 );
