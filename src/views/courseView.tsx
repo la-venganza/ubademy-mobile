@@ -171,7 +171,7 @@ const CourseView = ({ route, navigation }:Props) => {
   };
 
   const handleGoToExamReadOnlyView = () => {
-    navigation.navigate('CourseExamReadOnly', {
+    navigation.navigate('CourseExamToCorrect', {
       courseId: course.id,
       lessonId: currentStage.id,
       examId: currentStage.exam?.id,
