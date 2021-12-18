@@ -40,19 +40,17 @@ interface Props {
   userId: string;
   readOnly: boolean;
   takenId: number;
+  enrollId: number;
 }
 
 const ExamView = ({
   navigation, courseId, lessonId, examId, userId,
-  readOnly, takenId,
+  readOnly, takenId, enrollId,
 } : Props) => {
   const [exam, setExam] = useState<IExam>({});
-
   const [resolution, setResolution] = useState({});
-
   const [answers, setAnswers] = useState({});
-
-  const [score, setScore] = useState(0);
+  const [score, setScore] = useState();
 
   const setAnswer = (answer: IExamAnswer) => {
     const qId = answer.questionId;
@@ -67,9 +65,13 @@ const ExamView = ({
 
   const fetchExam = async () => {
     const examData = await examService.getExam(courseId, lessonId, userId, examId);
+
     if (readOnly) {
       const res = await examService.getExamSolution(examId, courseId, lessonId, userId, takenId);
       setResolution(res);
+      if (!enrollId) {
+        setScore(examData.grade);
+      }
     }
 
     if (examData) {
@@ -77,8 +79,16 @@ const ExamView = ({
     }
   };
 
+  // fixme: deberia este objeto recibir una funcion onsubmit en vez de tantos if.
   const submit = () => {
-    examService.submitExamAnswers(examId, courseId, lessonId, userId, Object.values(answers));
+    console.log(enrollId && readOnly);
+    if (readOnly && enrollId) {
+      examService.setExamGrade(examId, userId, takenId, enrollId, score);
+    } else {
+      examService.submitExamAnswers(examId, courseId, lessonId, userId, Object.values(answers));
+    }
+
+    // fixme
     navigation.goBack(null);
   };
 
@@ -130,8 +140,9 @@ const ExamView = ({
     return (
       <View style={styles.wrapper}>
         <TextInput
+          disabled={enrollId === undefined}
           mode="outlined"
-          value={score}
+          value={score && score.toString()}
           onChangeText={setScore}
           label="Score"
         />
@@ -160,11 +171,26 @@ const ExamView = ({
                   })}
                 </View>
                 {readOnly && renderScoreButton()}
-                <View style={styles.menuWrapper}>
-                  <Button onPress={cancelAll}>Cancel</Button>
-                  <Button mode="contained" labelStyle={{ color: 'white' }} onPress={submit}>Submit</Button>
-                </View>
+                {(readOnly && !enrollId)
+                  ? (
+                    <>
+                      <View>
+                        <Button mode="contained" labelStyle={{ color: 'white' }} onPress={cancelAll}>Back</Button>
+                      </View>
+
+                    </>
+                  )
+                  : (
+                    <>
+                      <View style={styles.menuWrapper}>
+                        <Button onPress={cancelAll}>Cancel</Button>
+                        <Button mode="contained" labelStyle={{ color: 'white' }} onPress={submit}>Submit</Button>
+                      </View>
+
+                    </>
+                  )}
               </ScrollView>
+
             </>
           ) : <ActivityIndicator size="large" color="#00ff00" /> }
       </View>

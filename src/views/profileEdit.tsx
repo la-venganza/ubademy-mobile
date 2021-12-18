@@ -49,7 +49,6 @@ const ProfileEditScreen = ({ navigation, route } : Props) => {
   const setErrorList = (errors: string[]) => _setErrors(errors);
 
   useEffect(() => {
-    console.log(user.user);
     setFirstName(user.user.first_name);
     setLastName(user.user.last_name);
     setBirthDate(user.user.birth_date);

@@ -60,6 +60,7 @@ const ExamsToCorrectListScreen = ({ navigation }) => {
       userId: auth.userId,
       readOnly: true,
       takenId: exam.exam_taken_id,
+      enrollId: exam.enroll_course_id,
     });
   };
 

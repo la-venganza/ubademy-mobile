@@ -39,8 +39,10 @@ interface Props {
     studentAnswer: string,
 }
 
-const ExamDevelopQuestion = ({ examDevelopQuestion, returnAnwser,
-  readOnly, studentAnswer }: Props) => {
+const ExamDevelopQuestion = ({
+  examDevelopQuestion, returnAnwser,
+  readOnly, studentAnswer,
+}: Props) => {
   const [answer, _setAnswer] = useState('');
 
   useEffect(() => {

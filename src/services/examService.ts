@@ -215,113 +215,23 @@ const submitExamAnswers = async (examId: number, courseId: number, lessonId: num
   }
 };
 
-const mockExamSolution = {
-  grade: null,
-  answers: [
-    {
-      choice_id: null,
-      text: 'soy una respuesta',
-      question: {
-        sequence_number: 1,
-        type: 'develop',
-        score: 1,
-        multiple_choice_question: null,
-        develop_question: {
-          text: 'Hola',
-        },
-      },
-      choice: null,
-    },
-    {
-      choice_id: 23,
-      text: 'soy otra respuesta',
-      question: {
-        sequence_number: 2,
-        type: 'multiple',
-        score: 0,
-        multiple_choice_question: {
-          text: 'Test',
-          amount_of_options: 2,
-          choices: [
-            {
-              text: '35',
-              is_correct: false,
-            },
-            {
-              text: '12',
-              is_correct: true,
-            },
-          ],
-        },
-        develop_question: null,
-      },
-      choice: {
-        text: '12',
-        is_correct: true,
-      },
-    },
-    {
-      choice_id: null,
-      text: 'soy una tercer respuesta',
-      question: {
-        sequence_number: 3,
-        type: 'develop',
-        score: 1,
-        multiple_choice_question: null,
-        develop_question: {
-          text: 'Test 2',
-        },
-      },
-      choice: null,
-    },
-  ],
-  exam: {
-    title: 'Exam 1',
-    description: 'Example',
-    minimum_qualification: 10,
-    active: false,
-    questions: [
-      {
-        sequence_number: 1,
-        type: 'develop',
-        score: 1,
-        multiple_choice_question: null,
-        develop_question: {
-          text: 'Hola',
-        },
-      },
-      {
-        sequence_number: 2,
-        type: 'multiple',
-        score: 0,
-        multiple_choice_question: {
-          text: 'Test',
-          amount_of_options: 2,
-          choices: [
-            {
-              text: '35',
-              is_correct: false,
-            },
-            {
-              text: '12',
-              is_correct: true,
-            },
-          ],
-        },
-        develop_question: null,
-      },
-      {
-        sequence_number: 3,
-        type: 'develop',
-        score: 1,
-        multiple_choice_question: null,
-        develop_question: {
-          text: 'Test 2',
-        },
-      },
-    ],
-  },
-  exam_date: '2021-12-17T02:17:26.672361+00:00',
+const setExamGrade = async (examId, userId, takenId, enrollId, grade) => {
+  try {
+    console.log(`Submitting exam grade to exam ${examId}`);
+    const response = await instance.patch(`/exam/${examId}`, {
+      user_id: userId,
+      exam_to_grade_id: takenId,
+      enroll_course_id: enrollId,
+      grade,
+    });
+
+    return response.data;
+  } catch (error) {
+    console.log('Could not get exam from backend.');
+    console.log(error);
+    console.log('Returning null');
+    return null;
+  }
 };
 
 export default {
@@ -332,4 +242,5 @@ export default {
   getExamsListToCorrect,
   getExamsCompleted,
   getExamSolution,
+  setExamGrade,
 };

@@ -11,7 +11,6 @@ import ExamToCorrectScreen from '../views/exam/examToCorrect';
 import ExamsToCorrectListScreen from '../views/exam/examsToCorrectList';
 import UsersList from '../views/usersList';
 
-
 const Drawer = createDrawerNavigator();
 
 const DrawerNavigator = () => (
@@ -56,16 +55,16 @@ const DrawerNavigator = () => (
         ),
       }}
     />
-  <Drawer.Screen
+    <Drawer.Screen
       name="Exams to correct"
       component={ExamsToCorrectStackNavigator}
       options={{
         title: 'Exams to correct',
         drawerIcon: ({ focused, size }) => (
           <Icon name="book" color={Colors.primary} size={25} />
-          ),
+        ),
       }}
-      />
+    />
   </Drawer.Navigator>
 );
 
