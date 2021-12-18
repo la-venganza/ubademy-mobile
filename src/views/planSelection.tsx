@@ -79,6 +79,9 @@ const PlanSelection = ({ navigation }) => {
       const subscription = await subscriptionService.getSubscription(authContext.userId);
       setSelectedPlan(subscription?.subscription?.title ?? 'Free');
     };
+  });
+
+  const onSubmit = async () => {
     if (currentPlan === selectedPlan) {
       // do nothing?
     } else {
@@ -90,6 +93,7 @@ const PlanSelection = ({ navigation }) => {
       }
     }
   };
+
   return (
     <View style={styles.surface}>
       <View style={styles.wrapper}>

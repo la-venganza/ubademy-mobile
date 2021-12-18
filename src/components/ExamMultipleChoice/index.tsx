@@ -3,7 +3,7 @@ import {
   View, StyleSheet,
 } from 'react-native';
 import {
-  Surface, TextInput, Button, Text, RadioButton,
+  Surface, TextInput, Button, Text, RadioButton, Colors, Badge,
 } from 'react-native-paper';
 import ColorPalette from '../../styles/colors';
 import { IExamMultipleChoice } from '../../interfaces/IExamMultipleChoice';
@@ -31,20 +31,31 @@ const styles = StyleSheet.create({
     color: ColorPalette.white,
     fontWeight: 'bold',
   },
+  badge: {
+    alignSelf: 'center',
+  },
 });
 
 interface Props {
     examMultipleChoice: IExamMultipleChoice;
     setAnswer: (answer: IExamAnswer) => void;
     readOnly: boolean;
+    answerSet: number;
 }
 
-const ExamMultipleChoice = ({ examMultipleChoice, setAnswer, readOnly }: Props) => {
-  const [checked, _setChecked] = useState('');
+const ExamMultipleChoice = ({
+  examMultipleChoice, setAnswer, readOnly, answerSet,
+}: Props) => {
+  const [checked, _setChecked] = useState(0);
+  const [selected, _setSelected] = useState(0);
   useEffect(() => {
     if (readOnly) {
-      const checkedId = examMultipleChoice.choices.find((x) => x.isCorrect);
-      _setChecked(String(checkedId));
+      console.log(examMultipleChoice);
+      const correctChoice = examMultipleChoice.choices.find((x) => x.isCorrect);
+      const checkedId = correctChoice ? correctChoice.id : -1;
+      console.log(checkedId);
+      _setChecked(checkedId);
+      _setSelected(answerSet);
     }
   }, []);
 
@@ -53,16 +64,13 @@ const ExamMultipleChoice = ({ examMultipleChoice, setAnswer, readOnly }: Props) 
       questionId: examMultipleChoice.questionId,
       choiceId: Number(choiceOptionId),
     };
-
     _setChecked(choiceOptionId);
     setAnswer(answerJson);
   };
 
   const renderChoice = (choice) => (
-    <Surface
-      key={choice.id}
-    >
-      <View style={{ flexDirection: 'row', alignItems: 'flex-start' }}>
+    <Surface>
+      <View style={{ flexDirection: 'row', alignItems: 'flex-start', flexWrap: 'wrap' }}>
         <>
           <RadioButton.Item
             disabled={readOnly}
@@ -72,6 +80,13 @@ const ExamMultipleChoice = ({ examMultipleChoice, setAnswer, readOnly }: Props) 
             status={checked === choice.id ? 'checked' : 'unchecked'}
             onPress={() => setChecked(choice.id)}
           />
+          <Badge
+            visible={selected === choice.id}
+            style={[styles.badge, { backgroundColor: Colors.blue500 }]}
+          >
+            Selected
+          </Badge>
+
         </>
       </View>
     </Surface>

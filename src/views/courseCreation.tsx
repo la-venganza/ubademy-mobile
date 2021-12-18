@@ -98,8 +98,6 @@ const CourseCreationScreen = ({ route, navigation }) => {
   const [examList, setExamList] = useState<IExam[]>([]);
 
   const saveExam = (exam: IExam) => {
-    console.log('exam should be saved');
-    console.log(exam);
     const ewExamList = [...examList, exam];
     setExamList(ewExamList);
   };

@@ -101,7 +101,7 @@ const ExamEditScreen = ({ navigation, route } : Props) => {
       description,
       title,
     };
-    console.log(newExam);
+
     _setExam(newExam);
 
     // Callback to be handled by course creation.
