@@ -74,7 +74,6 @@ const ProfileScreen = ({ navigation } : Props) => {
 
   const fetchUser = async () => {
     const userData = await userService.getUser(auth.auth.email);
-    console.log(userData);
     if (userData) {
       setUser(userData);
     }

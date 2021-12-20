@@ -70,7 +70,7 @@ const ExamView = ({
       const res = await examService.getExamSolution(examId, courseId, lessonId, userId, takenId);
       setResolution(res);
       if (!enrollId) {
-        setScore(examData.grade);
+        setScore(res.grade);
       }
     }
 
@@ -83,7 +83,7 @@ const ExamView = ({
   const submit = () => {
     console.log(enrollId && readOnly);
     if (readOnly && enrollId) {
-      examService.setExamGrade(examId, userId, takenId, enrollId, score);
+      examService.setExamGrade(examId, userId, takenId, enrollId, score, courseId, lessonId);
     } else {
       examService.submitExamAnswers(examId, courseId, lessonId, userId, Object.values(answers));
     }
