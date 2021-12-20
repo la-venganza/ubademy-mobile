@@ -10,6 +10,8 @@ import {
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import Colors from '../styles/colors';
 import userService from '../services/userService';
+import walletService from '../services/walletService';
+import subscriptionService from '../services/subscriptionService';
 import IUser from '../interfaces/IUser';
 import { AuthContext } from '../context/AuthContext';
 
@@ -68,7 +70,10 @@ interface Props {
 }
 
 const ProfileScreen = ({ navigation } : Props) => {
+  const authContext = useContext(AuthContext);
   const [user, setUser] = useState<IUser>({});
+  const [currentPlan, setCurrentPlan] = useState('free');
+  const [availableMoney, setAvailableMoney] = useState(0);
 
   const auth = useContext(AuthContext);
 
@@ -80,8 +85,16 @@ const ProfileScreen = ({ navigation } : Props) => {
     }
   };
 
+  const getBalance = async () => {
+    const balance = await walletService.getBalance(authContext.userId);
+    setAvailableMoney(balance?.balance ?? 0);
+    const subscription = await subscriptionService.getSubscription(authContext.userId);
+    setCurrentPlan(subscription?.subscription?.title ?? 'Free');
+  };    
+
   useEffect(() => {
     fetchUser();
+    getBalance();
   }, []);
 
   const userRole = (role) => {
@@ -146,11 +159,11 @@ const ProfileScreen = ({ navigation } : Props) => {
           borderRightWidth: 1,
         }]}
         >
-          <Title>$0.0</Title>
+          <Title>{parseFloat(`${availableMoney}`).toFixed(4)}ETH</Title>
           <Caption>Wallet</Caption>
         </View>
         <View style={styles.infoBox}>
-          <Title>{user.subscription}</Title>
+          <Title>{currentPlan}</Title>
           <Caption>Subscription</Caption>
         </View>
       </View>

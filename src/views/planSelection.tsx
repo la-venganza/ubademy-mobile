@@ -78,14 +78,17 @@ const PlanSelection = ({ navigation }) => {
       setAvailableMoney(balance?.balance ?? 0);
       const subscription = await subscriptionService.getSubscription(authContext.userId);
       setSelectedPlan(subscription?.subscription?.title ?? 'Free');
+      setCurrentPlan(subscription?.subscription?.title ?? 'Free');
     };
-  });
+    getBalance()
+  }, []);
 
   const onSubmit = async () => {
     if (currentPlan === selectedPlan) {
       // do nothing?
     } else {
       const planUpdatedResponse = await subscriptionService.updateSubscription(authContext.userId, selectedPlan);
+      console.log(planUpdatedResponse)
       if (planUpdatedResponse) {
         setSnackbar({ show: true, message: 'Plan updated!', type: 'success' });
       } else {
@@ -114,14 +117,21 @@ const PlanSelection = ({ navigation }) => {
             onPress={() => setSelectedPlan('Free')}
           >
             <Text style={[styles.planText, styles.planTitle]}>Free</Text>
-            <Text style={[styles.planText]}>$0 per month</Text>
+            <Text style={[styles.planText]}>0ETH per month</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={selectedPlan === 'Gold' ? styles.planTypeSelected : styles.planTypeNotSelected}
+            onPress={() => setSelectedPlan('Gold')}
+          >
+            <Text style={[styles.planText, styles.planTitle]}>Gold</Text>
+            <Text style={[styles.planText]}>0.001ETH per month</Text>
           </TouchableOpacity>
           <TouchableOpacity
             style={selectedPlan === 'Premium' ? styles.planTypeSelected : styles.planTypeNotSelected}
             onPress={() => setSelectedPlan('Premium')}
           >
             <Text style={[styles.planText, styles.planTitle]}>Premium</Text>
-            <Text style={[styles.planText]}>$50 per month</Text>
+            <Text style={[styles.planText]}>0.002ETH per month</Text>
           </TouchableOpacity>
         </View>
         <View style={styles.buttons}>
