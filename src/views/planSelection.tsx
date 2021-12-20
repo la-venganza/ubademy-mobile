@@ -68,6 +68,7 @@ const PlanSelection = ({ navigation }) => {
   const [selectedPlan, setSelectedPlan] = useState('free');
   const [currentPlan, setCurrentPlan] = useState('free');
   const [availableMoney, setAvailableMoney] = useState(0);
+  const [wallet, setWalletAddress] = useState('');
   const [snackbar, setSnackbar] = useState({ show: false, message: '', type: 'success' });
   const [showSaldoMenu, setShowSaldoMenu] = useState(false);
 
@@ -76,6 +77,8 @@ const PlanSelection = ({ navigation }) => {
     const getBalance = async () => {
       const balance = await walletService.getBalance(authContext.userId);
       setAvailableMoney(balance?.balance ?? 0);
+      const wallet = await walletService.getWallet(authContext.userId);
+      setWalletAddress(wallet?.address ?? '')
       const subscription = await subscriptionService.getSubscription(authContext.userId);
       setSelectedPlan(subscription?.subscription?.title ?? 'Free');
       setCurrentPlan(subscription?.subscription?.title ?? 'Free');
@@ -107,7 +110,7 @@ const PlanSelection = ({ navigation }) => {
             onDismiss={() => setShowSaldoMenu(false)}
             anchor={<Badge onPress={() => setShowSaldoMenu(true)}>{availableMoney}</Badge>}
           >
-            <Menu.Item title="Your hash: OFJDPDK" />
+            <Menu.Item title={wallet} />
           </Menu>
 
         </View>

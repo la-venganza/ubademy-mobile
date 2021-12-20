@@ -10,4 +10,14 @@ const getBalance = async (userId: string) => {
   }
 };
 
-export default { getBalance };
+const getWallet = async (userId: string) => {
+  try {
+    const response = await instance.get(`wallet/${userId}`);
+    return response.data;
+  } catch (error) {
+    console.log(error);
+    return null;
+  }
+};
+
+export default { getBalance, getWallet };
