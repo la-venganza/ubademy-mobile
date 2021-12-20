@@ -251,7 +251,10 @@ const CourseView = ({ route, navigation }:Props) => {
     examService
       .getExamsCompleted(id, stageId, auth.userId, stage.exam.id)
       .then((result) => {
-        setCurrentExamLastTakenId(result[0]);
+        if (result && result.length > 0) {
+          // Por ahora solo permito y muestro un intento de examen.
+          setCurrentExamLastTakenId(result[0]);
+        }
         setIsCurrentExamCompleted(result.length !== 0);
         setLoadingExam(false);
       });
