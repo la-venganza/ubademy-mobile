@@ -67,6 +67,7 @@ const loginWithUserAndPassword = async (authCtx: AuthContext, email: string, pas
       // Obtaining userId from back.
       userService.getUser(email).then((u) => {
         authCtx.setUserId(u.user_id);
+        authCtx.setSubscription(u.subscriptions);
         authCtx.setAuth(jwt, userName, email, false, u.enroll_courses);
       }).catch((error) => {
         console.log(error);
