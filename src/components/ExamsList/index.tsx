@@ -32,29 +32,43 @@ const ExamsList = ({ exams = [], handleGoToExam }) => {
   const auth = useContext(AuthContext);
   return (
     <Surface style={styles.surface}>
-      {exams && exams.map((exam) => (
+      { exams?.map((exam) => (
         <TouchableOpacity
           style={styles.course}
           key={getUniqueId(exam)}
           onPress={() => handleGoToExam(exam)}
         >
           <Text>
-            Course
-            {' '}
-            {exam.course_title}
-            {'\n'}
+            {exam.course_title && 'Course title'}
+            {exam.course_title && ' '}
+            {exam.course_title && exam.course_title}
+
+            {exam.course_title && '\n'}
             Lesson
             {' '}
             {exam.lesson_id}
-            {'\n'}
-            Student
-            {' '}
-            {exam.student_username}
-            {'\n'}
-            Date
-            {' '}
-            {exam.exam_date}
+
+            {exam.student_username && '\n'}
+            {exam.student_username && 'Student'}
+            {exam.student_username && ' '}
+            {exam.student_username && exam.student_username}
+
+            {exam.exam_date && '\n'}
+            {exam.exam_date && 'Exam date'}
+            {exam.exam_date && ' '}
+            {exam.exam_date && exam.exam_date}
+
+            {exam.title && '\n'}
+            {exam.title && 'Title'}
+            {exam.title && ' '}
+            {exam.title && exam.title}
+
+            {exam.description && '\n'}
+            {exam.description && 'Description'}
+            {exam.description && ' '}
+            {exam.description && exam.description}
           </Text>
+          
           {exam.exam_grade && renderGraded(exam)}
         </TouchableOpacity>
       ))}

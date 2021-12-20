@@ -201,7 +201,8 @@ const CourseView = ({ route, navigation }:Props) => {
   useEffect(() => {
     const fetchCourse = async () => {
       console.log('course =========>', auth.auth.courses);
-      if (!auth.auth.courses.some((course) => course.course.id === id)) {
+      if (!auth.auth.courses.some((course) => course.course.id === id)
+      || auth.userId === course.creatorId) {
         navigation.navigate('Course Enroll', { id });
       }
       loadingCtx.setLoading(true);

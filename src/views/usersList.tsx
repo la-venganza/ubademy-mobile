@@ -39,7 +39,7 @@ const styles = StyleSheet.create({
   },
 });
 
-const HomeScreen = ({ navigation }) => {
+const UserListScreen = ({ navigation }) => {
   const isFocused = useIsFocused();
   const auth = useContext(AuthContext);
   const [users, setUsers] = useState([]);
@@ -54,7 +54,7 @@ const HomeScreen = ({ navigation }) => {
     fetchUsers();
   }, [isFocused]);
 
-  const handleGoToUser = (id) => navigation.navigate('Profile', { screen: 'OtherProfile', params: { id } });
+  const handleGoToUser = (id) => navigation.navigate('ProfileDrawer', { screen: 'OtherProfile', params: { id } });
 
   return (
     <ScrollView>
@@ -71,4 +71,4 @@ const HomeScreen = ({ navigation }) => {
     </ScrollView>
   );
 };
-export default HomeScreen;
+export default UserListScreen;

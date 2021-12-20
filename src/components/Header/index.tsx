@@ -12,7 +12,7 @@ const styles = StyleSheet.create({
 const MyComponent = ({ userName, navigation }) => (
   <Appbar.Header style={styles.text}>
     <Appbar.Content title="Ubademy" subtitle={`Welcome, ${userName}`} color="white" />
-    <Button color="white" onPress={() => navigation.navigate('Profile')}>My profile</Button>
+    <Button color="white" onPress={() => navigation.navigate('ProfileDrawer')}>My profile</Button>
     <LogoutButton />
   </Appbar.Header>
 );
