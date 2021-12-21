@@ -69,6 +69,7 @@ const PlanSelection = ({ navigation }) => {
   const [currentPlan, setCurrentPlan] = useState('free');
   const [availableMoney, setAvailableMoney] = useState(0);
   const [wallet, setWalletAddress] = useState('');
+  const [teacherWallet, setTeacherWalletAddress] = useState('');
   const [snackbar, setSnackbar] = useState({ show: false, message: '', type: 'success' });
   const [showSaldoMenu, setShowSaldoMenu] = useState(false);
 

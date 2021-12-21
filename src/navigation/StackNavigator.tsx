@@ -12,6 +12,7 @@ import ExamEditScreen from '../views/exam/examEdit';
 import ExamsToCorrectListScreen from '../views/exam/examsToCorrectList';
 import ExamToCorrectScreen from '../views/exam/examToCorrect';
 import OtherUserProfileScreen from '../views/userProfileView';
+import ExtractScreen from '../views/extract';
 
 
 const Stack = createNativeStackNavigator();
@@ -34,6 +35,7 @@ const ProfileStackNavigator = () => (
     <Stack.Screen name="Profile" component={ProfileScreen} options={{ headerShown: false }} />
     <Stack.Screen name="ProfileEdit" component={ProfileEditScreen} options={{ headerShown: false }} />
     <Stack.Screen name="Subscription" component={PlanSelectionScreen} />
+    <Stack.Screen name="Extract" component={ExtractScreen} />
     <Stack.Screen name="OtherProfile" component={OtherUserProfileScreen} initialParams={{ id: 0 }} />
   </Stack.Navigator>
 );
