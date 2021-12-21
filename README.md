@@ -5,18 +5,23 @@
 # ubademy-mobile
 React Native Android app for Taller 2
 
-# How to build
+# Prerrequisitos
+- Node version 14 o superior (Si no tenes [nvm](https://github.com/nvm-sh/nvm), recomendamos que lo instales.
+- Instalar expo en la compu
 ```
-yarn install 
+npm install --global expo-cli
+```
+
+
+# How to install dependencies
+Una vez instalado expo, correr el siguiente comando para instalar dependencias. Podemos usar yarn como alternativa.
+```
+expo install 
 ```
 
 # How to run with expo
 Bajarse la app de expo en el celular (Buscar expo go en el marketplace y bajarlo).
 
-Instalar expo en la compu
-```
-npm install --global expo-cli
-```
 
 Correr la app con expo
 ```

@@ -2,6 +2,16 @@ import { instance, configureAxiosHeaders } from '../utils/httpClient';
 
 const getBalance = async (userId: string) => {
   try {
+    const response = await instance.get(`wallet/balance/${userId}`);
+    return response.data;
+  } catch (error) {
+    console.log(error);
+    return null;
+  }
+};
+
+const getWallet = async (userId: string) => {
+  try {
     const response = await instance.get(`wallet/${userId}`);
     return response.data;
   } catch (error) {
@@ -10,4 +20,4 @@ const getBalance = async (userId: string) => {
   }
 };
 
-export default { getBalance };
+export default { getBalance, getWallet };
