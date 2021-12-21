@@ -85,7 +85,7 @@ const CourseExamsListScreen = ({ navigation, route }) => {
         : (
           <>
             <View>
-              <Text style={styles.msg}>No exams to correct.</Text>
+              <Text style={styles.msg}>No exams matching filter.</Text>
             </View>
 
           </>

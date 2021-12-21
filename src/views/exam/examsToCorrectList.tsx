@@ -103,7 +103,7 @@ const ExamsToCorrectListScreen = ({ navigation }) => {
         : (
           <>
             <View>
-              <Text style={styles.msg}>No exams to correct.</Text>
+              <Text style={styles.msg}>No exams matching filter.</Text>
             </View>
 
           </>

@@ -22,7 +22,7 @@ const styles = StyleSheet.create({
 
 const renderGraded = (exam) => (
   <View>
-    <Text style={{ color: 'green' }}>Graded</Text>
+    <Text style={{ color: 'green' }}>Graded {exam.exam_grade}</Text>
   </View>
 );
 
@@ -67,9 +67,10 @@ const ExamsList = ({ exams = [], handleGoToExam }) => {
             {exam.description && 'Description'}
             {exam.description && ' '}
             {exam.description && exam.description}
+            {exam.exam_grade && '\n'}
+            {exam.exam_grade && renderGraded(exam)}
           </Text>
-          
-          {exam.exam_grade && renderGraded(exam)}
+
         </TouchableOpacity>
       ))}
     </Surface>

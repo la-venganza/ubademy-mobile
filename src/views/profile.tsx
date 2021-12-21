@@ -97,7 +97,7 @@ const ProfileScreen = ({ navigation } : Props) => {
   }, []);
 
   const userRole = (user) => {
-    if (user.created_courses) {
+    if (user.created_courses && user.created_courses.length > 0) {
       return 'Teacher';
     }
     return 'Student';
@@ -109,6 +109,10 @@ const ProfileScreen = ({ navigation } : Props) => {
 
   const handleGoToCourseExams = (id) => {
     navigation.navigate('CourseExamsList', { id });
+  };
+
+  const handleGoToStudents = (id) => {
+    navigation.navigate('CourseUsersList', { id });
   };
 
   return (
@@ -195,7 +199,7 @@ const ProfileScreen = ({ navigation } : Props) => {
           </View>
         </TouchableRipple>
         <TouchableRipple onPress={() => navigation.navigate('CreatedCoursesList', {
-          courses: user.created_courses,
+          courses: user.created_courses, handleGoToCourse: handleGoToStudents,
         })}
         >
           <View style={styles.menuItem}>
@@ -210,12 +214,6 @@ const ProfileScreen = ({ navigation } : Props) => {
           <View style={styles.menuItem}>
             <Icon name="account-edit-outline" color={Colors.secondary} size={25} />
             <Text style={styles.menuItemText}>Edit profile</Text>
-          </View>
-        </TouchableRipple>
-        <TouchableRipple onPress={() => {}}>
-          <View style={styles.menuItem}>
-            <Icon name="account-check-outline" color={Colors.secondary} size={25} />
-            <Text style={styles.menuItemText}>Support</Text>
           </View>
         </TouchableRipple>
         <TouchableRipple onPress={() => navigation.navigate('Subscription')}>
