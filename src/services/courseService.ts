@@ -90,6 +90,17 @@ const enroll = async (id, userId) => {
   }
 };
 
+const leaveCourse = async (userId, courseId) => {
+  try {
+    console.log(`course/${courseId}/registration`, userId);
+    const response = await HTTPClient.patch(`course/${courseId}/registration`, { user_id: userId });
+    return response.data;
+  } catch (error) {
+    console.log('Error while leaving course: ', error);
+    return null;
+  }
+};
+
 export default {
   createCourse,
   updateCourse,
@@ -98,4 +109,5 @@ export default {
   getCourses,
   setCookie,
   enroll,
+  leaveCourse,
 };
