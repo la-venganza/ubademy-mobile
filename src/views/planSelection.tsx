@@ -92,7 +92,6 @@ const PlanSelection = ({ navigation }) => {
       // do nothing?
     } else {
       const planUpdatedResponse = await subscriptionService.updateSubscription(authContext.userId, selectedPlan);
-      console.log(planUpdatedResponse)
       if (planUpdatedResponse) {
         setSnackbar({ show: true, message: 'Plan updated!', type: 'success' });
       } else {
