@@ -110,7 +110,7 @@ const Extract = ({ navigation }) => {
         />
         <View style={styles.buttons}>
           <Button mode="text">Cancel</Button>
-          <Button mode="contained" labelStyle={styles.planText} onPress={onSubmit} disabled={teacherWallet == ''}>Extract</Button>
+          <Button mode="contained" labelStyle={styles.planText} onPress={onSubmit} disabled={teacherWallet == '' || availableMoney == 0}>Extract</Button>
         </View>
       </View>
       <Snackbar style={[snackbar.type === 'success' ? styles.snackbarSuccess : styles.snackbarError]} visible={snackbar.show} duration={7000}>{snackbar.message}</Snackbar>
