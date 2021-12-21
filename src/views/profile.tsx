@@ -79,7 +79,6 @@ const ProfileScreen = ({ navigation } : Props) => {
 
   const fetchUser = async () => {
     const userData = await userService.getUser(auth.auth.email);
-    console.log(userData);
     if (userData) {
       setUser(userData);
     }
@@ -90,7 +89,7 @@ const ProfileScreen = ({ navigation } : Props) => {
     setAvailableMoney(balance?.balance ?? 0);
     const subscription = await subscriptionService.getSubscription(authContext.userId);
     setCurrentPlan(subscription?.subscription?.title ?? 'Free');
-  };    
+  };
 
   useEffect(() => {
     fetchUser();
@@ -159,7 +158,10 @@ const ProfileScreen = ({ navigation } : Props) => {
           borderRightWidth: 1,
         }]}
         >
-          <Title>{parseFloat(`${availableMoney}`).toFixed(4)}ETH</Title>
+          <Title>
+            {parseFloat(`${availableMoney}`).toFixed(4)}
+            ETH
+          </Title>
           <Caption>Wallet</Caption>
         </View>
         <View style={styles.infoBox}>
