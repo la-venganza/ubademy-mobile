@@ -75,6 +75,7 @@ const PlanSelection = ({ navigation }) => {
   const [snackbar, setSnackbar] = useState({ show: false, message: '', type: 'success' });
   const [showSaldoMenu, setShowSaldoMenu] = useState(false);
   const [showModal, setShowModal] = useState(false);
+  const [showHashModal, setShowHashModal] = useState(false);
 
   useEffect(() => {
     // Api call for getting saldo
@@ -119,7 +120,7 @@ const PlanSelection = ({ navigation }) => {
           <Menu
             visible={showSaldoMenu}
             onDismiss={() => setShowSaldoMenu(false)}
-            anchor={<Badge onPress={() => setShowSaldoMenu(true)}>{availableMoney}</Badge>}
+            anchor={<Badge onPress={() => setShowHashModal(true)}>{availableMoney}</Badge>}
           >
             <Menu.Item title={wallet} />
           </Menu>
@@ -151,7 +152,7 @@ const PlanSelection = ({ navigation }) => {
         <View style={styles.buttons}>
           <Button mode="text">Cancel</Button>
           {
-            showModal
+            showModal || showHashModal
               ? null
               : <Button mode="contained" labelStyle={styles.planText} onPress={onSubmit} disabled={currentPlan === selectedPlan}>Select Plan</Button>
         }
@@ -159,6 +160,13 @@ const PlanSelection = ({ navigation }) => {
       </View>
       <Modal style={styles.modal} visible={showModal} onDismiss={dismiss}>
         <Text>Modifying non basic subscriptions is not supported at the moment</Text>
+      </Modal>
+      <Modal style={styles.modal} visible={showHashModal} onDismiss={() => setShowHashModal(false)}>
+        <Text>
+          Transfer to:
+          {' '}
+          {wallet}
+        </Text>
       </Modal>
       <Snackbar style={[snackbar.type === 'success' ? styles.snackbarSuccess : styles.snackbarError]} visible={snackbar.show} duration={7000}>{snackbar.message}</Snackbar>
     </View>

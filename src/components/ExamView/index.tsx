@@ -81,7 +81,6 @@ const ExamView = ({
 
   // fixme: deberia este objeto recibir una funcion onsubmit en vez de tantos if.
   const submit = () => {
-    console.log(enrollId && readOnly);
     if (readOnly && enrollId) {
       examService.setExamGrade(examId, userId, takenId, enrollId, score);
     } else {
