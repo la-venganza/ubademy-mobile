@@ -234,6 +234,20 @@ const setExamGrade = async (examId, userId, takenId, enrollId, grade, courseId, 
   }
 };
 
+const getExamsByCourse = async (courseId, userId) => {
+  try {
+    console.log(`Getting exams for course ${courseId} and user ${userId}`);
+    const response = await instance.get(`/exam/course/${courseId}?user_id=${userId}`);
+    console.log(response.data);
+    return response.data;
+  } catch (error) {
+    console.log('Could not get exam from backend.');
+    console.log(error);
+    console.log('Returning null');
+    return null;
+  }
+};
+
 export default {
   getExam,
   createExam,
@@ -243,4 +257,5 @@ export default {
   getExamsCompleted,
   getExamSolution,
   setExamGrade,
+  getExamsByCourse,
 };

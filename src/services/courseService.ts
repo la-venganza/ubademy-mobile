@@ -101,6 +101,19 @@ const leaveCourse = async (userId, courseId) => {
   }
 };
 
+const getStudents = async (courseId, userId) => {
+  try {
+    console.log(`Getting users for course ${courseId} and user ${userId}`);
+    const response = await HTTPClient.get(`/course/${courseId}?user_id=${userId}`);
+    return response.data.enrollments.map((x) => x.user);
+  } catch (error) {
+    console.log('Could not get exam from backend.');
+    console.log(error);
+    console.log('Returning null');
+    return null;
+  }
+};
+
 export default {
   createCourse,
   updateCourse,
@@ -110,4 +123,5 @@ export default {
   setCookie,
   enroll,
   leaveCourse,
+  getStudents,
 };
