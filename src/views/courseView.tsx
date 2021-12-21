@@ -22,6 +22,7 @@ import { LoadingContext } from '../context/LoadingContext';
 import { AuthContext } from '../context/AuthContext';
 import examService from '../services/examService';
 import IExam from '../interfaces/IExam';
+import LeaveCourseButton from '../components/LeaveCourseButton';
 
 interface Props {
     route: {params:{id: number}};
@@ -196,7 +197,6 @@ const CourseView = ({ route, navigation }:Props) => {
 
   useEffect(() => {
     const fetchCourse = async () => {
-      console.log('course =========>', auth.auth.courses);
       if (!auth.auth.courses.some((course) => course.course.id === id)) {
         navigation.navigate('Course Enroll', { id });
       }
@@ -213,7 +213,7 @@ const CourseView = ({ route, navigation }:Props) => {
       loadingCtx.setLoading(false);
     };
     fetchCourse();
-  }, []);
+  }, [auth.auth.courses]);
 
   const handleCourseSelection = async (stageId:number) => {
     const stage = stages.find((stage, index) => stage.id === stageId);
@@ -297,6 +297,7 @@ const CourseView = ({ route, navigation }:Props) => {
             activeSlide={currentStage}
           />
         </Surface>
+        <LeaveCourseButton courseId={id} />
         {startDownload && renderDownload()}
       </ScrollView>
     </View>
