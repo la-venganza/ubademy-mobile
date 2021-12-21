@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import { StyleSheet } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import {
   Surface, Text,
@@ -19,6 +19,12 @@ const styles = StyleSheet.create({
     marginTop: 12,
   },
 });
+
+const renderGraded = (exam) => (
+  <View>
+    <Text style={{ color: 'green' }}>Graded</Text>
+  </View>
+);
 
 const getUniqueId = (exam) => `${exam.exam_id}-${exam.exam_taken_id}`;
 
@@ -49,6 +55,7 @@ const ExamsList = ({ exams = [], handleGoToExam }) => {
             {' '}
             {exam.exam_date}
           </Text>
+          {exam.exam_grade && renderGraded(exam)}
         </TouchableOpacity>
       ))}
     </Surface>

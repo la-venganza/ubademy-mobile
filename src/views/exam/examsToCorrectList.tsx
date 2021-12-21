@@ -37,12 +37,25 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: 'bold',
   },
+  twoButtons: {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-evenly',
+    marginTop: 24,
+  },
+  msg: {
+    marginTop: 12,
+    marginLeft: 12,
+    fontSize: 18,
+    fontWeight: 'bold',
+  },
 });
 
 const ExamsToCorrectListScreen = ({ navigation }) => {
   const auth = useContext(AuthContext);
   const [exams, setExams] = useState([]);
   const isFocused = useIsFocused();
+  const [selectedFilter, setSelectedFilter] = useState('all');
 
   useEffect(() => {
     const fetchExams = async () => {
@@ -51,6 +64,12 @@ const ExamsToCorrectListScreen = ({ navigation }) => {
     };
     fetchExams();
   }, [isFocused]);
+
+  const handleSelect = (selectedFilter) => {
+    setSelectedFilter(selectedFilter);
+  };
+
+  const getExamsToShow = () => (selectedFilter === 'all' ? exams : exams.filter((e) => !e.exam_grade));
 
   const handleGoToExam = (exam) => {
     navigation.navigate('ExamToCorrect', {
@@ -65,11 +84,33 @@ const ExamsToCorrectListScreen = ({ navigation }) => {
   };
 
   return (
-    <ScrollView>
-      <View style={styles.courseWrapperList}>
-        <ExamsList exams={exams} handleGoToExam={handleGoToExam} />
+    <View>
+      <View style={styles.twoButtons}>
+        <Button mode={selectedFilter === 'all' ? 'contained' : 'outlined'} onPress={() => handleSelect('all')}>All</Button>
+        <Button mode={selectedFilter === 'notGraded' ? 'contained' : 'outlined'} onPress={() => handleSelect('notGraded')}>Not graded</Button>
       </View>
-    </ScrollView>
+
+      { (getExamsToShow().length !== 0)
+        ? (
+          <>
+            <ScrollView>
+              <View style={styles.courseWrapperList}>
+                <ExamsList exams={getExamsToShow()} handleGoToExam={handleGoToExam} />
+              </View>
+            </ScrollView>
+          </>
+        )
+        : (
+          <>
+            <View>
+              <Text style={styles.msg}>No exams to correct.</Text>
+            </View>
+
+          </>
+        )}
+
+    </View>
+
   );
 };
 export default ExamsToCorrectListScreen;

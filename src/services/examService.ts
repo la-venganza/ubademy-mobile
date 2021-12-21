@@ -213,14 +213,16 @@ const submitExamAnswers = async (examId: number, courseId: number, lessonId: num
   }
 };
 
-const setExamGrade = async (examId, userId, takenId, enrollId, grade) => {
+const setExamGrade = async (examId, userId, takenId, enrollId, grade, courseId, lessonId) => {
   try {
     console.log(`Submitting exam grade to exam ${examId}`);
     const response = await instance.patch(`/exam/${examId}`, {
       user_id: userId,
       exam_to_grade_id: takenId,
       enroll_course_id: enrollId,
-      grade,
+      course_id: courseId,
+      lesson_id: lessonId,
+      grade: Number(grade),
     });
 
     return response.data;
