@@ -85,6 +85,8 @@ const Extract = ({ navigation }) => {
     } else {
       setSnackbar({ show: false, message: 'There was an error while extracting your balance. Try again later!', type: 'error' });
     }
+    const balance = await walletService.getTeacherBalance(authContext.userId);
+    setAvailableMoney(balance?.balance ?? 0);
   };
 
   const setTeacherWalletAddress = (name: string) => _setTeacherWalletAddress(name)
@@ -109,7 +111,6 @@ const Extract = ({ navigation }) => {
           label="Wallet Address"
         />
         <View style={styles.buttons}>
-          <Button mode="text">Cancel</Button>
           <Button mode="contained" labelStyle={styles.planText} onPress={onSubmit} disabled={teacherWallet == '' || availableMoney == 0}>Extract</Button>
         </View>
       </View>
