@@ -41,7 +41,7 @@ const loginWithGoogle = async (auth: AuthContext) => {
       userService.registerUser(userData);
     }
 
-    userService.getUser(firebaseCredential.user.email)
+    userService.getUser(firebaseCredential.user.email, 'google')
       .then((user: any) => {
         auth.setUserId(u.user_id);
         auth.setAuth(jwt, userName, firebaseCredential.user.email, false, user.enroll_courses);
@@ -65,7 +65,7 @@ const loginWithUserAndPassword = async (authCtx: AuthContext, email: string, pas
       authCtx.setAuth(jwt, userName, email, true);
       userService.setCookie(jwt);
       // Obtaining userId from back.
-      userService.getUser(email).then((u) => {
+      userService.getUser(email, 'email').then((u) => {
         authCtx.setUserId(u.user_id);
         authCtx.setSubscription(u.subscriptions);
         authCtx.setAuth(jwt, userName, email, false, u.enroll_courses);
