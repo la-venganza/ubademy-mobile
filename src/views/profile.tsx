@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { View, SafeAreaView, StyleSheet } from 'react-native';
+import { View, SafeAreaView, StyleSheet, DatePickerIOSBase } from 'react-native';
 import {
   Avatar,
   Title,
@@ -89,13 +89,13 @@ const ProfileScreen = ({ navigation } : Props) => {
     const balance = await walletService.getBalance(authContext.userId);
     setAvailableMoney(balance?.balance ?? 0);
     const subscription = await subscriptionService.getSubscription(authContext.userId);
-    setCurrentPlan(subscription?.subscription?.title ?? 'Free');
+    setCurrentPlan(subscription?.results[0].subscription?.title ?? 'Free');
   };    
 
   useEffect(() => {
     fetchUser();
     getBalance();
-  }, []);
+  }, [authContext.updateData]);
 
   const userRole = (role) => {
     if (role) {

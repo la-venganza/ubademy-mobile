@@ -69,7 +69,6 @@ const PlanSelection = ({ navigation }) => {
   const [currentPlan, setCurrentPlan] = useState('free');
   const [availableMoney, setAvailableMoney] = useState(0);
   const [wallet, setWalletAddress] = useState('');
-  const [teacherWallet, setTeacherWalletAddress] = useState('');
   const [snackbar, setSnackbar] = useState({ show: false, message: '', type: 'success' });
   const [showSaldoMenu, setShowSaldoMenu] = useState(false);
 
@@ -85,7 +84,7 @@ const PlanSelection = ({ navigation }) => {
       setCurrentPlan(subscription?.subscription?.title ?? 'Free');
     };
     getBalance()
-  }, []);
+  }, [authContext.updateData]);
 
   const onSubmit = async () => {
     if (currentPlan === selectedPlan) {
@@ -98,6 +97,7 @@ const PlanSelection = ({ navigation }) => {
         setSnackbar({ show: false, message: 'There was an error while updating your plan. Try again later!', type: 'error' });
       }
     }
+    authContext.update()
   };
 
   return (
