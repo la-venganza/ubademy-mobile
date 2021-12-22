@@ -1,5 +1,5 @@
 import React from 'react';
-
+import { StackActions, NavigationActions } from 'react-navigation';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import Colors from '../styles/colors';
@@ -16,7 +16,7 @@ const Drawer = createDrawerNavigator();
 const DrawerNavigator = () => (
   <Drawer.Navigator>
     <Drawer.Screen
-      name="Home"
+      name="HomeDrawer"
       component={MainStackNavigator}
       options={{
         title: 'Home',
@@ -26,7 +26,7 @@ const DrawerNavigator = () => (
       }}
     />
     <Drawer.Screen
-      name="Profile"
+      name="ProfileDrawer"
       component={ProfileStackNavigator}
       options={{
         title: 'Profile',

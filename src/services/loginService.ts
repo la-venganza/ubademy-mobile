@@ -5,7 +5,7 @@ import * as AppAuth from 'expo-app-auth';
 import {
   getAuth, GoogleAuthProvider, signInWithCredential,
   signInWithEmailAndPassword, createUserWithEmailAndPassword,
-  updateProfile,
+  updateProfile, sendPasswordResetEmail,
 } from 'firebase/auth';
 import { AuthContext } from '../context/AuthContext';
 import * as GoogleAuthentication from '../actions/googleAuthentication';
@@ -113,6 +113,15 @@ const registerUser = async (authCtx: AuthContext,
     });
 };
 
+const recoverPassword = async (email, action) => {
+  console.log(email);
+  console.log('piazzi was here');
+  const firebaseAuth = getAuth();
+  await sendPasswordResetEmail(firebaseAuth, email)
+    .then(() => action())
+    .catch((e) => alert(e));
+};
+
 export default {
-  loginWithGoogle, loginWithUserAndPassword, registerUser,
+  loginWithGoogle, loginWithUserAndPassword, registerUser, recoverPassword,
 };

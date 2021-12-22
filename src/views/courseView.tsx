@@ -8,6 +8,7 @@ import {
 } from 'react-native-paper';
 import { ScrollView } from 'react-native-gesture-handler';
 import { createDownloadResumable } from 'expo-file-system';
+import { useIsFocused } from '@react-navigation/native';
 import ICourse from '../interfaces/ICourse';
 import CourseService from '../services/courseService';
 import ISlide from '../interfaces/ISlide';
@@ -22,6 +23,7 @@ import { LoadingContext } from '../context/LoadingContext';
 import { AuthContext } from '../context/AuthContext';
 import examService from '../services/examService';
 import IExam from '../interfaces/IExam';
+import LeaveCourseButton from '../components/LeaveCourseButton';
 
 interface Props {
     route: {params:{id: number}};
@@ -121,6 +123,8 @@ const CourseView = ({ route, navigation }:Props) => {
   const scrollRef = useRef();
   const loadingCtx = useContext(LoadingContext);
 
+  const isFocused = useIsFocused();
+
   const renderDownload = () => (<FileDownloadWebview uri={currentStage.multimediaUri} />);
 
   const handleDownload = () => {
@@ -161,6 +165,7 @@ const CourseView = ({ route, navigation }:Props) => {
   };
 
   const handleGoToExam = () => {
+    setLoadingExam(true);
     navigation.navigate('CourseExamToComplete', {
       courseId: course.id,
       lessonId: currentStage.id,
@@ -196,7 +201,8 @@ const CourseView = ({ route, navigation }:Props) => {
 
   useEffect(() => {
     const fetchCourse = async () => {
-      if (!auth.auth.courses.some((course) => course.course.id === id)) {
+      if (!auth.auth.courses.some((course) => course.course.id === id)
+      || auth.userId === course.creatorId) {
         navigation.navigate('Course Enroll', { id });
       }
       loadingCtx.setLoading(true);
@@ -212,7 +218,18 @@ const CourseView = ({ route, navigation }:Props) => {
       loadingCtx.setLoading(false);
     };
     fetchCourse();
-  }, []);
+
+    setLoadingExam(true);
+    if (currentStage.exam) {
+      examService
+        .getExamsCompleted(id, currentStage.id, auth.userId, currentStage.exam.id)
+        .then((result) => {
+          setCurrentExamLastTakenId(result[0]);
+          setIsCurrentExamCompleted(result.length !== 0);
+          setLoadingExam(false);
+        });
+    }
+  }, [isFocused, auth.auth.courses]);
 
   const handleCourseSelection = async (stageId:number) => {
     const stage = stages.find((stage, index) => stage.id === stageId);
@@ -235,7 +252,10 @@ const CourseView = ({ route, navigation }:Props) => {
     examService
       .getExamsCompleted(id, stageId, auth.userId, stage.exam.id)
       .then((result) => {
-        setCurrentExamLastTakenId(result[0]);
+        if (result && result.length > 0) {
+          // Por ahora solo permito y muestro un intento de examen.
+          setCurrentExamLastTakenId(result[0]);
+        }
         setIsCurrentExamCompleted(result.length !== 0);
         setLoadingExam(false);
       });
@@ -296,6 +316,7 @@ const CourseView = ({ route, navigation }:Props) => {
             activeSlide={currentStage}
           />
         </Surface>
+        <LeaveCourseButton courseId={id} />
         {startDownload && renderDownload()}
       </ScrollView>
     </View>

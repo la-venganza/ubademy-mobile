@@ -54,11 +54,11 @@ const OtherProfileScreen = ({ route } : Props) => {
     fetchUser();
   }, [isFocused]);
 
-  const userRole = (role) => {
-    if (role) {
-      return role;
+  const userRole = (user) => {
+    if (user.created_courses) {
+      return 'Teacher';
     }
-    return 'No role for user';
+    return 'Student';
   };
 
   return (
@@ -68,7 +68,7 @@ const OtherProfileScreen = ({ route } : Props) => {
         <View style={{ flexDirection: 'row', marginTop: 15 }}>
           <Avatar.Image
             source={{
-              uri: 'https://lh3.googleusercontent.com/a/AATXAJzmbRfP0iie6cg_7tNSQfxZroDeLDolmuoc8tzA=s96-c',
+              uri: 'https://www.shareicon.net/data/2016/08/18/814671_user_512x512.png',
             }}
             size={80}
           />
@@ -102,7 +102,7 @@ const OtherProfileScreen = ({ route } : Props) => {
       <View style={styles.userInfoSection}>
         <View style={styles.row}>
           <Icon name="head" color="#777777" size={20} />
-          <Text style={{ color: '#777777', marginLeft: 20 }}>{userRole(user.role)}</Text>
+          <Text style={{ color: '#777777', marginLeft: 20 }}>{userRole(user)}</Text>
         </View>
         <View style={styles.row}>
           <Icon name="email" color="#777777" size={20} />
