@@ -2,7 +2,7 @@ import React, { useState, useEffect, useContext } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import {
-  Button, Text, Badge, Title, Snackbar, Menu,
+  Button, Text, Badge, Title, Snackbar, Menu, Modal,
 } from 'react-native-paper';
 import { AuthContext } from '../context/AuthContext';
 import colors from '../styles/colors';
@@ -61,6 +61,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
   },
+  modal: {
+    backgroundColor: 'white', padding: 20, margin: 48, marginBottom: 56,
+  },
 });
 
 const PlanSelection = ({ navigation }) => {
@@ -71,24 +74,30 @@ const PlanSelection = ({ navigation }) => {
   const [wallet, setWalletAddress] = useState('');
   const [snackbar, setSnackbar] = useState({ show: false, message: '', type: 'success' });
   const [showSaldoMenu, setShowSaldoMenu] = useState(false);
+  const [showModal, setShowModal] = useState(false);
+  const [showHashModal, setShowHashModal] = useState(false);
 
   useEffect(() => {
     // Api call for getting saldo
     const getBalance = async () => {
       const balance = await walletService.getBalance(authContext.userId);
       setAvailableMoney(balance?.balance ?? 0);
-      const wallet = await walletService.getWallet(authContext.userId);
-      setWalletAddress(wallet?.address ?? '')
-      const subscription = await subscriptionService.getSubscription(authContext.userId);
-      setSelectedPlan(subscription?.subscription?.title ?? 'Free');
-      setCurrentPlan(subscription?.subscription?.title ?? 'Free');
+      const walletResponse = await walletService.getWallet(authContext.userId);
+      setWalletAddress(walletResponse?.address ?? '');
+      const subscriptionResponse = await subscriptionService.getSubscription(authContext.userId);
+      const subscriptionTitle = subscriptionResponse.results.length
+        ? subscriptionResponse.results[0].subscription.title
+        : 'Free';
+      setSelectedPlan(subscriptionTitle);
+      setCurrentPlan(subscriptionTitle);
     };
-    getBalance()
+    getBalance();
   }, []);
 
   const onSubmit = async () => {
-    if (currentPlan === selectedPlan) {
-      // do nothing?
+    setShowModal(true);
+    if (currentPlan !== 'Free') {
+      setShowModal(true);
     } else {
       const planUpdatedResponse = await subscriptionService.updateSubscription(authContext.userId, selectedPlan);
       if (planUpdatedResponse) {
@@ -99,6 +108,10 @@ const PlanSelection = ({ navigation }) => {
     }
   };
 
+  const dismiss = () => {
+    setShowModal(false);
+  };
+
   return (
     <View style={styles.surface}>
       <View style={styles.wrapper}>
@@ -107,7 +120,7 @@ const PlanSelection = ({ navigation }) => {
           <Menu
             visible={showSaldoMenu}
             onDismiss={() => setShowSaldoMenu(false)}
-            anchor={<Badge onPress={() => setShowSaldoMenu(true)}>{availableMoney}</Badge>}
+            anchor={<Badge onPress={() => setShowHashModal(true)}>{availableMoney}</Badge>}
           >
             <Menu.Item title={wallet} />
           </Menu>
@@ -138,9 +151,23 @@ const PlanSelection = ({ navigation }) => {
         </View>
         <View style={styles.buttons}>
           <Button mode="text">Cancel</Button>
-          <Button mode="contained" labelStyle={styles.planText} onPress={onSubmit} disabled={currentPlan === selectedPlan}>Select Plan</Button>
+          {
+            showModal || showHashModal
+              ? null
+              : <Button mode="contained" labelStyle={styles.planText} onPress={onSubmit} disabled={currentPlan === selectedPlan}>Select Plan</Button>
+        }
         </View>
       </View>
+      <Modal style={styles.modal} visible={showModal} onDismiss={dismiss}>
+        <Text>Modifying non basic subscriptions is not supported at the moment</Text>
+      </Modal>
+      <Modal style={styles.modal} visible={showHashModal} onDismiss={() => setShowHashModal(false)}>
+        <Text>
+          Transfer to:
+          {' '}
+          {wallet}
+        </Text>
+      </Modal>
       <Snackbar style={[snackbar.type === 'success' ? styles.snackbarSuccess : styles.snackbarError]} visible={snackbar.show} duration={7000}>{snackbar.message}</Snackbar>
     </View>
   );

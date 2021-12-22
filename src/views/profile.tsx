@@ -170,7 +170,10 @@ const ProfileScreen = ({ navigation } : Props) => {
           borderRightWidth: 1,
         }]}
         >
-          <Title>{parseFloat(`${availableMoney}`).toFixed(4)}ETH</Title>
+          <Title>
+            {parseFloat(`${availableMoney}`).toFixed(4)}
+            ETH
+          </Title>
           <Caption>Wallet</Caption>
         </View>
         <View style={styles.infoBox}>
