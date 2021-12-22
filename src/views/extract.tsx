@@ -62,7 +62,7 @@ const styles = StyleSheet.create({
   },
 });
 
-const Extract = ({ navigation }) => {
+const Withdraw = ({ navigation }) => {
   const authContext = useContext(AuthContext);
   const [availableMoney, setAvailableMoney] = useState(0);
   const [teacherWallet, _setTeacherWalletAddress] = useState('');
@@ -70,7 +70,6 @@ const Extract = ({ navigation }) => {
   const [showSaldoMenu, setShowSaldoMenu] = useState(false);
 
   useEffect(() => {
-    // Api call for getting saldo
     const getBalance = async () => {
       const balance = await walletService.getTeacherBalance(authContext.userId);
       setAvailableMoney(balance?.balance ?? 0);
@@ -119,4 +118,4 @@ const Extract = ({ navigation }) => {
   );
 };
 
-export default Extract;
+export default Withdraw;
