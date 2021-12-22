@@ -4,6 +4,7 @@ import { Button, Text, TextInput } from 'react-native-paper';
 import Logo from '../components/Logo';
 import { GoogleLoginButton } from '../components/LoginButton';
 import LogOnButton from '../components/LogOnButton';
+import loginService from '../services/loginService';
 
 const styles = StyleSheet.create({
   surface: {
@@ -29,40 +30,37 @@ const styles = StyleSheet.create({
   },
 });
 
-const LoginScreen = ({ navigation }) => {
+const RecoverPasswordScreen = ({ navigation }) => {
   const [email, _setEmail] = useState('');
-  const [password, _setPassword] = useState('');
+
+  const handleRecoverPassword = (myEmail) => {
+    loginService.recoverPassword(myEmail, () => navigation.navigate('Login'));
+  };
 
   const setEmail = (name: string) => _setEmail(name);
-  const setPassword = (text: string) => _setPassword(text);
+
   return (
     <View style={styles.wrapper}>
       <View style={styles.surface}>
         <Logo style={styles.image} />
-        <Text>Welcome to Ubademy! Please log in</Text>
+        <Text>
+          Enter your username or e-mail address and we'll
+          send you an email to reset your password
+
+        </Text>
+
         <TextInput
           mode="outlined"
           value={email}
           onChangeText={setEmail}
           label="Email"
         />
-        <TextInput
-          mode="outlined"
-          value={password}
-          onChangeText={setPassword}
-          label="Password"
-          secureTextEntry
-        />
         <View style={styles.buttonWrapper}>
-          <LogOnButton email={email} password={password}>Log In</LogOnButton>
-          <Button mode="text" onPress={() => navigation.navigate('Recover')}>Forgot password</Button>
-          <Button mode="text" onPress={() => navigation.navigate('Registration')}>You don&apos;t have an account? Register now!</Button>
-        </View>
-        <View style={styles.row}>
-          <GoogleLoginButton />
+          <Button mode="text" onPress={() => handleRecoverPassword(email)}>Submit</Button>
+          <Button mode="text" onPress={() => navigation.navigate('Login')}>Cancel</Button>
         </View>
       </View>
     </View>
   );
 };
-export default LoginScreen;
+export default RecoverPasswordScreen;

@@ -9,6 +9,8 @@ import { useIsFocused } from '@react-navigation/native';
 import { AuthContext, AuthProvider } from '../context/AuthContext';
 import UsersList from '../components/UsersList';
 import userService from '../services/userService';
+import examService from '../services/examService';
+import courseService from '../services/courseService';
 
 const styles = StyleSheet.create({
   container: {
@@ -39,17 +41,17 @@ const styles = StyleSheet.create({
   },
 });
 
-const UserListScreen = ({ navigation }) => {
+const CourseUserListScreen = ({ navigation, route }) => {
   const isFocused = useIsFocused();
   const auth = useContext(AuthContext);
   const [users, setUsers] = useState([]);
+  const { id } = route.params;
+
   useEffect(() => {
     const fetchUsers = async () => {
       userService.setCookie(auth?.auth?.token);
-      const results = await userService.getAll();
-      if (results?.results?.length) {
-        setUsers(results.results);
-      }
+      const results = await courseService.getStudents(id, auth.userId);
+      setUsers(results);
     };
     fetchUsers();
   }, [isFocused]);
@@ -71,4 +73,4 @@ const UserListScreen = ({ navigation }) => {
     </ScrollView>
   );
 };
-export default UserListScreen;
+export default CourseUserListScreen;
