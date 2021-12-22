@@ -18,6 +18,7 @@ import ProfileEditScreen from './src/views/profileEdit';
 import LoadingScreen from './src/views/loading';
 import DrawerNavigator from './src/navigation/DrawerNavigator';
 import ExamEditScreen from './src/views/exam/examEdit';
+import RecoverPasswordScreen from './src/views/recoverPassword';
 
 const firebaseConfig = {
   apiKey: Constants.manifest.extra.FIREBASE_API_KEY,
@@ -64,6 +65,7 @@ export default () => (
                       <Stack.Navigator>
                         <Stack.Screen name="Login" component={LoginScreen} />
                         <Stack.Screen name="Registration" component={RegistrationScreen} />
+                        <Stack.Screen name="Recover" component={RecoverPasswordScreen} />
                       </Stack.Navigator>
                     </>
                   );

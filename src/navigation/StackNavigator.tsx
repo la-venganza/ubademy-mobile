@@ -13,6 +13,9 @@ import ExamsToCorrectListScreen from '../views/exam/examsToCorrectList';
 import ExamToCorrectScreen from '../views/exam/examToCorrect';
 import OtherUserProfileScreen from '../views/userProfileView';
 import ExtractScreen from '../views/extract';
+import CreatedCoursesListScreen from '../views/createdCoursesList';
+import CourseExamsListScreen from '../views/exam/courseExamsList';
+import CourseUserListScreen from '../views/courseUsersList';
 
 
 const Stack = createNativeStackNavigator();
@@ -34,9 +37,12 @@ const ProfileStackNavigator = () => (
   <Stack.Navigator>
     <Stack.Screen name="Profile" component={ProfileScreen} options={{ headerShown: false }} />
     <Stack.Screen name="ProfileEdit" component={ProfileEditScreen} options={{ headerShown: false }} />
-    <Stack.Screen name="Subscription" component={PlanSelectionScreen} />
+    <Stack.Screen name="Subscription" component={PlanSelectionScreen} options={{ headerShown: false }} />
     <Stack.Screen name="Extract" component={ExtractScreen} />
-    <Stack.Screen name="OtherProfile" component={OtherUserProfileScreen} initialParams={{ id: 0 }} />
+    <Stack.Screen name="CreatedCoursesList" component={CreatedCoursesListScreen} initialParams={{ id: 0 }} options={{ headerShown: false }} />
+    <Stack.Screen name="CourseExamsList" component={CourseExamsListScreen} initialParams={{ id: 0 }} options={{ headerShown: false }} />
+    <Stack.Screen name="CourseUsersList" component={CourseUserListScreen} initialParams={{ id: 0 }} options={{ headerShown: false }} />
+    <Stack.Screen name="OtherProfile" component={OtherUserProfileScreen} initialParams={{ id: 0 }} options={{ headerShown: false }} />
   </Stack.Navigator>
 );
 

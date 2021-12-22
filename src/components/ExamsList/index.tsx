@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import { StyleSheet } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import {
   Surface, Text,
@@ -20,35 +20,57 @@ const styles = StyleSheet.create({
   },
 });
 
+const renderGraded = (exam) => (
+  <View>
+    <Text style={{ color: 'green' }}>Graded {exam.exam_grade}</Text>
+  </View>
+);
+
 const getUniqueId = (exam) => `${exam.exam_id}-${exam.exam_taken_id}`;
 
 const ExamsList = ({ exams = [], handleGoToExam }) => {
   const auth = useContext(AuthContext);
   return (
     <Surface style={styles.surface}>
-      {exams && exams.map((exam) => (
+      { exams?.map((exam) => (
         <TouchableOpacity
           style={styles.course}
           key={getUniqueId(exam)}
           onPress={() => handleGoToExam(exam)}
         >
           <Text>
-            Course
-            {' '}
-            {exam.course_title}
-            {'\n'}
+            {exam.course_title && 'Course title'}
+            {exam.course_title && ' '}
+            {exam.course_title && exam.course_title}
+
+            {exam.course_title && '\n'}
             Lesson
             {' '}
             {exam.lesson_id}
-            {'\n'}
-            Student
-            {' '}
-            {exam.student_username}
-            {'\n'}
-            Date
-            {' '}
-            {exam.exam_date}
+
+            {exam.student_username && '\n'}
+            {exam.student_username && 'Student'}
+            {exam.student_username && ' '}
+            {exam.student_username && exam.student_username}
+
+            {exam.exam_date && '\n'}
+            {exam.exam_date && 'Exam date'}
+            {exam.exam_date && ' '}
+            {exam.exam_date && exam.exam_date}
+
+            {exam.title && '\n'}
+            {exam.title && 'Title'}
+            {exam.title && ' '}
+            {exam.title && exam.title}
+
+            {exam.description && '\n'}
+            {exam.description && 'Description'}
+            {exam.description && ' '}
+            {exam.description && exam.description}
+            {exam.exam_grade && '\n'}
+            {exam.exam_grade && renderGraded(exam)}
           </Text>
+
         </TouchableOpacity>
       ))}
     </Surface>

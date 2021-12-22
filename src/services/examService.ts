@@ -213,16 +213,32 @@ const submitExamAnswers = async (examId: number, courseId: number, lessonId: num
   }
 };
 
-const setExamGrade = async (examId, userId, takenId, enrollId, grade) => {
+const setExamGrade = async (examId, userId, takenId, enrollId, grade, courseId, lessonId) => {
   try {
     console.log(`Submitting exam grade to exam ${examId}`);
     const response = await instance.patch(`/exam/${examId}`, {
       user_id: userId,
       exam_to_grade_id: takenId,
       enroll_course_id: enrollId,
-      grade,
+      course_id: courseId,
+      lesson_id: lessonId,
+      grade: Number(grade),
     });
 
+    return response.data;
+  } catch (error) {
+    console.log('Could not get exam from backend.');
+    console.log(error);
+    console.log('Returning null');
+    return null;
+  }
+};
+
+const getExamsByCourse = async (courseId, userId) => {
+  try {
+    console.log(`Getting exams for course ${courseId} and user ${userId}`);
+    const response = await instance.get(`/exam/course/${courseId}?user_id=${userId}`);
+    console.log(response.data);
     return response.data;
   } catch (error) {
     console.log('Could not get exam from backend.');
@@ -241,4 +257,5 @@ export default {
   getExamsCompleted,
   getExamSolution,
   setExamGrade,
+  getExamsByCourse,
 };

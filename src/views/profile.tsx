@@ -72,14 +72,13 @@ interface Props {
 const ProfileScreen = ({ navigation } : Props) => {
   const authContext = useContext(AuthContext);
   const [user, setUser] = useState<IUser>({});
-  const [currentPlan, setCurrentPlan] = useState('free');
+  const [currentPlan, setCurrentPlan] = useState('Free');
   const [availableMoney, setAvailableMoney] = useState(0);
 
   const auth = useContext(AuthContext);
 
   const fetchUser = async () => {
     const userData = await userService.getUser(auth.auth.email);
-    console.log(userData);
     if (userData) {
       setUser(userData);
     }
@@ -97,11 +96,23 @@ const ProfileScreen = ({ navigation } : Props) => {
     getBalance();
   }, [authContext.updateData]);
 
-  const userRole = (role) => {
-    if (role) {
-      return role;
+  const userRole = (user) => {
+    if (user.created_courses && user.created_courses.length > 0) {
+      return 'Teacher';
     }
-    return 'No role for user';
+    return 'Student';
+  };
+
+  const handleGoToCourse = (id) => {
+    navigation.navigate('Course view', { id });
+  };
+
+  const handleGoToCourseExams = (id) => {
+    navigation.navigate('CourseExamsList', { id });
+  };
+
+  const handleGoToStudents = (id) => {
+    navigation.navigate('CourseUsersList', { id });
   };
 
   return (
@@ -111,7 +122,7 @@ const ProfileScreen = ({ navigation } : Props) => {
         <View style={{ flexDirection: 'row', marginTop: 15 }}>
           <Avatar.Image
             source={{
-              uri: 'https://lh3.googleusercontent.com/a/AATXAJzmbRfP0iie6cg_7tNSQfxZroDeLDolmuoc8tzA=s96-c',
+              uri: 'https://www.shareicon.net/data/2016/08/18/814671_user_512x512.png',
             }}
             size={80}
           />
@@ -145,7 +156,7 @@ const ProfileScreen = ({ navigation } : Props) => {
       <View style={styles.userInfoSection}>
         <View style={styles.row}>
           <Icon name="head" color="#777777" size={20} />
-          <Text style={{ color: '#777777', marginLeft: 20 }}>{userRole(user.role)}</Text>
+          <Text style={{ color: '#777777', marginLeft: 20 }}>{userRole(user)}</Text>
         </View>
         <View style={styles.row}>
           <Icon name="email" color="#777777" size={20} />
@@ -159,7 +170,10 @@ const ProfileScreen = ({ navigation } : Props) => {
           borderRightWidth: 1,
         }]}
         >
-          <Title>{parseFloat(`${availableMoney}`).toFixed(4)}ETH</Title>
+          <Title>
+            {parseFloat(`${availableMoney}`).toFixed(4)}
+            ETH
+          </Title>
           <Caption>Wallet</Caption>
         </View>
         <View style={styles.infoBox}>
@@ -169,10 +183,31 @@ const ProfileScreen = ({ navigation } : Props) => {
       </View>
 
       <View style={styles.menuWrapper}>
-        <TouchableRipple onPress={() => {}}>
+        <TouchableRipple onPress={() => navigation.navigate('CreatedCoursesList', {
+          courses: user.created_courses, handleGoToCourse,
+        })}
+        >
           <View style={styles.menuItem}>
             <Icon name="book-open-variant" color={Colors.secondary} size={25} />
-            <Text style={styles.menuItemText}>Your Courses</Text>
+            <Text style={styles.menuItemText}>Your courses</Text>
+          </View>
+        </TouchableRipple>
+        <TouchableRipple onPress={() => navigation.navigate('CreatedCoursesList', {
+          courses: user.created_courses, handleGoToCourse: handleGoToCourseExams,
+        })}
+        >
+          <View style={styles.menuItem}>
+            <Icon name="book-open-variant" color={Colors.secondary} size={25} />
+            <Text style={styles.menuItemText}>Your exams by course</Text>
+          </View>
+        </TouchableRipple>
+        <TouchableRipple onPress={() => navigation.navigate('CreatedCoursesList', {
+          courses: user.created_courses, handleGoToCourse: handleGoToStudents,
+        })}
+        >
+          <View style={styles.menuItem}>
+            <Icon name="account-box-multiple" color={Colors.secondary} size={25} />
+            <Text style={styles.menuItemText}>Your students by course</Text>
           </View>
         </TouchableRipple>
         <TouchableRipple onPress={() => navigation.navigate('ProfileEdit', {
@@ -181,13 +216,7 @@ const ProfileScreen = ({ navigation } : Props) => {
         >
           <View style={styles.menuItem}>
             <Icon name="account-edit-outline" color={Colors.secondary} size={25} />
-            <Text style={styles.menuItemText}>Edit</Text>
-          </View>
-        </TouchableRipple>
-        <TouchableRipple onPress={() => {}}>
-          <View style={styles.menuItem}>
-            <Icon name="account-check-outline" color={Colors.secondary} size={25} />
-            <Text style={styles.menuItemText}>Support</Text>
+            <Text style={styles.menuItemText}>Edit profile</Text>
           </View>
         </TouchableRipple>
         <TouchableRipple onPress={() => navigation.navigate('Subscription')}>

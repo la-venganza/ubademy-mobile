@@ -51,51 +51,33 @@ const styles = StyleSheet.create({
   },
 });
 
-const ExamsToCorrectListScreen = ({ navigation }) => {
+const CourseExamsListScreen = ({ navigation, route }) => {
   const auth = useContext(AuthContext);
   const [exams, setExams] = useState([]);
   const isFocused = useIsFocused();
-  const [selectedFilter, setSelectedFilter] = useState('all');
+
+  const { id } = route.params;
 
   useEffect(() => {
     const fetchExams = async () => {
-      const results = await examsService.getExamsListToCorrect(auth.userId);
-      setExams(results);
+      const results = await examsService.getExamsByCourse(id, auth.userId);
+      setExams(results.results);
     };
     fetchExams();
   }, [isFocused]);
 
-  const handleSelect = (selectedFilter) => {
-    setSelectedFilter(selectedFilter);
-  };
-
-  const getExamsToShow = () => (selectedFilter === 'all' ? exams : exams.filter((e) => !e.exam_grade));
-
   const handleGoToExam = (exam) => {
-    navigation.navigate('ExamToCorrect', {
-      courseId: exam.course_id,
-      lessonId: exam.lesson_id,
-      examId: exam.exam_id,
-      userId: auth.userId,
-      readOnly: true,
-      takenId: exam.exam_taken_id,
-      enrollId: exam.enroll_course_id,
-    });
+    alert(JSON.stringify(exam));
   };
 
   return (
     <View>
-      <View style={styles.twoButtons}>
-        <Button mode={selectedFilter === 'all' ? 'contained' : 'outlined'} onPress={() => handleSelect('all')}>All</Button>
-        <Button mode={selectedFilter === 'notGraded' ? 'contained' : 'outlined'} onPress={() => handleSelect('notGraded')}>Not graded</Button>
-      </View>
-
-      { (getExamsToShow().length !== 0)
+      { (exams && exams.length !== 0)
         ? (
           <>
             <ScrollView>
               <View style={styles.courseWrapperList}>
-                <ExamsList exams={getExamsToShow()} handleGoToExam={handleGoToExam} />
+                <ExamsList exams={exams} handleGoToExam={handleGoToExam} />
               </View>
             </ScrollView>
           </>
@@ -113,4 +95,4 @@ const ExamsToCorrectListScreen = ({ navigation }) => {
 
   );
 };
-export default ExamsToCorrectListScreen;
+export default CourseExamsListScreen;

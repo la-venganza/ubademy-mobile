@@ -44,13 +44,14 @@ const AuthProvider = ({ children }) => {
   // Update AsyncStorage & context state
   const setAuth = async (token:string, name:string = '', email:string = '', loading:boolean = false, courses:Array = []) => {
     try {
+      const activeCourses = courses.filter((course) => course.active);
       await AsyncStorage.setItem('auth', JSON.stringify({
-        token, name, email, userId, loading, courses,
+        token, name, email, userId, loading, activeCourses,
       }));
       // Configure axios headers
       configureAxiosHeaders(token);
       setAuthState({
-        token, name, email, loading, courses,
+        token, name, email, loading, courses: activeCourses,
       });
     } catch (error) {
       Promise.reject(error);
