@@ -87,8 +87,11 @@ const ProfileScreen = ({ navigation } : Props) => {
   const getBalance = async () => {
     const balance = await walletService.getBalance(authContext.userId);
     setAvailableMoney(balance?.balance ?? 0);
-    const subscription = await subscriptionService.getSubscription(authContext.userId);
-    setCurrentPlan(subscription?.results[0].subscription?.title ?? 'Free');
+    const subscriptionResponse = await subscriptionService.getSubscription(authContext.userId);
+    const subscriptionTitle = subscriptionResponse.results.length
+    ? subscriptionResponse.results[0].subscription.title
+    : 'Free';
+    setCurrentPlan(subscriptionTitle);
   };    
 
   useEffect(() => {
