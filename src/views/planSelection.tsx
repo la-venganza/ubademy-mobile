@@ -91,8 +91,8 @@ const PlanSelection = ({ navigation }) => {
       setSelectedPlan(subscriptionTitle);
       setCurrentPlan(subscriptionTitle);
     };
-    getBalance();
-  }, []);
+    getBalance()
+  }, [authContext.updateData]);
 
   const onSubmit = async () => {
     setShowModal(true);
@@ -106,6 +106,7 @@ const PlanSelection = ({ navigation }) => {
         setSnackbar({ show: false, message: 'There was an error while updating your plan. Try again later!', type: 'error' });
       }
     }
+    authContext.update()
   };
 
   const dismiss = () => {
