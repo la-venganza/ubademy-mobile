@@ -228,10 +228,10 @@ const ProfileScreen = ({ navigation } : Props) => {
             <Text style={styles.menuItemText}>Subscription</Text>
           </View>
         </TouchableRipple>
-        <TouchableRipple onPress={() => navigation.navigate('Extract')}>
+        <TouchableRipple onPress={() => navigation.navigate('Withdraw')}>
           <View style={styles.menuItem}>
             <Icon name="credit-card" color={Colors.secondary} size={25} />
-            <Text style={styles.menuItemText}>Extract as Teacher</Text>
+            <Text style={styles.menuItemText}>Withdraw as Teacher</Text>
           </View>
         </TouchableRipple>
       </View>
