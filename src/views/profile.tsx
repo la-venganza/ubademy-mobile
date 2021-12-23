@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { View, SafeAreaView, StyleSheet } from 'react-native';
+import { View, SafeAreaView, StyleSheet, DatePickerIOSBase } from 'react-native';
 import {
   Avatar,
   Title,
@@ -91,14 +91,21 @@ const ProfileScreen = ({ navigation } : Props) => {
   const getBalance = async () => {
     const balance = await walletService.getBalance(authContext.userId);
     setAvailableMoney(balance?.balance ?? 0);
-    const subscription = await subscriptionService.getSubscription(authContext.userId);
-    setCurrentPlan(subscription?.subscription?.title ?? 'Free');
-  };
+    const subscriptionResponse = await subscriptionService.getSubscription(authContext.userId);
+    const subscriptionTitle = subscriptionResponse.results.length
+    ? subscriptionResponse.results[0].subscription.title
+    : 'Free';
+    setCurrentPlan(subscriptionTitle);
+  };    
 
   useEffect(() => {
     fetchUser();
     getBalance();
+<<<<<<< HEAD
   }, [isFocused]);
+=======
+  }, [authContext.updateData]);
+>>>>>>> development
 
   const userRole = (user) => {
     if (user.created_courses && user.created_courses.length > 0) {
@@ -227,6 +234,12 @@ const ProfileScreen = ({ navigation } : Props) => {
           <View style={styles.menuItem}>
             <Icon name="credit-card" color={Colors.secondary} size={25} />
             <Text style={styles.menuItemText}>Subscription</Text>
+          </View>
+        </TouchableRipple>
+        <TouchableRipple onPress={() => navigation.navigate('Withdraw')}>
+          <View style={styles.menuItem}>
+            <Icon name="credit-card" color={Colors.secondary} size={25} />
+            <Text style={styles.menuItemText}>Withdraw as Teacher</Text>
           </View>
         </TouchableRipple>
       </View>

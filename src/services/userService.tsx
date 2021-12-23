@@ -14,10 +14,12 @@ const setCookie = async (token) => {
   configureAxiosHeaders(token);
 };
 
-const getUser = async (email) => {
+const getUser = async (email, loginType = '') => {
   try {
     console.log('Trying to fetch user form back');
-    const response = await instance.get(`/user/login/${email}?properties=all`);
+    let path = `/user/login/${email}?properties=all`;
+    if (loginType !== '') path = `${path}&loginType=${loginType}`;
+    const response = await instance.get(path);
     return response.data;
   } catch (error) {
     console.log('Exception rised when trying to fetch user from back.');
