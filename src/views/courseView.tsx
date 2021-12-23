@@ -201,15 +201,15 @@ const CourseView = ({ route, navigation }:Props) => {
 
   useEffect(() => {
     const fetchCourse = async () => {
-      if (!auth.auth.courses.some((course) => course.course.id === id)
-      || auth.userId === course.creatorId) {
-        navigation.navigate('Course Enroll', { id });
-      }
       loadingCtx.setLoading(true);
       const courseData = await CourseService.getCourse(id);
       if (courseData?.id) {
         setCourse(courseData);
         setStages(courseData.lessons.map((lesson) => lessonMapper(lesson)));
+        if ((!auth.auth.courses.some((course) => course.course.id === id))
+        && (!(auth.userId === courseData.creator_id))) {
+          navigation.navigate('Course Enroll', { id });
+        }
       } else {
         setCourse(dataMock);
         setStages(dataMock.stages);
@@ -279,14 +279,7 @@ const CourseView = ({ route, navigation }:Props) => {
   };
 
   const handleVideoEnd = () => {
-    if (!currentStage.seen) {
-      currentStage.seen = true;
-    }
-    const stageIndex = course.stages.findIndex((stage) => stage.id === currentStage.id);
-    if (stageIndex < course.stages.length - 1) {
-      setCurrentStage(course.stages[stageIndex + 1]);
-      currentStageRef.current = course.stages[stageIndex + 1];
-    }
+
   };
 
   return (
@@ -316,7 +309,7 @@ const CourseView = ({ route, navigation }:Props) => {
             activeSlide={currentStage}
           />
         </Surface>
-        <LeaveCourseButton courseId={id} />
+        {(course.creator_id !== auth.userId) && <LeaveCourseButton courseId={id} />}
         {startDownload && renderDownload()}
       </ScrollView>
     </View>

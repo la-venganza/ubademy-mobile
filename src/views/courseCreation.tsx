@@ -220,7 +220,7 @@ const CourseCreationScreen = ({ route, navigation }) => {
     setSlides(auxArray);
   };
 
-  const cancelAll = () => navigation.navigate('Home');
+  const cancelAll = () => navigation.navigate('HomeDrawer');
 
   const addExamAction = () => navigation.navigate('CourseExamEdit', {
     saveExam,

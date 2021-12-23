@@ -17,21 +17,7 @@ import CreatedCoursesListScreen from '../views/createdCoursesList';
 import CourseExamsListScreen from '../views/exam/courseExamsList';
 import CourseUserListScreen from '../views/courseUsersList';
 
-
 const Stack = createNativeStackNavigator();
-
-const MainStackNavigator = () => (
-  <Stack.Navigator>
-    <Stack.Screen name="Home" component={HomeScreen} options={{ headerShown: false }} />
-    <Stack.Screen name="Course creation" component={CourseCreationScreen} initialParams={{ id: 0 }} options={{ headerShown: false }} />
-    <Stack.Screen name="Course view" component={CourseViewScreen} initialParams={{ id: 0 }} options={{ headerShown: false }} />
-    <Stack.Screen name="Course Enroll" component={CourseEnrollScreen} initialParams={{ id: 0 }} options={{ headerShown: false }} />
-    <Stack.Screen name="CourseExamEdit" component={ExamEditScreen} options={{ headerShown: false }} />
-    <Stack.Screen name="CourseExamToComplete" component={ExamToCompleteScreen} options={{ headerShown: false }} />
-    <Stack.Screen name="CourseExamToCorrect" component={ExamToCorrectScreen} initialParams={{ id: 0 }} options={{ headerShown: false }} />
-
-  </Stack.Navigator>
-);
 
 const ProfileStackNavigator = () => (
   <Stack.Navigator>
@@ -39,9 +25,6 @@ const ProfileStackNavigator = () => (
     <Stack.Screen name="ProfileEdit" component={ProfileEditScreen} options={{ headerShown: false }} />
     <Stack.Screen name="Subscription" component={PlanSelectionScreen} options={{ headerShown: false }} />
     <Stack.Screen name="Withdraw" component={WithdrawScreen} />
-    <Stack.Screen name="CreatedCoursesList" component={CreatedCoursesListScreen} initialParams={{ id: 0 }} options={{ headerShown: false }} />
-    <Stack.Screen name="CourseExamsList" component={CourseExamsListScreen} initialParams={{ id: 0 }} options={{ headerShown: false }} />
-    <Stack.Screen name="CourseUsersList" component={CourseUserListScreen} initialParams={{ id: 0 }} options={{ headerShown: false }} />
     <Stack.Screen name="OtherProfile" component={OtherUserProfileScreen} initialParams={{ id: 0 }} options={{ headerShown: false }} />
   </Stack.Navigator>
 );
@@ -53,6 +36,10 @@ const CoursesStackNavigator = () => (
     <Stack.Screen name="CourseExamEdit" component={ExamEditScreen} options={{ headerShown: false }} />
     <Stack.Screen name="Course Enroll" component={CourseEnrollScreen} initialParams={{ id: 0 }} options={{ headerShown: false }} />
     <Stack.Screen name="CourseExamToComplete" component={ExamToCompleteScreen} options={{ headerShown: false }} />
+    <Stack.Screen name="CourseExamToCorrect" component={ExamToCorrectScreen} initialParams={{ id: 0 }} options={{ headerShown: false }} />
+    <Stack.Screen name="CreatedCoursesList" component={CreatedCoursesListScreen} initialParams={{ id: 0 }} options={{ headerShown: false }} />
+    <Stack.Screen name="CourseExamsList" component={CourseExamsListScreen} initialParams={{ id: 0 }} options={{ headerShown: false }} />
+    <Stack.Screen name="CourseUsersList" component={CourseUserListScreen} initialParams={{ id: 0 }} options={{ headerShown: false }} />
   </Stack.Navigator>
 );
 
@@ -64,6 +51,6 @@ const ExamsToCorrectStackNavigator = () => (
 );
 
 export {
-  MainStackNavigator, ProfileStackNavigator,
+  ProfileStackNavigator,
   CoursesStackNavigator, ExamsToCorrectStackNavigator,
 };
