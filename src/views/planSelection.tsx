@@ -160,9 +160,6 @@ const PlanSelection = ({ navigation }) => {
         }
         </View>
       </View>
-      {/* <Modal style={styles.modal} visible={showModal} onDismiss={dismiss}>
-        <Text>Modifying non basic subscriptions is not supported at the moment</Text>
-      </Modal> */}
       <Modal style={styles.modal} visible={showHashModal} onDismiss={() => setShowHashModal(false)}>
         <Text>
           Transfer to:
