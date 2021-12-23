@@ -1,14 +1,10 @@
-import React, { useContext, userContext } from 'react';
-import Constants from 'expo-constants';
-import * as Google from 'expo-google-app-auth';
-import * as AppAuth from 'expo-app-auth';
 import {
   getAuth, GoogleAuthProvider, signInWithCredential,
   signInWithEmailAndPassword, createUserWithEmailAndPassword,
   updateProfile, sendPasswordResetEmail,
 } from 'firebase/auth';
-import { AuthContext } from '../context/AuthContext';
 import * as GoogleAuthentication from '../actions/googleAuthentication';
+import { instance } from '../utils/httpClient';
 import userService from './userService';
 
 const loginWithGoogle = async (auth: AuthContext) => {
@@ -114,8 +110,6 @@ const registerUser = async (authCtx: AuthContext,
 };
 
 const recoverPassword = async (email, action) => {
-  console.log(email);
-  console.log('piazzi was here');
   const firebaseAuth = getAuth();
   await sendPasswordResetEmail(firebaseAuth, email)
     .then(() => action())
