@@ -151,7 +151,6 @@ const PlanSelection = ({ navigation }) => {
           </TouchableOpacity>
         </View>
         <View style={styles.buttons}>
-          <Button mode="text">Cancel</Button>
           {
             showModal || showHashModal
               ? null
