@@ -4,6 +4,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { Provider as PaperProvider, DefaultTheme, ActivityIndicator } from 'react-native-paper';
 import Constants from 'expo-constants';
 import * as firebase from 'firebase/app';
+import { LogBox } from 'react-native';
 import HomeScreen from './src/views/home.tsx';
 import LoginScreen from './src/views/login.tsx';
 import ProfileScreen from './src/views/profile.tsx';
@@ -19,6 +20,9 @@ import LoadingScreen from './src/views/loading';
 import DrawerNavigator from './src/navigation/DrawerNavigator';
 import ExamEditScreen from './src/views/exam/examEdit';
 import RecoverPasswordScreen from './src/views/recoverPassword';
+
+LogBox.ignoreLogs(['Warning: ...']); // Ignore log notification by message
+LogBox.ignoreAllLogs();// Ignore all log notifications
 
 const firebaseConfig = {
   apiKey: Constants.manifest.extra.FIREBASE_API_KEY,

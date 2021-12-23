@@ -192,27 +192,39 @@ const ProfileScreen = ({ navigation } : Props) => {
       </View>
 
       <View style={styles.menuWrapper}>
-        <TouchableRipple onPress={() => navigation.navigate('CreatedCoursesList', {
-          courses: user.created_courses, handleGoToCourse,
-        })}
+        <TouchableRipple onPress={() => navigation.navigate('Courses',
+          {
+            screen: 'CreatedCoursesList',
+            params: {
+              courses: user.created_courses, handleGoToCourse: handleGoToCourse,
+            },
+          })}
         >
           <View style={styles.menuItem}>
             <Icon name="book-open-variant" color={Colors.secondary} size={25} />
             <Text style={styles.menuItemText}>Your courses</Text>
           </View>
         </TouchableRipple>
-        <TouchableRipple onPress={() => navigation.navigate('CreatedCoursesList', {
-          courses: user.created_courses, handleGoToCourse: handleGoToCourseExams,
-        })}
+        <TouchableRipple onPress={() => navigation.navigate('Courses',
+          {
+            screen: 'CreatedCoursesList',
+            params: {
+              courses: user.created_courses, handleGoToCourse: handleGoToCourseExams,
+            },
+          })}
         >
           <View style={styles.menuItem}>
             <Icon name="book-open-variant" color={Colors.secondary} size={25} />
             <Text style={styles.menuItemText}>Your exams by course</Text>
           </View>
         </TouchableRipple>
-        <TouchableRipple onPress={() => navigation.navigate('CreatedCoursesList', {
-          courses: user.created_courses, handleGoToCourse: handleGoToStudents,
-        })}
+        <TouchableRipple onPress={() => navigation.navigate('Courses',
+          {
+            screen: 'CreatedCoursesList',
+            params: {
+              courses: user.created_courses, handleGoToCourse: handleGoToStudents,
+            },
+          })}
         >
           <View style={styles.menuItem}>
             <Icon name="account-box-multiple" color={Colors.secondary} size={25} />

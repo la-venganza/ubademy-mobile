@@ -279,14 +279,7 @@ const CourseView = ({ route, navigation }:Props) => {
   };
 
   const handleVideoEnd = () => {
-    if (!currentStage.seen) {
-      currentStage.seen = true;
-    }
-    const stageIndex = course.stages.findIndex((stage) => stage.id === currentStage.id);
-    if (stageIndex < course.stages.length - 1) {
-      setCurrentStage(course.stages[stageIndex + 1]);
-      currentStageRef.current = course.stages[stageIndex + 1];
-    }
+
   };
 
   return (
