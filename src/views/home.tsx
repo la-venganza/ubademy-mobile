@@ -61,11 +61,11 @@ const HomeScreen = ({ navigation }) => {
   }, [isFocused, searchTerm, selectedPlan]);
 
   const handleGoToCourse = (id) => {
-    navigation.navigate('Course view', { id });
+    navigation.navigate('Courses', { screen: 'Course view', params: { id } });
   };
 
   const handleNewCourse = () => {
-    navigation.navigate('Course creation');
+    navigation.navigate('Courses', { screen: 'Course creation' });
   };
 
   return (

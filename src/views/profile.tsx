@@ -8,6 +8,7 @@ import {
   TouchableRipple,
 } from 'react-native-paper';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import { useIsFocused } from '@react-navigation/native';
 import Colors from '../styles/colors';
 import userService from '../services/userService';
 import walletService from '../services/walletService';
@@ -77,7 +78,10 @@ const ProfileScreen = ({ navigation } : Props) => {
 
   const auth = useContext(AuthContext);
 
+  const isFocused = useIsFocused();
+
   const fetchUser = async () => {
+    console.log('here');
     const userData = await userService.getUser(auth.auth.email);
     if (userData) {
       setUser(userData);
@@ -94,7 +98,7 @@ const ProfileScreen = ({ navigation } : Props) => {
   useEffect(() => {
     fetchUser();
     getBalance();
-  }, []);
+  }, [isFocused]);
 
   const userRole = (user) => {
     if (user.created_courses && user.created_courses.length > 0) {
@@ -104,15 +108,15 @@ const ProfileScreen = ({ navigation } : Props) => {
   };
 
   const handleGoToCourse = (id) => {
-    navigation.navigate('Course view', { id });
+    navigation.navigate('Courses', { screen: 'Course view', params: { id } });
   };
 
   const handleGoToCourseExams = (id) => {
-    navigation.navigate('CourseExamsList', { id });
+    navigation.navigate('Courses', { screen: 'CourseExamsList', params: { id } });
   };
 
   const handleGoToStudents = (id) => {
-    navigation.navigate('CourseUsersList', { id });
+    navigation.navigate('Courses', { screen: 'CourseUsersList', params: { id } });
   };
 
   return (
@@ -170,7 +174,10 @@ const ProfileScreen = ({ navigation } : Props) => {
           borderRightWidth: 1,
         }]}
         >
-          <Title>{parseFloat(`${availableMoney}`).toFixed(4)}ETH</Title>
+          <Title>
+            {parseFloat(`${availableMoney}`).toFixed(4)}
+            ETH
+          </Title>
           <Caption>Wallet</Caption>
         </View>
         <View style={styles.infoBox}>
