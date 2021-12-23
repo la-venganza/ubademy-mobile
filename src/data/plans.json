@@ -4,6 +4,10 @@
         "value": "free"
     },
     {
+        "label": "Gold",
+        "value": "gold"
+    },
+    {
         "label": "Premium",
         "value": "premium"
     }
