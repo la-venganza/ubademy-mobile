@@ -1,7 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
-import {
-  View, SafeAreaView, StyleSheet, DatePickerIOSBase,
-} from 'react-native';
+import { View, SafeAreaView, StyleSheet, DatePickerIOSBase, ScrollView } from 'react-native';
 import {
   Avatar,
   Title,
@@ -75,7 +73,7 @@ interface Props {
 const ProfileScreen = ({ navigation } : Props) => {
   const authContext = useContext(AuthContext);
   const [user, setUser] = useState<IUser>({});
-  const [currentPlan, setCurrentPlan] = useState('Free');
+  const [currentPlan, setCurrentPlan] = useState('free');
   const [availableMoney, setAvailableMoney] = useState(0);
 
   const auth = useContext(AuthContext);
@@ -87,6 +85,13 @@ const ProfileScreen = ({ navigation } : Props) => {
     const userData = await userService.getUser(auth.auth.email);
     if (userData) {
       setUser(userData);
+    }
+    if (userData.subscriptions.length) {
+      let tmpPlans = []
+      userData.subscriptions.forEach(subscription => {
+        tmpPlans.push(subscription.subscription.title.toLowerCase())
+      });
+      auth.setAllPlans(tmpPlans)
     }
   };
 
@@ -251,8 +256,8 @@ const ProfileScreen = ({ navigation } : Props) => {
             <Icon name="credit-card" color={Colors.secondary} size={25} />
             <Text style={styles.menuItemText}>Withdraw as Teacher</Text>
           </View>
-        </TouchableRipple>
-      </View>
+        </TouchableRipple>        
+      </ScrollView>
     </SafeAreaView>
   );
 };

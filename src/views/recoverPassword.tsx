@@ -5,6 +5,7 @@ import Logo from '../components/Logo';
 import { GoogleLoginButton } from '../components/LoginButton';
 import LogOnButton from '../components/LogOnButton';
 import loginService from '../services/loginService';
+import metricsService from '../services/metricsService';
 
 const styles = StyleSheet.create({
   surface: {
@@ -34,7 +35,10 @@ const RecoverPasswordScreen = ({ navigation }) => {
   const [email, _setEmail] = useState('');
 
   const handleRecoverPassword = (myEmail) => {
-    loginService.recoverPassword(myEmail, () => navigation.navigate('Login'));
+    loginService.recoverPassword(myEmail, () => {
+      metricsService.sendRecoveryMetrics();
+      navigation.navigate('Login');
+    });
   };
 
   const setEmail = (name: string) => _setEmail(name);

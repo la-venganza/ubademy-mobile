@@ -22,6 +22,7 @@ const PlansToggle = ({ selectedPlan, setSelectedPlan }) => {
   return (
     <View style={styles.planToggle}>
       <Button mode={selectedPlan === 'free' ? 'contained' : 'outlined'} onPress={() => handleSelect('free')}>Free</Button>
+      <Button mode={selectedPlan === 'gold' ? 'contained' : 'outlined'} onPress={() => handleSelect('gold')}>Gold</Button>
       <Button mode={selectedPlan === 'premium' ? 'contained' : 'outlined'} onPress={() => handleSelect('premium')}>Premium</Button>
     </View>
   );

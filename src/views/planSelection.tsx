@@ -70,6 +70,7 @@ const PlanSelection = ({ navigation }) => {
   const authContext = useContext(AuthContext);
   const [selectedPlan, setSelectedPlan] = useState('free');
   const [currentPlan, setCurrentPlan] = useState('free');
+  const [plans, setPlans] = useState(['free'])
   const [availableMoney, setAvailableMoney] = useState(0);
   const [wallet, setWalletAddress] = useState('');
   const [snackbar, setSnackbar] = useState({ show: false, message: '', type: 'success' });
@@ -90,13 +91,14 @@ const PlanSelection = ({ navigation }) => {
         : 'Free';
       setSelectedPlan(subscriptionTitle);
       setCurrentPlan(subscriptionTitle);
+      setPlans(authContext.plans);
     };
     getBalance()
   }, [authContext.updateData]);
 
   const onSubmit = async () => {
     setShowModal(true);
-    if (currentPlan !== 'Free') {
+    if (plans.includes(selectedPlan)) {
       setShowModal(true);
     } else {
       const planUpdatedResponse = await subscriptionService.updateSubscription(authContext.userId, selectedPlan);
@@ -154,13 +156,10 @@ const PlanSelection = ({ navigation }) => {
           {
             showModal || showHashModal
               ? null
-              : <Button mode="contained" labelStyle={styles.planText} onPress={onSubmit} disabled={currentPlan === selectedPlan}>Select Plan</Button>
+              : <Button mode="contained" labelStyle={styles.planText} onPress={onSubmit} disabled={currentPlan === selectedPlan || plans.includes(selectedPlan.toLowerCase())}>Select Plan</Button>
         }
         </View>
       </View>
-      <Modal style={styles.modal} visible={showModal} onDismiss={dismiss}>
-        <Text>Modifying non basic subscriptions is not supported at the moment</Text>
-      </Modal>
       <Modal style={styles.modal} visible={showHashModal} onDismiss={() => setShowHashModal(false)}>
         <Text>
           Transfer to:
