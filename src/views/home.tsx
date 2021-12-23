@@ -12,6 +12,7 @@ import courseService from '../services/courseService';
 import Header from '../components/Header';
 import Searchbar from '../components/Searchbar';
 import PlanToggle from '../components/PlanToggle';
+import CategoryDropdown from '../components/CategoryDropdown';
 
 const styles = StyleSheet.create({
   container: {
@@ -47,18 +48,19 @@ const HomeScreen = ({ navigation }) => {
   const [courses, setCourses] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedPlan, setSelectedPlan] = useState('free');
+  const [category, setCategory] = useState('');
   const isFocused = useIsFocused();
 
   useEffect(() => {
     const fetchCourses = async () => {
       courseService.setCookie(auth?.auth?.token);
-      const results = await courseService.getCourses(searchTerm, selectedPlan);
+      const results = await courseService.getCourses(searchTerm, selectedPlan, category);
       if (results?.results?.length) {
         setCourses(results.results);
       }
     };
     fetchCourses();
-  }, [isFocused, searchTerm, selectedPlan]);
+  }, [isFocused, searchTerm, selectedPlan, category]);
 
   const handleGoToCourse = (id) => {
     navigation.navigate('Course view', { id });
@@ -82,6 +84,7 @@ const HomeScreen = ({ navigation }) => {
             />
           </View>
           <Searchbar searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
+          <CategoryDropdown handleChange={setCategory} category={category} />
           <PlanToggle selectedPlan={selectedPlan} setSelectedPlan={setSelectedPlan} />
           <View style={styles.courseWrapperList}>
             <CourseList courses={courses} handleGoToCourse={handleGoToCourse} />
