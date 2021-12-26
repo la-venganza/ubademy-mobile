@@ -201,7 +201,9 @@ const CourseView = ({ route, navigation }:Props) => {
 
   useEffect(() => {
     const fetchCourse = async () => {
-      if (!auth.auth.courses.some((course) => course.course.id === id)
+      if (!auth.enroll) {
+        navigation.navigate("Home");
+      } else if (!auth.auth.courses.some((course) => course.course.id === id)
       || auth.userId === course.creatorId) {
         navigation.navigate('Course Enroll', { id });
       }

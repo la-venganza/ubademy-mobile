@@ -53,6 +53,7 @@ const HomeScreen = ({ navigation }) => {
 
   useEffect(() => {
     const fetchCourses = async () => {
+      auth.setEnroll(true)
       courseService.setCookie(auth?.auth?.token);
       const results = await courseService.getCourses(searchTerm, selectedPlan, category);
       if (results?.results?.length) {

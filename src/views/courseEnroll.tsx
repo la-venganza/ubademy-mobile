@@ -62,6 +62,7 @@ const CourseEnroll = ({ route, navigation }:Props) => {
 
   useEffect(() => {
     const fetchCourse = async () => {
+      auth.setEnroll(false)
       loadingCtx.setLoading(true);
       const courseData = await CourseService.getCourse(id);
 
