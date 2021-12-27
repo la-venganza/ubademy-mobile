@@ -4,7 +4,7 @@ import React, {
 import { Image, StyleSheet, View } from 'react-native';
 import {
   Button,
-  Divider, Surface, Text, Title,
+  Divider, Surface, Text, Title, ActivityIndicator
 } from 'react-native-paper';
 import { ScrollView } from 'react-native-gesture-handler';
 import { createDownloadResumable } from 'expo-file-system';
@@ -26,8 +26,8 @@ import IExam from '../interfaces/IExam';
 import LeaveCourseButton from '../components/LeaveCourseButton';
 
 interface Props {
-    route: {params:{id: number}};
-    navigation: object;
+  route: { params: { id: number } };
+  navigation: object;
 }
 const dataMock = {
   title: 'Sample title',
@@ -104,9 +104,30 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     marginTop: 24,
   },
+  surface: {
+    flex: 1,
+    padding: 275,
+    width: '100%',
+    alignSelf: 'center',
+    justifyContent: 'center',
+  },
+  wrapper: {
+    flex: 1,
+    width: '100%',
+  },
+  image: {
+    alignSelf: 'center',
+  },
+  buttonWrapper: {
+    marginTop: 25,
+  },
+  row: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+  },
 });
 
-const CourseView = ({ route, navigation }:Props) => {
+const CourseView = ({ route, navigation }: Props) => {
   const auth = useContext(AuthContext);
   const { id } = route.params;
   const [course, setCourse] = useState<ICourse>({});
@@ -187,13 +208,13 @@ const CourseView = ({ route, navigation }:Props) => {
     });
   };
 
-  const renderCompleteExam = (exam : IExam) => (
+  const renderCompleteExam = (exam: IExam) => (
     <Button onPress={handleGoToExam}>
       Complete Exam
     </Button>
   );
 
-  const renderViewExam = (exam : IExam) => (
+  const renderViewExam = (exam: IExam) => (
     <Button onPress={handleGoToExamReadOnlyView}>
       Exam submitted, view exam
     </Button>
@@ -204,7 +225,7 @@ const CourseView = ({ route, navigation }:Props) => {
       if (!auth.enroll) {
         navigation.navigate("Home");
       } else if (!auth.auth.courses.some((course) => course.course.id === id)
-      || auth.userId === course.creatorId) {
+        || auth.userId === course.creatorId) {
         navigation.navigate('Course Enroll', { id });
       }
       loadingCtx.setLoading(true);
@@ -220,6 +241,7 @@ const CourseView = ({ route, navigation }:Props) => {
       loadingCtx.setLoading(false);
     };
     fetchCourse();
+    courseRender();
 
     setLoadingExam(true);
     if (currentStage.exam) {
@@ -233,7 +255,7 @@ const CourseView = ({ route, navigation }:Props) => {
     }
   }, [isFocused, auth.auth.courses]);
 
-  const handleCourseSelection = async (stageId:number) => {
+  const handleCourseSelection = async (stageId: number) => {
     const stage = stages.find((stage, index) => stage.id === stageId);
     let mediaUrl = '';
     try {
@@ -291,37 +313,55 @@ const CourseView = ({ route, navigation }:Props) => {
     }
   };
 
-  return (
-    <View>
-      <ScrollView ref={scrollRef}>
-        <Surface>
-          {renderMedia()}
-          {(currentStage.exam
-          && !loadingExam
-          && !isCurrentExamCompleted)
-          && renderCompleteExam(currentStage.exam)}
-          {
-            currentStage.exam
-            && isCurrentExamCompleted
-            && renderViewExam(currentStage.exam)
-          }
-        </Surface>
-        <View style={styles.courseInfoWrapper}>
-          <Title style={styles.title}>{course.title}</Title>
-          <Text>{course.description}</Text>
+  const courseRender = () => {
+    if (auth.enroll) {
+      return (
+        <View>
+          <ScrollView ref={scrollRef}>
+            <Surface>
+              {renderMedia()}
+              {(currentStage.exam
+                && !loadingExam
+                && !isCurrentExamCompleted)
+                && renderCompleteExam(currentStage.exam)}
+              {
+                currentStage.exam
+                && isCurrentExamCompleted
+                && renderViewExam(currentStage.exam)
+              }
+            </Surface>
+            <View style={styles.courseInfoWrapper}>
+              <Title style={styles.title}>{course.title}</Title>
+              <Text>{course.description}</Text>
+            </View>
+            <Divider style={styles.divider} />
+            <Surface>
+              <SlideList
+                slides={stages}
+                handleSelect={handleCourseSelection}
+                activeSlide={currentStage}
+              />
+            </Surface>
+            <LeaveCourseButton courseId={id} />
+            {startDownload && renderDownload()}
+          </ScrollView>
         </View>
-        <Divider style={styles.divider} />
-        <Surface>
-          <SlideList
-            slides={stages}
-            handleSelect={handleCourseSelection}
-            activeSlide={currentStage}
-          />
-        </Surface>
-        <LeaveCourseButton courseId={id} />
-        {startDownload && renderDownload()}
-      </ScrollView>
-    </View>
+      )
+    } else {
+      return (
+        <View style={styles.wrapper}>
+          <View style={styles.surface}>
+            <View style={styles.row}>
+              <ActivityIndicator size="large" color="#1bb7f3" />
+            </View>
+          </View>
+        </View>
+      )
+    }
+  }
+
+  return (
+    <View>{courseRender()}</View>
   );
 };
 
