@@ -79,6 +79,7 @@ const CourseEnroll = ({ route, navigation }:Props) => {
     const response = await courseService.enroll(id, auth.userId);
     loadingCtx.setLoading(false);
     if (response) {
+      auth.setEnroll(true)
       auth.setCourses([...(auth.auth.courses), { course }]);
       navigation.navigate('Course view', { id });
     } else {
