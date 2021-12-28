@@ -8,6 +8,7 @@ import {
   TouchableRipple,
 } from 'react-native-paper';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import { useIsFocused } from '@react-navigation/native';
 import Colors from '../styles/colors';
 import userService from '../services/userService';
 import walletService from '../services/walletService';
@@ -77,7 +78,10 @@ const ProfileScreen = ({ navigation } : Props) => {
 
   const auth = useContext(AuthContext);
 
+  const isFocused = useIsFocused();
+
   const fetchUser = async () => {
+    console.log('here');
     const userData = await userService.getUser(auth.auth.email);
     if (userData) {
       setUser(userData);
@@ -96,15 +100,15 @@ const ProfileScreen = ({ navigation } : Props) => {
     setAvailableMoney(balance?.balance ?? 0);
     const subscriptionResponse = await subscriptionService.getSubscription(authContext.userId);
     const subscriptionTitle = subscriptionResponse.results.length
-    ? subscriptionResponse.results[0].subscription.title
-    : 'Free';
+      ? subscriptionResponse.results[0].subscription.title
+      : 'Free';
     setCurrentPlan(subscriptionTitle);
-  };    
+  };
 
   useEffect(() => {
     fetchUser();
     getBalance();
-  }, [authContext.updateData]);
+  }, [isFocused, authContext.updateData]);
 
   const userRole = (user) => {
     if (user.created_courses && user.created_courses.length > 0) {
@@ -114,15 +118,15 @@ const ProfileScreen = ({ navigation } : Props) => {
   };
 
   const handleGoToCourse = (id) => {
-    navigation.navigate('Course view', { id });
+    navigation.navigate('Courses', { screen: 'Course view', params: { id } });
   };
 
   const handleGoToCourseExams = (id) => {
-    navigation.navigate('CourseExamsList', { id });
+    navigation.navigate('Courses', { screen: 'CourseExamsList', params: { id } });
   };
 
   const handleGoToStudents = (id) => {
-    navigation.navigate('CourseUsersList', { id });
+    navigation.navigate('Courses', { screen: 'CourseUsersList', params: { id } });
   };
 
   return (
@@ -192,28 +196,40 @@ const ProfileScreen = ({ navigation } : Props) => {
         </View>
       </View>
 
-      <ScrollView style={styles.menuWrapper}>
-        <TouchableRipple onPress={() => navigation.navigate('CreatedCoursesList', {
-          courses: user.created_courses, handleGoToCourse,
-        })}
+      <View style={styles.menuWrapper}>
+        <TouchableRipple onPress={() => navigation.navigate('Courses',
+          {
+            screen: 'CreatedCoursesList',
+            params: {
+              courses: user.created_courses, handleGoToCourse: handleGoToCourse,
+            },
+          })}
         >
           <View style={styles.menuItem}>
             <Icon name="book-open-variant" color={Colors.secondary} size={25} />
             <Text style={styles.menuItemText}>Your courses</Text>
           </View>
         </TouchableRipple>
-        <TouchableRipple onPress={() => navigation.navigate('CreatedCoursesList', {
-          courses: user.created_courses, handleGoToCourse: handleGoToCourseExams,
-        })}
+        <TouchableRipple onPress={() => navigation.navigate('Courses',
+          {
+            screen: 'CreatedCoursesList',
+            params: {
+              courses: user.created_courses, handleGoToCourse: handleGoToCourseExams,
+            },
+          })}
         >
           <View style={styles.menuItem}>
             <Icon name="book-open-variant" color={Colors.secondary} size={25} />
             <Text style={styles.menuItemText}>Your exams by course</Text>
           </View>
         </TouchableRipple>
-        <TouchableRipple onPress={() => navigation.navigate('CreatedCoursesList', {
-          courses: user.created_courses, handleGoToCourse: handleGoToStudents,
-        })}
+        <TouchableRipple onPress={() => navigation.navigate('Courses',
+          {
+            screen: 'CreatedCoursesList',
+            params: {
+              courses: user.created_courses, handleGoToCourse: handleGoToStudents,
+            },
+          })}
         >
           <View style={styles.menuItem}>
             <Icon name="account-box-multiple" color={Colors.secondary} size={25} />

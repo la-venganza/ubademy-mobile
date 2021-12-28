@@ -7,6 +7,7 @@ import {
   Divider, Surface, Text, Title, Snackbar,
 } from 'react-native-paper';
 import { ScrollView } from 'react-native-gesture-handler';
+import { useIsFocused } from '@react-navigation/native';
 import ICourse from '../interfaces/ICourse';
 import CourseService from '../services/courseService';
 import courseService from '../services/courseService';
@@ -50,7 +51,6 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
 });
-const isRightPlan = (userSubscriptions, requiredSubs) => userSubscriptions.some((subscription) => subscription.subscription.title === requiredSubs.title);
 
 const CourseEnroll = ({ route, navigation }:Props) => {
   const auth = useContext(AuthContext);
@@ -59,6 +59,11 @@ const CourseEnroll = ({ route, navigation }:Props) => {
   const scrollRef = useRef();
   const loadingCtx = useContext(LoadingContext);
   const [showSnackbar, setShowSnackbar] = useState(false);
+
+  const isRightPlan = (userSubscriptions, requiredSubs) => userSubscriptions
+    .some((subscription) => subscription.subscription.title === requiredSubs.title);
+
+  const isFocused = useIsFocused();
 
   useEffect(() => {
     const fetchCourse = async () => {
@@ -72,7 +77,7 @@ const CourseEnroll = ({ route, navigation }:Props) => {
       loadingCtx.setLoading(false);
     };
     fetchCourse();
-  }, []);
+  }, [isFocused]);
 
   const doEnroll = async () => {
     loadingCtx.setLoading(true);
@@ -120,7 +125,7 @@ const CourseEnroll = ({ route, navigation }:Props) => {
         {' '}
         subscription. Upgrade now!
       </Text>
-      <View><Button onPress={() => navigation.navigate('Profile', { screen: 'Subscription' })}>Go to subscriptions</Button></View>
+      <View><Button onPress={() => navigation.navigate('ProfileDrawer', { screen: 'Subscription' })}>Go to subscriptions</Button></View>
     </>
   );
 
@@ -134,9 +139,10 @@ const CourseEnroll = ({ route, navigation }:Props) => {
         <Divider style={styles.divider} />
         <Surface>
           {
-                course.subscription_required && isRightPlan(auth.subscription, course.subscription_required)
-                  ? renderCorrectPlan()
-                  : renderPlanUpgrade()
+              // eslint-disable-next-line max-len
+              course.subscription_required && isRightPlan(auth.subscription, course.subscription_required, course)
+                ? renderCorrectPlan()
+                : renderPlanUpgrade()
             }
         </Surface>
       </ScrollView>
