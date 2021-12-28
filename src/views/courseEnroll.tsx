@@ -67,6 +67,7 @@ const CourseEnroll = ({ route, navigation }:Props) => {
 
   useEffect(() => {
     const fetchCourse = async () => {
+      auth.setEnroll(false)
       loadingCtx.setLoading(true);
       const courseData = await CourseService.getCourse(id);
 
@@ -83,6 +84,7 @@ const CourseEnroll = ({ route, navigation }:Props) => {
     const response = await courseService.enroll(id, auth.userId);
     loadingCtx.setLoading(false);
     if (response) {
+      auth.setEnroll(true)
       auth.setCourses([...(auth.auth.courses), { course }]);
       navigation.navigate('Course view', { id });
     } else {

@@ -17,6 +17,7 @@ const AuthProvider = ({ children }) => {
   const [subscription, setSubscription] = useState(null);
   const [updateData, setUpdateData] = useState(0);
   const [plans, setPlans] = useState(['Free'])
+  const [enroll, setEnroll] = useState(true)
 
   // Get current auth state from AsyncStorage
   const getAuthState = async () => {
@@ -77,7 +78,8 @@ const AuthProvider = ({ children }) => {
 
   return (
     <AuthContext.Provider value={{
-      auth, setAuth, userId, setUserId, setCourses, subscription, setSubscription, updateData, update, plans, setAllPlans
+      auth, setAuth, userId, setUserId, setCourses, subscription, setSubscription, 
+      updateData, update, plans, setAllPlans, enroll, setEnroll
     }}
     >
       {children}
