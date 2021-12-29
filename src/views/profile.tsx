@@ -1,5 +1,7 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { View, SafeAreaView, StyleSheet, DatePickerIOSBase, ScrollView } from 'react-native';
+import {
+  View, SafeAreaView, StyleSheet, DatePickerIOSBase, ScrollView,
+} from 'react-native';
 import {
   Avatar,
   Title,
@@ -87,11 +89,11 @@ const ProfileScreen = ({ navigation } : Props) => {
       setUser(userData);
     }
     if (userData.subscriptions.length) {
-      let tmpPlans = []
-      userData.subscriptions.forEach(subscription => {
-        tmpPlans.push(subscription.subscription.title.toLowerCase())
+      const tmpPlans = [];
+      userData.subscriptions.forEach((subscription) => {
+        tmpPlans.push(subscription.subscription.title.toLowerCase());
       });
-      auth.setAllPlans(tmpPlans)
+      auth.setAllPlans(tmpPlans);
     }
   };
 
@@ -196,12 +198,12 @@ const ProfileScreen = ({ navigation } : Props) => {
         </View>
       </View>
 
-      <View style={styles.menuWrapper}>
+      <ScrollView style={styles.menuWrapper}>
         <TouchableRipple onPress={() => navigation.navigate('Courses',
           {
             screen: 'CreatedCoursesList',
             params: {
-              courses: user.created_courses, handleGoToCourse: handleGoToCourse,
+              courses: user.created_courses, handleGoToCourse,
             },
           })}
         >
@@ -256,7 +258,7 @@ const ProfileScreen = ({ navigation } : Props) => {
             <Icon name="credit-card" color={Colors.secondary} size={25} />
             <Text style={styles.menuItemText}>Withdraw as Teacher</Text>
           </View>
-        </TouchableRipple>        
+        </TouchableRipple>
       </ScrollView>
     </SafeAreaView>
   );

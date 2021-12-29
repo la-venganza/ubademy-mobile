@@ -26,11 +26,11 @@ const loginWithGoogle = async (auth: AuthContext) => {
   backUser = userService.getUser(firebaseCredential.user.email);
 
   backUser.then((u: { results: string | any[]; }): void => {
-    if (u.user_id) {
+    if (!u) {
       const userData = {
         username: result.user.name,
         first_name: result.user.givenName,
-        last_name: 'mock',
+        last_name: 'empty',
         email: firebaseCredential.user.email,
       };
       console.log('User not found, registering user.');
@@ -45,7 +45,11 @@ const loginWithGoogle = async (auth: AuthContext) => {
       })
       .catch((error: any) => {
         console.log(error);
+        auth.setAuth('', '', '', false);
       });
+  }).catch((error: any) => {
+    console.log(error);
+    auth.setAuth('', '', '', false);
   });
 };
 
